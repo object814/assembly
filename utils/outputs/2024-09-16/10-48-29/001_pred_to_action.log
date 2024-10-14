@@ -1,0 +1,4 @@
+[2024-09-16 10:49:14,377][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-16 10:49:17,498][websockets.server][INFO] - connection open
+[2024-09-16 10:49:25,233][root][INFO] - Succeeded to open port: /dev/ttyUSB1
+[2024-09-16 10:49:25,234][root][INFO] - Succeeded to set baudrate to 3000000

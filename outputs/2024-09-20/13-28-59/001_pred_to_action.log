@@ -1,0 +1,500 @@
+[2024-09-20 13:29:00,066][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: 'Infinity'
+debug: null
+n_view: 1
+run_id: 3wy8qqex
+use_BN: true
+exp_name: 2024-01-11-20-02-45
+n_epochs: 62
+save_dir: /home/bowenw/debug/2024-01-11-20-02-45/
+use_mask: false
+loss_type: pairwise_valid
+optimizer: adam
+batch_size: 64
+crop_ratio: 1.1
+enable_amp: true
+use_normal: false
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+vis_interval: 1000
+weight_decay: 0
+normalize_xyz: true
+resume_run_id: null
+clip_grad_norm: 'Infinity'
+lr_epoch_decay: 500
+render_backend: nvdiffrast
+train_num_pair: 5
+lr_decay_epochs:
+- 50
+n_epochs_warmup: 1
+make_pair_online: false
+gradient_max_norm: 'Infinity'
+max_step_per_epoch: 10000
+n_rendering_workers: 1
+save_epoch_interval: 100
+n_dataloader_workers: 100
+split_objects_across_gpus: true
+ckpt_dir: FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+
+[2024-09-20 13:29:00,066][root][INFO] - self.h5_file:None
+[2024-09-20 13:29:00,256][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+[2024-09-20 13:29:00,318][root][INFO] - init done
+[2024-09-20 13:29:00,318][root][INFO] - welcome
+[2024-09-20 13:29:00,321][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: .inf
+debug: null
+w_rot: 0.1
+n_view: 1
+run_id: null
+use_BN: true
+rot_rep: axis_angle
+ckpt_dir: FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+exp_name: 2023-10-28-18-33-37
+save_dir: /tmp/2023-10-28-18-33-37/
+loss_type: l2
+optimizer: adam
+trans_rep: tracknet
+batch_size: 64
+crop_ratio: 1.2
+use_normal: false
+BN_momentum: 0.1
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+normal_uint8: false
+vis_interval: 1000
+weight_decay: 0
+n_max_objects: null
+normalize_xyz: true
+clip_grad_norm: 'Infinity'
+rot_normalizer: 0.3490658503988659
+trans_normalizer:
+- 0.019999999552965164
+- 0.019999999552965164
+- 0.05000000074505806
+max_step_per_epoch: 25000
+val_epoch_interval: 10
+n_dataloader_workers: 60
+enable_amp: true
+use_mask: false
+
+[2024-09-20 13:29:00,321][root][INFO] - self.h5_file:
+[2024-09-20 13:29:00,371][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+[2024-09-20 13:29:00,394][root][INFO] - init done
+[2024-09-20 13:29:01,483][root][INFO] - self.diameter:0.15243421826573095, vox_size:0.007621710913286547
+[2024-09-20 13:29:01,498][root][INFO] - self.pts:torch.Size([464, 3])
+[2024-09-20 13:29:02,194][root][INFO] - reset done
+[2024-09-20 13:29:02,195][root][INFO] - cam_in_obs:(42, 4, 4)
+[2024-09-20 13:29:02,196][root][INFO] - rot_grid:(252, 4, 4)
+[2024-09-20 13:29:02,197][root][INFO] - after cluster, rot_grid:(252, 4, 4)
+[2024-09-20 13:29:02,197][root][INFO] - self.rot_grid: torch.Size([252, 4, 4])
+[2024-09-20 13:29:11,294][root][INFO] - Welcome
+[2024-09-20 13:29:11,308][root][INFO] - poses:(252, 4, 4)
+[2024-09-20 13:29:11,320][root][INFO] - after viewpoint, add_errs min:-1.0
+[2024-09-20 13:29:11,393][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-20 13:29:11,393][root][INFO] - self.cfg.use_normal:False
+[2024-09-20 13:29:11,393][root][INFO] - trans_normalizer:[0.019999999552965164, 0.019999999552965164, 0.05000000074505806], rot_normalizer:0.3490658503988659
+[2024-09-20 13:29:11,397][root][INFO] - making cropped data
+[2024-09-20 13:29:11,397][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:11,401][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:11,425][root][INFO] - render done
+[2024-09-20 13:29:11,430][root][INFO] - warp done
+[2024-09-20 13:29:11,436][root][INFO] - pose batch data done
+[2024-09-20 13:29:11,436][root][INFO] - forward start
+[2024-09-20 13:29:11,564][root][INFO] - forward done
+[2024-09-20 13:29:11,575][root][INFO] - making cropped data
+[2024-09-20 13:29:11,575][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:11,577][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:11,593][root][INFO] - render done
+[2024-09-20 13:29:11,597][root][INFO] - warp done
+[2024-09-20 13:29:11,599][root][INFO] - pose batch data done
+[2024-09-20 13:29:11,599][root][INFO] - forward start
+[2024-09-20 13:29:11,601][root][INFO] - forward done
+[2024-09-20 13:29:11,601][root][INFO] - making cropped data
+[2024-09-20 13:29:11,601][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:11,711][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:11,727][root][INFO] - render done
+[2024-09-20 13:29:11,730][root][INFO] - warp done
+[2024-09-20 13:29:11,733][root][INFO] - pose batch data done
+[2024-09-20 13:29:11,733][root][INFO] - forward start
+[2024-09-20 13:29:11,735][root][INFO] - forward done
+[2024-09-20 13:29:11,735][root][INFO] - making cropped data
+[2024-09-20 13:29:11,735][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:11,844][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:11,860][root][INFO] - render done
+[2024-09-20 13:29:11,863][root][INFO] - warp done
+[2024-09-20 13:29:11,866][root][INFO] - pose batch data done
+[2024-09-20 13:29:11,866][root][INFO] - forward start
+[2024-09-20 13:29:11,867][root][INFO] - forward done
+[2024-09-20 13:29:11,868][root][INFO] - making cropped data
+[2024-09-20 13:29:11,868][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:11,977][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:11,992][root][INFO] - render done
+[2024-09-20 13:29:11,996][root][INFO] - warp done
+[2024-09-20 13:29:11,999][root][INFO] - pose batch data done
+[2024-09-20 13:29:11,999][root][INFO] - forward start
+[2024-09-20 13:29:12,000][root][INFO] - forward done
+[2024-09-20 13:29:12,125][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-20 13:29:12,125][root][INFO] - self.cfg.use_normal:False
+[2024-09-20 13:29:12,125][root][INFO] - making cropped data
+[2024-09-20 13:29:12,133][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 13:29:12,134][root][INFO] - make tf_to_crops done
+[2024-09-20 13:29:12,148][root][INFO] - render done
+[2024-09-20 13:29:12,289][root][INFO] - pose batch data done
+[2024-09-20 13:29:12,289][root][INFO] - pose_data.rgbAs.shape[0]: 252
+[2024-09-20 13:29:12,395][root][INFO] - forward done
+[2024-09-20 13:29:12,412][root][INFO] - final, add_errs min:-1.0
+[2024-09-20 13:29:12,422][root][INFO] - sort ids:tensor([  3,   4,  34,  70,  76,  99, 100, 106, 226, 244,  10, 130,  50,   8,
+         55,  71,  98, 104, 134, 146, 169, 170,  32,  56,  74, 103, 128, 193,
+        194,   1,   5,  43,  65, 127, 131, 137, 145, 203, 221, 227, 245, 251,
+          6,   9,  47,  77, 101, 133, 163, 202, 220,   7,  33,  72,  73, 188,
+         81,  87,  93, 105, 135,  15,  27,  28,  75,  94, 108, 184, 250,   0,
+         42,  96, 126, 132,  16,  22,  82,  88, 123, 138, 154, 178,  13,  18,
+         19,  36,  37,  78,  90,  91, 111, 114, 115, 116, 121, 122, 124, 185,
+        187, 206,  12,  14,  20,  23,  64,  79,  80,  84,  85, 120, 141, 161,
+        179, 205, 211, 229,  83,  86,  95, 119, 125, 155, 212, 230, 236, 248,
+         17,  41,  49,  62,  89, 118, 102, 117,  26,  21,  58,  67, 197,  53,
+         59,  61, 196, 223, 247,  52,  68, 237, 158, 218, 208,  45, 107, 172,
+        173, 200, 241, 166, 199,  30, 148, 239, 129, 156, 160, 175, 191,  24,
+         39, 149, 152, 164, 214,  92, 150, 224, 233, 151, 171, 181, 235, 209,
+        198, 231, 162,  97,  11, 136,   2, 210, 140, 176, 143, 144, 204, 228,
+        243, 110, 113, 153, 165, 168, 177, 183, 190, 201, 225,  25,  40,  48,
+         51,  60,  66,  69, 157, 174, 213, 240,  31,  46,  54,  57,  63, 109,
+        180, 192, 195, 216, 217, 246,  35,  44, 159, 182, 207, 215, 222, 232,
+        234, 238, 242,  29,  38, 112, 139, 142, 147, 167, 186, 189, 219, 249])
+[2024-09-20 13:29:12,425][root][INFO] - sorted scores:tensor([62.5625, 62.5625, 62.5625, 62.5625, 62.5625, 62.5625, 62.5625, 62.5625,
+        62.5625, 62.5625, 62.5312, 62.5312, 62.2812, 62.1875, 62.1875, 62.1875,
+        62.1875, 62.1875, 62.1875, 62.1875, 62.1875, 62.1875, 62.1562, 62.1562,
+        62.1562, 62.1562, 62.1562, 62.1562, 62.1562, 62.1250, 62.1250, 62.1250,
+        62.1250, 62.1250, 62.1250, 62.1250, 62.1250, 62.1250, 62.1250, 62.1250,
+        62.1250, 62.1250, 62.0938, 62.0938, 62.0938, 62.0938, 62.0938, 62.0938,
+        62.0938, 62.0938, 62.0938, 62.0625, 62.0625, 62.0625, 62.0625, 62.0625,
+        62.0312, 62.0312, 62.0312, 62.0312, 62.0312, 62.0000, 62.0000, 62.0000,
+        62.0000, 62.0000, 62.0000, 62.0000, 62.0000, 61.9688, 61.9688, 61.9688,
+        61.9688, 61.9375, 61.9062, 61.9062, 61.9062, 61.9062, 61.9062, 61.9062,
+        61.9062, 61.9062, 61.8750, 61.8750, 61.8750, 61.8750, 61.8750, 61.8750,
+        61.8750, 61.8750, 61.8750, 61.8750, 61.8750, 61.8750, 61.8750, 61.8750,
+        61.8750, 61.8750, 61.8750, 61.8750, 61.8438, 61.8438, 61.8438, 61.8438,
+        61.8438, 61.8438, 61.8438, 61.8438, 61.8438, 61.8438, 61.8438, 61.8438,
+        61.8438, 61.8438, 61.8438, 61.8438, 61.8125, 61.8125, 61.8125, 61.8125,
+        61.8125, 61.8125, 61.8125, 61.8125, 61.8125, 61.8125, 61.7812, 61.7812,
+        61.7812, 61.7812, 61.7812, 61.7812, 61.7500, 61.7500, 61.7188, 61.6875,
+        61.6875, 61.6875, 61.6875, 61.6562, 61.6562, 61.6562, 61.6562, 61.6562,
+        61.6562, 61.6250, 61.6250, 61.5938, 61.5625, 61.5625, 61.5312, 61.5000,
+        61.5000, 61.5000, 61.5000, 61.5000, 61.5000, 61.4688, 61.4688, 61.4375,
+        61.4375, 61.4375, 61.4062, 61.4062, 61.4062, 61.4062, 61.4062, 61.3750,
+        61.3750, 61.3125, 61.3125, 61.2812, 61.2812, 61.2500, 61.2500, 61.2500,
+        61.2500, 61.2188, 61.2188, 61.1875, 61.1562, 61.1250, 61.0625, 61.0000,
+        60.9375, 60.8125, 60.7188, 60.6875, 60.6562, 60.6562, 60.5625, 60.5625,
+        60.5312, 60.5312, 60.5312, 60.5000, 60.5000, 60.4688, 60.4688, 60.4688,
+        60.4688, 60.4688, 60.4688, 60.4688, 60.4688, 60.4688, 60.4688, 60.4375,
+        60.4375, 60.4375, 60.4375, 60.4375, 60.4375, 60.4375, 60.4375, 60.4375,
+        60.4375, 60.4375, 60.4062, 60.4062, 60.4062, 60.4062, 60.4062, 60.4062,
+        60.4062, 60.4062, 60.4062, 60.4062, 60.4062, 60.4062, 60.3750, 60.3750,
+        60.3750, 60.3750, 60.3750, 60.3750, 60.3750, 60.3750, 60.3750, 60.3750,
+        60.3750, 60.3438, 60.3438, 60.3438, 60.3438, 60.3438, 60.3438, 60.3438,
+        60.3438, 60.3438, 60.3438, 60.3438])
+[2024-09-20 13:29:23,571][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-20 13:29:24,078][websockets.server][INFO] - connection open
+[2024-09-20 13:29:29,128][root][INFO] - Succeeded to open port: /dev/ttyUSB0
+[2024-09-20 13:29:29,129][root][INFO] - Succeeded to set baudrate to 3000000
+[2024-09-20 13:29:29,159][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,175][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,191][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,207][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,223][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,239][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,255][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,271][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,287][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,303][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,319][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,335][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,351][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,367][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,383][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,399][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,399][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:29,655][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,671][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,687][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,703][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,719][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,735][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,751][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,767][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,783][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,799][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,815][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,831][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,847][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,863][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,879][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,895][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:29,895][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:30,151][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,167][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,183][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,199][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,215][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,231][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,247][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,263][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,279][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,295][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,311][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,327][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,343][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,359][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,375][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,391][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,391][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:30,647][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,663][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,679][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,695][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,711][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,727][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,743][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,759][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,775][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,791][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,807][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,823][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,839][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,855][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,871][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,887][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:30,887][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:31,143][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,159][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,175][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,191][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,207][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,223][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,239][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,255][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,271][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,287][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,303][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,319][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,335][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,351][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,367][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,383][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,383][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:31,639][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,655][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,671][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,687][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,703][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,719][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,735][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,751][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,767][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,783][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,799][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,815][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,831][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,847][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,863][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,879][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:31,879][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:32,135][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,151][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,167][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,183][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,199][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,215][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,231][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,247][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,263][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,279][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,295][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,311][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,327][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,343][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,359][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,375][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,375][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:32,631][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,647][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,663][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,679][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,695][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,711][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,727][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,743][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,759][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,775][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,791][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,807][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,823][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,839][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,855][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,871][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:32,871][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:33,127][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,143][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,159][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,175][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,191][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,207][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,223][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,239][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,255][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,271][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,287][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,303][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,319][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,335][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,351][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,367][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,367][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:33,623][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,639][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,655][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,671][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,687][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,703][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,719][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,735][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,751][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,767][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,783][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,799][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,815][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,831][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,847][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,863][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:33,863][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:34,119][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,135][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,151][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,167][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,183][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,199][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,215][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,231][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,247][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,263][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,279][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,295][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,311][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,327][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,343][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,359][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,359][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:34,615][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,631][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,647][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,663][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,679][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,695][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,711][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,727][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,743][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,759][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,775][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,791][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,807][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,823][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,839][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,855][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:34,855][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:35,111][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,127][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,143][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,159][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,175][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,191][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,207][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,223][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,239][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,255][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,271][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,287][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,303][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,319][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,335][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,351][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,351][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:35,607][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,623][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,639][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,655][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,671][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,687][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,703][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,719][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,735][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,751][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,767][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,783][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,799][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,815][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,831][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,847][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:35,847][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:36,103][root][ERROR] - > write_byte: [Motor ID: 0] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,119][root][ERROR] - > write_byte: [Motor ID: 1] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,135][root][ERROR] - > write_byte: [Motor ID: 2] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,151][root][ERROR] - > write_byte: [Motor ID: 3] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,167][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,183][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,199][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,215][root][ERROR] - > write_byte: [Motor ID: 7] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,231][root][ERROR] - > write_byte: [Motor ID: 8] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,247][root][ERROR] - > write_byte: [Motor ID: 9] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,263][root][ERROR] - > write_byte: [Motor ID: 10] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,279][root][ERROR] - > write_byte: [Motor ID: 11] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,295][root][ERROR] - > write_byte: [Motor ID: 12] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,311][root][ERROR] - > write_byte: [Motor ID: 13] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,327][root][ERROR] - > write_byte: [Motor ID: 14] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,343][root][ERROR] - > write_byte: [Motor ID: 15] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 13:29:36,343][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:36,627][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,662][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,696][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,730][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,764][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,798][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,833][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,867][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,901][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,935][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:36,969][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,003][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,037][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,071][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,105][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,140][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,140][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-20 13:29:37,424][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,458][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,493][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,527][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,561][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,595][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,630][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,664][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,698][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,733][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,767][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,801][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,835][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,869][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,903][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,937][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-20 13:29:37,937][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]

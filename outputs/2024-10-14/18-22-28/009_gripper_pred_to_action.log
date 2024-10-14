@@ -1,0 +1,236 @@
+[2024-10-14 18:22:28,407][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-10-14 18:22:28,429][websockets.server][INFO] - connection open
+[2024-10-14 18:22:28,632][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: 'Infinity'
+debug: null
+n_view: 1
+run_id: 3wy8qqex
+use_BN: true
+exp_name: 2024-01-11-20-02-45
+n_epochs: 62
+save_dir: /home/bowenw/debug/2024-01-11-20-02-45/
+use_mask: false
+loss_type: pairwise_valid
+optimizer: adam
+batch_size: 64
+crop_ratio: 1.1
+enable_amp: true
+use_normal: false
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+vis_interval: 1000
+weight_decay: 0
+normalize_xyz: true
+resume_run_id: null
+clip_grad_norm: 'Infinity'
+lr_epoch_decay: 500
+render_backend: nvdiffrast
+train_num_pair: 5
+lr_decay_epochs:
+- 50
+n_epochs_warmup: 1
+make_pair_online: false
+gradient_max_norm: 'Infinity'
+max_step_per_epoch: 10000
+n_rendering_workers: 1
+save_epoch_interval: 100
+n_dataloader_workers: 100
+split_objects_across_gpus: true
+ckpt_dir: /home/shaol/gjx/rw/third_party/FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+
+[2024-10-14 18:22:28,632][root][INFO] - self.h5_file:None
+[2024-10-14 18:22:28,904][root][INFO] - Using pretrained model from /home/shaol/gjx/rw/third_party/FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+[2024-10-14 18:22:28,986][root][INFO] - init done
+[2024-10-14 18:22:28,986][root][INFO] - welcome
+[2024-10-14 18:22:28,992][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: .inf
+debug: null
+w_rot: 0.1
+n_view: 1
+run_id: null
+use_BN: true
+rot_rep: axis_angle
+ckpt_dir: /home/shaol/gjx/rw/third_party/FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+exp_name: 2023-10-28-18-33-37
+save_dir: /tmp/2023-10-28-18-33-37/
+loss_type: l2
+optimizer: adam
+trans_rep: tracknet
+batch_size: 64
+crop_ratio: 1.2
+use_normal: false
+BN_momentum: 0.1
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+normal_uint8: false
+vis_interval: 1000
+weight_decay: 0
+n_max_objects: null
+normalize_xyz: true
+clip_grad_norm: 'Infinity'
+rot_normalizer: 0.3490658503988659
+trans_normalizer:
+- 0.019999999552965164
+- 0.019999999552965164
+- 0.05000000074505806
+max_step_per_epoch: 25000
+val_epoch_interval: 10
+n_dataloader_workers: 60
+enable_amp: true
+use_mask: false
+
+[2024-10-14 18:22:28,992][root][INFO] - self.h5_file:
+[2024-10-14 18:22:29,172][root][INFO] - Using pretrained model from /home/shaol/gjx/rw/third_party/FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+[2024-10-14 18:22:29,202][root][INFO] - init done
+[2024-10-14 18:22:30,597][root][INFO] - self.diameter:0.09129442543218583, vox_size:0.004564721271609291
+[2024-10-14 18:22:30,615][root][INFO] - self.pts:torch.Size([825, 3])
+[2024-10-14 18:22:31,586][websockets.server][INFO] - connection open
+[2024-10-14 18:22:31,971][root][INFO] - reset done
+[2024-10-14 18:22:31,972][root][INFO] - cam_in_obs:(42, 4, 4)
+[2024-10-14 18:22:31,975][root][INFO] - rot_grid:(252, 4, 4)
+[2024-10-14 18:22:31,976][root][INFO] - after cluster, rot_grid:(252, 4, 4)
+[2024-10-14 18:22:31,977][root][INFO] - self.rot_grid: torch.Size([252, 4, 4])
+[2024-10-14 18:22:43,565][root][INFO] - Welcome
+[2024-10-14 18:22:43,594][root][INFO] - poses:(252, 4, 4)
+[2024-10-14 18:22:43,605][root][INFO] - after viewpoint, add_errs min:-1.0
+[2024-10-14 18:22:43,683][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-10-14 18:22:43,683][root][INFO] - self.cfg.use_normal:False
+[2024-10-14 18:22:43,683][root][INFO] - trans_normalizer:[0.019999999552965164, 0.019999999552965164, 0.05000000074505806], rot_normalizer:0.3490658503988659
+[2024-10-14 18:22:43,708][root][INFO] - making cropped data
+[2024-10-14 18:22:43,708][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:43,715][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:43,742][root][INFO] - render done
+[2024-10-14 18:22:43,753][root][INFO] - warp done
+[2024-10-14 18:22:43,760][root][INFO] - pose batch data done
+[2024-10-14 18:22:43,760][root][INFO] - forward start
+[2024-10-14 18:22:43,900][root][INFO] - forward done
+[2024-10-14 18:22:43,910][root][INFO] - making cropped data
+[2024-10-14 18:22:43,910][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:43,911][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:43,925][root][INFO] - render done
+[2024-10-14 18:22:43,929][root][INFO] - warp done
+[2024-10-14 18:22:43,932][root][INFO] - pose batch data done
+[2024-10-14 18:22:43,932][root][INFO] - forward start
+[2024-10-14 18:22:43,933][root][INFO] - forward done
+[2024-10-14 18:22:43,934][root][INFO] - making cropped data
+[2024-10-14 18:22:43,934][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:44,025][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:44,039][root][INFO] - render done
+[2024-10-14 18:22:44,043][root][INFO] - warp done
+[2024-10-14 18:22:44,046][root][INFO] - pose batch data done
+[2024-10-14 18:22:44,046][root][INFO] - forward start
+[2024-10-14 18:22:44,048][root][INFO] - forward done
+[2024-10-14 18:22:44,048][root][INFO] - making cropped data
+[2024-10-14 18:22:44,048][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:44,138][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:44,152][root][INFO] - render done
+[2024-10-14 18:22:44,156][root][INFO] - warp done
+[2024-10-14 18:22:44,158][root][INFO] - pose batch data done
+[2024-10-14 18:22:44,159][root][INFO] - forward start
+[2024-10-14 18:22:44,161][root][INFO] - forward done
+[2024-10-14 18:22:44,162][root][INFO] - making cropped data
+[2024-10-14 18:22:44,162][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:44,250][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:44,264][root][INFO] - render done
+[2024-10-14 18:22:44,268][root][INFO] - warp done
+[2024-10-14 18:22:44,271][root][INFO] - pose batch data done
+[2024-10-14 18:22:44,271][root][INFO] - forward start
+[2024-10-14 18:22:44,273][root][INFO] - forward done
+[2024-10-14 18:22:44,378][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-10-14 18:22:44,378][root][INFO] - self.cfg.use_normal:False
+[2024-10-14 18:22:44,378][root][INFO] - making cropped data
+[2024-10-14 18:22:44,398][root][INFO] - Welcome make_crop_data_batch
+[2024-10-14 18:22:44,399][root][INFO] - make tf_to_crops done
+[2024-10-14 18:22:44,412][root][INFO] - render done
+[2024-10-14 18:22:44,530][root][INFO] - pose batch data done
+[2024-10-14 18:22:44,530][root][INFO] - pose_data.rgbAs.shape[0]: 252
+[2024-10-14 18:22:44,620][root][INFO] - forward done
+[2024-10-14 18:22:44,638][root][INFO] - final, add_errs min:-1.0
+[2024-10-14 18:22:44,650][root][INFO] - sort ids:tensor([110, 174,  29,  32,  90, 239,  24, 180, 187, 111,  89, 243,  47,  38,
+        142, 219,  39, 138, 162, 201, 213, 220,  46, 207, 212, 117, 143,  37,
+        122, 129, 158, 136,  59, 186, 109, 168,  31, 185,   2,  28,  30, 102,
+        179,  35,  48,  75, 106, 113, 134, 149, 150, 191, 197, 222, 235,   8,
+         74,  96,  98,  99, 104, 167, 170, 183, 240,   3,  53, 108, 173, 188,
+          4, 100, 130,  34,  76, 101, 192, 228, 244,  84, 226,   9, 152, 218,
+        234, 245,  25,  44,  72, 112, 131, 135, 147, 153, 159, 160, 176,   5,
+         77, 123, 139, 140, 182, 194, 203,  11,  19,  40,  49, 132, 137, 141,
+        151, 164, 171, 193, 195, 210,  43,  45,  56,  57, 175,  55, 165,  70,
+        221,  64, 208, 232, 250,  16, 157, 202, 238,  69, 242,  68,  97, 200,
+        224, 231, 248,   0,  26, 127, 249, 103, 145,   7,  10,  73, 133, 163,
+         41, 146, 172, 206,  58, 196, 198, 223,  52,  67, 148, 217,   1,  65,
+        190, 209, 215, 247,  61, 233, 251,  60, 199, 246, 189,  62, 169, 229,
+        227,  95, 161, 155,  14,  23,  83,  86, 116, 125,  80,  93, 114, 236,
+          6, 230,  85,  92, 205,  13,  50,  79, 115, 211,  71, 181,  22,  94,
+        178,  82, 184, 124, 166, 214, 225,  87,  36, 144,  54, 128, 241,  12,
+         63, 119, 204,  66,  17,  20,  81,  88, 118,  21,  51, 121,  18,  91,
+        105,  15,  33,  78, 126,  42, 120,  27, 177, 237, 156, 107, 216, 154])
+[2024-10-14 18:22:44,655][root][INFO] - sorted scores:tensor([91.3516, 91.3516, 91.3359, 91.3359, 91.3359, 91.3359, 91.3281, 91.3281,
+        91.3281, 91.3125, 91.2969, 91.2969, 91.2891, 91.2266, 91.2266, 91.2266,
+        91.2188, 91.2188, 91.2188, 91.2188, 91.2188, 91.2188, 91.2109, 91.2109,
+        91.2109, 91.2031, 91.2031, 91.1953, 91.1953, 91.1953, 91.1797, 91.1484,
+        91.1328, 91.1250, 91.1172, 91.1172, 91.1094, 91.1094, 91.1016, 91.1016,
+        91.1016, 91.1016, 91.1016, 91.0938, 91.0938, 91.0938, 91.0938, 91.0938,
+        91.0938, 91.0938, 91.0938, 91.0938, 91.0938, 91.0938, 91.0938, 91.0859,
+        91.0859, 91.0859, 91.0859, 91.0859, 91.0859, 91.0859, 91.0859, 91.0859,
+        91.0859, 91.0781, 91.0781, 91.0781, 91.0781, 91.0781, 91.0703, 91.0703,
+        91.0703, 91.0625, 91.0625, 91.0625, 91.0625, 91.0625, 91.0625, 91.0547,
+        91.0547, 91.0391, 91.0312, 91.0312, 91.0312, 91.0312, 91.0234, 91.0234,
+        91.0234, 91.0234, 91.0234, 91.0234, 91.0234, 91.0234, 91.0234, 91.0234,
+        91.0234, 91.0156, 91.0156, 91.0156, 91.0156, 91.0156, 91.0156, 91.0156,
+        91.0156, 91.0078, 91.0078, 91.0078, 91.0078, 91.0078, 91.0078, 91.0078,
+        91.0078, 91.0078, 91.0078, 91.0078, 91.0078, 91.0078, 91.0000, 91.0000,
+        91.0000, 91.0000, 91.0000, 90.9922, 90.9922, 90.9844, 90.9844, 90.9766,
+        90.9766, 90.9766, 90.9766, 90.9688, 90.9688, 90.9531, 90.9531, 90.9453,
+        90.9453, 90.9375, 90.9375, 90.9375, 90.9375, 90.9375, 90.9375, 90.9297,
+        90.9297, 90.9297, 90.9297, 90.9219, 90.9219, 90.9141, 90.9141, 90.9141,
+        90.9141, 90.9141, 90.9062, 90.9062, 90.9062, 90.9062, 90.8516, 90.8516,
+        90.8516, 90.8516, 90.8438, 90.8438, 90.8438, 90.8438, 90.8359, 90.8359,
+        90.8359, 90.8359, 90.8359, 90.8359, 90.8281, 90.8281, 90.8281, 90.8203,
+        90.8203, 90.8203, 90.8047, 90.7812, 90.7734, 90.7422, 90.7188, 90.6406,
+        90.6406, 90.6328, 90.6250, 90.6250, 90.6250, 90.6250, 90.6250, 90.6250,
+        90.6172, 90.6172, 90.6172, 90.6172, 90.6094, 90.6094, 90.5859, 90.5859,
+        90.5625, 90.5547, 90.5547, 90.5547, 90.5547, 90.5547, 90.5391, 90.5391,
+        90.5234, 90.5234, 90.5234, 90.5156, 90.5156, 90.5000, 90.5000, 90.5000,
+        90.4531, 90.4375, 90.3828, 90.3828, 90.3594, 90.3516, 90.3438, 90.3359,
+        90.3281, 90.3281, 90.3203, 90.3047, 90.2969, 90.2969, 90.2969, 90.2969,
+        90.2969, 90.2891, 90.2812, 90.2812, 90.2656, 90.2656, 90.2656, 90.2578,
+        90.2578, 90.2422, 90.2344, 90.2031, 90.1328, 90.1250, 90.1016, 90.0547,
+        90.0391, 89.9844, 89.9844, 89.9375])
+[2024-10-14 18:23:07,808][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:07,809][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:07,944][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,028][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,033][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,033][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,033][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,104][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,104][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,113][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,113][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,185][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,186][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,186][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,186][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,264][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,264][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,313][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,314][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,315][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,315][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,397][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,397][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:08,512][websockets.server][INFO] - connection rejected (200 OK)
+[2024-10-14 18:23:08,512][websockets.server][INFO] - connection closed
+[2024-10-14 18:23:10,077][websockets.server][INFO] - connection open

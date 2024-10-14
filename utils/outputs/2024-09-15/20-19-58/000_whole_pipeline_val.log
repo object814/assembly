@@ -1,0 +1,7 @@
+[2024-09-15 20:20:25,551][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-15 20:20:25,707][websockets.server][INFO] - connection open
+[2024-09-15 20:20:27,412][websockets.server][INFO] - connection open
+[2024-09-15 20:20:27,941][websockets.server][INFO] - connection open
+[2024-09-15 20:20:29,579][websockets.server][INFO] - connection open
+[2024-09-15 20:20:30,865][websockets.server][INFO] - connection closed
+[2024-09-15 20:20:31,811][websockets.server][INFO] - connection closed

@@ -1,0 +1,280 @@
+[2024-09-20 17:19:00,232][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: 'Infinity'
+debug: null
+n_view: 1
+run_id: 3wy8qqex
+use_BN: true
+exp_name: 2024-01-11-20-02-45
+n_epochs: 62
+save_dir: /home/bowenw/debug/2024-01-11-20-02-45/
+use_mask: false
+loss_type: pairwise_valid
+optimizer: adam
+batch_size: 64
+crop_ratio: 1.1
+enable_amp: true
+use_normal: false
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+vis_interval: 1000
+weight_decay: 0
+normalize_xyz: true
+resume_run_id: null
+clip_grad_norm: 'Infinity'
+lr_epoch_decay: 500
+render_backend: nvdiffrast
+train_num_pair: 5
+lr_decay_epochs:
+- 50
+n_epochs_warmup: 1
+make_pair_online: false
+gradient_max_norm: 'Infinity'
+max_step_per_epoch: 10000
+n_rendering_workers: 1
+save_epoch_interval: 100
+n_dataloader_workers: 100
+split_objects_across_gpus: true
+ckpt_dir: FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+
+[2024-09-20 17:19:00,232][root][INFO] - self.h5_file:None
+[2024-09-20 17:19:00,413][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+[2024-09-20 17:19:00,479][root][INFO] - init done
+[2024-09-20 17:19:00,479][root][INFO] - welcome
+[2024-09-20 17:19:00,483][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: .inf
+debug: null
+w_rot: 0.1
+n_view: 1
+run_id: null
+use_BN: true
+rot_rep: axis_angle
+ckpt_dir: FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+exp_name: 2023-10-28-18-33-37
+save_dir: /tmp/2023-10-28-18-33-37/
+loss_type: l2
+optimizer: adam
+trans_rep: tracknet
+batch_size: 64
+crop_ratio: 1.2
+use_normal: false
+BN_momentum: 0.1
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+normal_uint8: false
+vis_interval: 1000
+weight_decay: 0
+n_max_objects: null
+normalize_xyz: true
+clip_grad_norm: 'Infinity'
+rot_normalizer: 0.3490658503988659
+trans_normalizer:
+- 0.019999999552965164
+- 0.019999999552965164
+- 0.05000000074505806
+max_step_per_epoch: 25000
+val_epoch_interval: 10
+n_dataloader_workers: 60
+enable_amp: true
+use_mask: false
+
+[2024-09-20 17:19:00,483][root][INFO] - self.h5_file:
+[2024-09-20 17:19:00,536][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+[2024-09-20 17:19:00,558][root][INFO] - init done
+[2024-09-20 17:19:02,740][root][INFO] - self.diameter:0.13731688484618407, vox_size:0.006865844242309203
+[2024-09-20 17:19:02,756][root][INFO] - self.pts:torch.Size([813, 3])
+[2024-09-20 17:19:03,737][root][INFO] - reset done
+[2024-09-20 17:19:03,738][root][INFO] - cam_in_obs:(42, 4, 4)
+[2024-09-20 17:19:03,740][root][INFO] - rot_grid:(252, 4, 4)
+[2024-09-20 17:19:03,741][root][INFO] - after cluster, rot_grid:(252, 4, 4)
+[2024-09-20 17:19:03,741][root][INFO] - self.rot_grid: torch.Size([252, 4, 4])
+[2024-09-20 17:19:13,369][root][INFO] - Welcome
+[2024-09-20 17:19:13,385][root][INFO] - poses:(252, 4, 4)
+[2024-09-20 17:19:13,395][root][INFO] - after viewpoint, add_errs min:-1.0
+[2024-09-20 17:19:13,426][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-20 17:19:13,427][root][INFO] - self.cfg.use_normal:False
+[2024-09-20 17:19:13,427][root][INFO] - trans_normalizer:[0.019999999552965164, 0.019999999552965164, 0.05000000074505806], rot_normalizer:0.3490658503988659
+[2024-09-20 17:19:13,472][root][INFO] - making cropped data
+[2024-09-20 17:19:13,473][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:13,477][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:13,508][root][INFO] - render done
+[2024-09-20 17:19:13,514][root][INFO] - warp done
+[2024-09-20 17:19:13,520][root][INFO] - pose batch data done
+[2024-09-20 17:19:13,520][root][INFO] - forward start
+[2024-09-20 17:19:13,644][root][INFO] - forward done
+[2024-09-20 17:19:13,656][root][INFO] - making cropped data
+[2024-09-20 17:19:13,656][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:13,657][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:13,678][root][INFO] - render done
+[2024-09-20 17:19:13,682][root][INFO] - warp done
+[2024-09-20 17:19:13,684][root][INFO] - pose batch data done
+[2024-09-20 17:19:13,685][root][INFO] - forward start
+[2024-09-20 17:19:13,686][root][INFO] - forward done
+[2024-09-20 17:19:13,686][root][INFO] - making cropped data
+[2024-09-20 17:19:13,686][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:13,796][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:13,817][root][INFO] - render done
+[2024-09-20 17:19:13,821][root][INFO] - warp done
+[2024-09-20 17:19:13,824][root][INFO] - pose batch data done
+[2024-09-20 17:19:13,824][root][INFO] - forward start
+[2024-09-20 17:19:13,826][root][INFO] - forward done
+[2024-09-20 17:19:13,826][root][INFO] - making cropped data
+[2024-09-20 17:19:13,826][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:13,937][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:13,958][root][INFO] - render done
+[2024-09-20 17:19:13,962][root][INFO] - warp done
+[2024-09-20 17:19:13,965][root][INFO] - pose batch data done
+[2024-09-20 17:19:13,965][root][INFO] - forward start
+[2024-09-20 17:19:13,966][root][INFO] - forward done
+[2024-09-20 17:19:13,966][root][INFO] - making cropped data
+[2024-09-20 17:19:13,967][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:14,076][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:14,097][root][INFO] - render done
+[2024-09-20 17:19:14,102][root][INFO] - warp done
+[2024-09-20 17:19:14,105][root][INFO] - pose batch data done
+[2024-09-20 17:19:14,105][root][INFO] - forward start
+[2024-09-20 17:19:14,106][root][INFO] - forward done
+[2024-09-20 17:19:14,232][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-20 17:19:14,232][root][INFO] - self.cfg.use_normal:False
+[2024-09-20 17:19:14,232][root][INFO] - making cropped data
+[2024-09-20 17:19:14,239][root][INFO] - Welcome make_crop_data_batch
+[2024-09-20 17:19:14,240][root][INFO] - make tf_to_crops done
+[2024-09-20 17:19:14,259][root][INFO] - render done
+[2024-09-20 17:19:14,400][root][INFO] - pose batch data done
+[2024-09-20 17:19:14,401][root][INFO] - pose_data.rgbAs.shape[0]: 252
+[2024-09-20 17:19:14,505][root][INFO] - forward done
+[2024-09-20 17:19:14,523][root][INFO] - final, add_errs min:-1.0
+[2024-09-20 17:19:14,533][root][INFO] - sort ids:tensor([ 47, 167,  37,  38,  63, 121, 142, 143, 156, 212, 213, 219,  48, 116,
+        157,  46, 220, 150, 162,  98, 130, 149, 168,   2,  80, 137, 195, 186,
+        109, 171, 237, 201,   0,  14,  35,  83,  76,  88, 222, 224, 242,   4,
+         23,  89, 100, 189, 232, 238,  54, 206,  28,  74, 202, 243,   8,  95,
+        125, 134, 173, 180, 185, 187,  16,  29,  69, 105, 179,  33,  72, 164,
+        191,  70,  82, 107, 133, 198,  11,  31,  73,  77,  97, 102, 110, 145,
+        174,  96, 144,  57, 192,  10,  30, 155, 166, 169, 175, 193, 249,  62,
+        103, 123, 126, 161, 207, 231, 248,   6,   7,  53,  91,  94, 106, 115,
+        188,  55,  79, 118, 127, 128, 132, 136, 138, 148, 208, 225,   3,  17,
+         27,  87,  90, 146, 170, 172, 250,  18,  34,  75,  84, 119, 205, 214,
+        230, 241,  19,  39,  65,  68,  78,  93, 101, 122, 129, 151, 153,   1,
+         15,  32,  36,  58,  86, 104, 152, 197, 204, 211,  22,  24,  42,  45,
+         99, 114, 117, 159, 190, 209, 215, 218, 221, 223, 228, 229, 233,   5,
+          9,  12,  21,  41, 111, 120, 135, 140, 176, 178, 210, 226, 247,  13,
+         50,  59,  81, 131, 158, 163, 177, 181, 183, 194, 199, 200, 216, 239,
+        240, 251,  20,  52,  60,  61,  71,  92, 182, 217, 244, 245,  43,  67,
+        184, 236,  40,  44,  85, 139, 141, 160, 203, 227,  49, 196,  56,  64,
+        108, 112, 124,  25,  26, 154, 165, 234, 246,  51, 147,  66, 113, 235])
+[2024-09-20 17:19:14,537][root][INFO] - sorted scores:tensor([132.3750, 132.3750, 132.3438, 132.3438, 132.3438, 132.3438, 132.3438,
+        132.3438, 132.3438, 132.3438, 132.3438, 132.3438, 132.3125, 132.3125,
+        132.3125, 132.2812, 132.2812, 132.2500, 132.2500, 131.9844, 131.9844,
+        131.9844, 131.9844, 131.9688, 131.9688, 131.9688, 131.9688, 131.9531,
+        131.9375, 131.9375, 131.9375, 131.9219, 131.9062, 131.8906, 131.8906,
+        131.8906, 131.8750, 131.8750, 131.8750, 131.8750, 131.8750, 131.8594,
+        131.8594, 131.8594, 131.8594, 131.8594, 131.8594, 131.8594, 131.8438,
+        131.8438, 131.8281, 131.8281, 131.8281, 131.8281, 131.8125, 131.8125,
+        131.8125, 131.8125, 131.8125, 131.8125, 131.8125, 131.8125, 131.7969,
+        131.7969, 131.7969, 131.7969, 131.7969, 131.7812, 131.7812, 131.7812,
+        131.7812, 131.7656, 131.7656, 131.7656, 131.7656, 131.7656, 131.7500,
+        131.7500, 131.7500, 131.7500, 131.7500, 131.7500, 131.7500, 131.7500,
+        131.7500, 131.7344, 131.7344, 131.7188, 131.7188, 131.7031, 131.7031,
+        131.7031, 131.7031, 131.7031, 131.7031, 131.7031, 131.7031, 131.6875,
+        131.6875, 131.6875, 131.6875, 131.6875, 131.6875, 131.6875, 131.6875,
+        131.6719, 131.6719, 131.6719, 131.6719, 131.6719, 131.6719, 131.6719,
+        131.6719, 131.6562, 131.6562, 131.6562, 131.6562, 131.6562, 131.6562,
+        131.6562, 131.6562, 131.6562, 131.6562, 131.6562, 131.6406, 131.6406,
+        131.6406, 131.6406, 131.6406, 131.6406, 131.6406, 131.6406, 131.6406,
+        131.6250, 131.6250, 131.6250, 131.6250, 131.6250, 131.6250, 131.6250,
+        131.6250, 131.6250, 131.6094, 131.6094, 131.6094, 131.6094, 131.6094,
+        131.6094, 131.6094, 131.6094, 131.6094, 131.6094, 131.6094, 131.5938,
+        131.5938, 131.5938, 131.5938, 131.5938, 131.5938, 131.5938, 131.5938,
+        131.5938, 131.5938, 131.5938, 131.5781, 131.5781, 131.5781, 131.5781,
+        131.5781, 131.5781, 131.5781, 131.5781, 131.5781, 131.5781, 131.5781,
+        131.5781, 131.5781, 131.5781, 131.5781, 131.5781, 131.5781, 131.5625,
+        131.5625, 131.5625, 131.5625, 131.5625, 131.5625, 131.5625, 131.5625,
+        131.5625, 131.5625, 131.5625, 131.5625, 131.5625, 131.5625, 131.5469,
+        131.5469, 131.5469, 131.5469, 131.5469, 131.5469, 131.5469, 131.5469,
+        131.5469, 131.5469, 131.5469, 131.5469, 131.5469, 131.5469, 131.5469,
+        131.5469, 131.5469, 131.5312, 131.5312, 131.5312, 131.5312, 131.5312,
+        131.5312, 131.5312, 131.5312, 131.5312, 131.5312, 131.5156, 131.5156,
+        131.5156, 131.5156, 131.5000, 131.5000, 131.5000, 131.5000, 131.5000,
+        131.5000, 131.5000, 131.5000, 131.4844, 131.4844, 131.4688, 131.4688,
+        131.4688, 131.4531, 131.4531, 131.4375, 131.4375, 131.4375, 131.4375,
+        131.4375, 131.4219, 131.4062, 131.4062, 131.3906, 131.3750, 131.3750])
+[2024-09-20 17:19:19,887][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-20 17:19:21,990][websockets.server][INFO] - connection open
+[2024-09-20 17:19:22,294][websockets.server][INFO] - connection open
+[2024-09-20 17:19:24,799][root][INFO] - Succeeded to open port: /dev/ttyUSB0
+[2024-09-20 17:19:24,800][root][INFO] - Succeeded to set baudrate to 3000000
+[2024-09-20 17:19:24,926][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:25,070][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:25,326][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:25,326][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:25,582][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:25,582][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:25,838][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:25,838][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:26,094][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:26,094][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:26,350][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:26,350][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:26,606][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:26,606][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:26,862][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:26,862][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:27,118][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:27,118][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:27,374][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:27,374][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:27,630][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:27,630][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:27,886][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:27,886][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:28,142][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:28,142][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:28,398][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:28,398][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:28,654][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:28,654][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:28,910][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:28,910][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:29,166][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:29,166][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:29,422][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:29,422][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:29,678][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:29,678][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:29,934][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:29,934][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:30,190][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:30,190][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:30,446][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:30,446][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:30,702][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:30,702][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:30,958][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:30,958][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:31,214][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:31,214][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:31,470][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:31,470][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:31,726][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:31,726][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:31,982][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:31,982][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:32,238][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:32,238][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:32,494][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:32,494][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:32,750][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-20 17:19:32,750][root][ERROR] - Could not set torque enabled for IDs: [6]
+[2024-09-20 17:19:33,034][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-20 17:19:33,034][root][ERROR] - Could not set torque enabled for IDs: [6]

@@ -1,0 +1,13 @@
+[2024-09-16 15:20:44,048][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-16 15:20:45,921][websockets.server][INFO] - connection open
+[2024-09-16 15:20:52,049][root][INFO] - Succeeded to open port: /dev/ttyUSB0
+[2024-09-16 15:20:52,050][root][INFO] - Succeeded to set baudrate to 3000000
+[2024-09-16 15:20:58,792][toppra.algorithm.algorithm][INFO] - No gridpoint specified. Automatically choose a gridpoint with 129 points
+[2024-09-16 15:20:58,792][toppra.algorithm.reachabilitybased.reachability_algorithm][INFO] - Solver wrapper not supplied. Choose solver wrapper automatically!
+[2024-09-16 15:20:58,792][toppra.algorithm.reachabilitybased.reachability_algorithm][INFO] - Select solver seidel
+[2024-09-16 15:20:58,794][toppra.algorithm.algorithm][INFO] - Successfully parametrize path. Duration: 3.185, previously 1.000)
+[2024-09-16 15:20:58,794][toppra.algorithm.algorithm][INFO] - Finish parametrization in 0.001 secs
+[2024-09-16 15:53:14,164][root][ERROR] - > write_byte: [Motor ID: 4] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-16 15:53:14,180][root][ERROR] - > write_byte: [Motor ID: 5] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-16 15:53:14,196][root][ERROR] - > write_byte: [Motor ID: 6] [RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!
+[2024-09-16 15:53:14,340][root][ERROR] - Could not set torque disabled for IDs: [4, 5, 6]

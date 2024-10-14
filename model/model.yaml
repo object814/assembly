@@ -1,0 +1,8 @@
+encoder:
+  name: 'dgcnn'
+  emb_dims: 512
+  pretrain: pretrain_kcnn_cat-epoch_40.pth
+
+center_feature: True
+frozen_embedding: True
+block_computing: True

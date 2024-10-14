@@ -1,0 +1,458 @@
+[2024-09-21 20:04:46,346][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: 'Infinity'
+debug: null
+n_view: 1
+run_id: 3wy8qqex
+use_BN: true
+exp_name: 2024-01-11-20-02-45
+n_epochs: 62
+save_dir: /home/bowenw/debug/2024-01-11-20-02-45/
+use_mask: false
+loss_type: pairwise_valid
+optimizer: adam
+batch_size: 64
+crop_ratio: 1.1
+enable_amp: true
+use_normal: false
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+vis_interval: 1000
+weight_decay: 0
+normalize_xyz: true
+resume_run_id: null
+clip_grad_norm: 'Infinity'
+lr_epoch_decay: 500
+render_backend: nvdiffrast
+train_num_pair: 5
+lr_decay_epochs:
+- 50
+n_epochs_warmup: 1
+make_pair_online: false
+gradient_max_norm: 'Infinity'
+max_step_per_epoch: 10000
+n_rendering_workers: 1
+save_epoch_interval: 100
+n_dataloader_workers: 100
+split_objects_across_gpus: true
+ckpt_dir: FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+
+[2024-09-21 20:04:46,346][root][INFO] - self.h5_file:None
+[2024-09-21 20:04:46,539][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+[2024-09-21 20:04:46,601][root][INFO] - init done
+[2024-09-21 20:04:46,601][root][INFO] - welcome
+[2024-09-21 20:04:46,605][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: .inf
+debug: null
+w_rot: 0.1
+n_view: 1
+run_id: null
+use_BN: true
+rot_rep: axis_angle
+ckpt_dir: FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+exp_name: 2023-10-28-18-33-37
+save_dir: /tmp/2023-10-28-18-33-37/
+loss_type: l2
+optimizer: adam
+trans_rep: tracknet
+batch_size: 64
+crop_ratio: 1.2
+use_normal: false
+BN_momentum: 0.1
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+normal_uint8: false
+vis_interval: 1000
+weight_decay: 0
+n_max_objects: null
+normalize_xyz: true
+clip_grad_norm: 'Infinity'
+rot_normalizer: 0.3490658503988659
+trans_normalizer:
+- 0.019999999552965164
+- 0.019999999552965164
+- 0.05000000074505806
+max_step_per_epoch: 25000
+val_epoch_interval: 10
+n_dataloader_workers: 60
+enable_amp: true
+use_mask: false
+
+[2024-09-21 20:04:46,605][root][INFO] - self.h5_file:
+[2024-09-21 20:04:46,651][root][INFO] - Using pretrained model from FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+[2024-09-21 20:04:46,674][root][INFO] - init done
+[2024-09-21 20:04:47,607][root][INFO] - self.diameter:0.11834483055076726, vox_size:0.005917241527538363
+[2024-09-21 20:04:47,623][root][INFO] - self.pts:torch.Size([1023, 3])
+[2024-09-21 20:04:48,153][root][INFO] - reset done
+[2024-09-21 20:04:48,154][root][INFO] - cam_in_obs:(42, 4, 4)
+[2024-09-21 20:04:48,156][root][INFO] - rot_grid:(252, 4, 4)
+[2024-09-21 20:04:48,157][root][INFO] - after cluster, rot_grid:(252, 4, 4)
+[2024-09-21 20:04:48,157][root][INFO] - self.rot_grid: torch.Size([252, 4, 4])
+[2024-09-21 20:05:01,013][root][INFO] - Welcome
+[2024-09-21 20:05:01,028][root][INFO] - poses:(252, 4, 4)
+[2024-09-21 20:05:01,037][root][INFO] - after viewpoint, add_errs min:-1.0
+[2024-09-21 20:05:01,078][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-21 20:05:01,078][root][INFO] - self.cfg.use_normal:False
+[2024-09-21 20:05:01,078][root][INFO] - trans_normalizer:[0.019999999552965164, 0.019999999552965164, 0.05000000074505806], rot_normalizer:0.3490658503988659
+[2024-09-21 20:05:01,085][root][INFO] - making cropped data
+[2024-09-21 20:05:01,085][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,089][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,114][root][INFO] - render done
+[2024-09-21 20:05:01,120][root][INFO] - warp done
+[2024-09-21 20:05:01,126][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,126][root][INFO] - forward start
+[2024-09-21 20:05:01,241][root][INFO] - forward done
+[2024-09-21 20:05:01,252][root][INFO] - making cropped data
+[2024-09-21 20:05:01,252][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,253][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,267][root][INFO] - render done
+[2024-09-21 20:05:01,270][root][INFO] - warp done
+[2024-09-21 20:05:01,274][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,274][root][INFO] - forward start
+[2024-09-21 20:05:01,275][root][INFO] - forward done
+[2024-09-21 20:05:01,275][root][INFO] - making cropped data
+[2024-09-21 20:05:01,276][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,373][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,386][root][INFO] - render done
+[2024-09-21 20:05:01,390][root][INFO] - warp done
+[2024-09-21 20:05:01,393][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,393][root][INFO] - forward start
+[2024-09-21 20:05:01,394][root][INFO] - forward done
+[2024-09-21 20:05:01,395][root][INFO] - making cropped data
+[2024-09-21 20:05:01,395][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,491][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,503][root][INFO] - render done
+[2024-09-21 20:05:01,508][root][INFO] - warp done
+[2024-09-21 20:05:01,511][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,511][root][INFO] - forward start
+[2024-09-21 20:05:01,512][root][INFO] - forward done
+[2024-09-21 20:05:01,512][root][INFO] - making cropped data
+[2024-09-21 20:05:01,513][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,608][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,621][root][INFO] - render done
+[2024-09-21 20:05:01,625][root][INFO] - warp done
+[2024-09-21 20:05:01,628][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,628][root][INFO] - forward start
+[2024-09-21 20:05:01,629][root][INFO] - forward done
+[2024-09-21 20:05:01,741][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-09-21 20:05:01,741][root][INFO] - self.cfg.use_normal:False
+[2024-09-21 20:05:01,741][root][INFO] - making cropped data
+[2024-09-21 20:05:01,754][root][INFO] - Welcome make_crop_data_batch
+[2024-09-21 20:05:01,755][root][INFO] - make tf_to_crops done
+[2024-09-21 20:05:01,767][root][INFO] - render done
+[2024-09-21 20:05:01,892][root][INFO] - pose batch data done
+[2024-09-21 20:05:01,892][root][INFO] - pose_data.rgbAs.shape[0]: 252
+[2024-09-21 20:05:01,986][root][INFO] - forward done
+[2024-09-21 20:05:02,004][root][INFO] - final, add_errs min:-1.0
+[2024-09-21 20:05:02,014][root][INFO] - sort ids:tensor([ 11, 107, 102, 137,  42,   5,  47,  72,  77, 101, 126, 131, 132, 203,
+         96, 227, 170,   8, 104, 146, 169, 202, 226,   0,  34,  74, 106,  31,
+         35, 133, 145, 233,   1,   6,   7,  14,  97, 188,  73,  76,  81,  91,
+         93, 127, 251,  15,  21,  33,  75,  84,  90,  99, 105, 124, 244,   4,
+          9,  80,  86,  87, 100, 162, 209, 215,   3,  19,  92, 116, 182, 225,
+         23,  40,  56,  78, 115, 119, 232, 238,  12,  13,  71, 114, 128, 201,
+        207, 242,  20,  22,  24,  32,  49,  70,  79,  82, 103, 121, 123, 130,
+        134, 208, 210, 224, 231, 239, 243, 250,   2,  50,  65,  69,  83,  85,
+         94,  98, 117, 157, 172, 200, 214, 237, 247,  26,  45,  62,  67,  95,
+        129, 141, 160, 168, 183, 199, 205, 218, 229,  16,  17,  28,  39,  64,
+         88,  89, 122, 125, 140, 144, 149, 153, 189, 193, 194, 198, 223, 230,
+        235, 245, 249,  41,  55, 109, 112, 135, 136, 148, 163, 181, 187, 204,
+        206, 217, 220, 221, 222, 234, 241, 246,  10,  48,  61,  66,  68, 110,
+        111, 118, 138, 143, 151, 152, 156, 159, 164, 171, 180, 213, 216, 228,
+        240, 248,  29,  38,  44,  46,  53,  57,  63, 113, 120, 139, 154, 155,
+        158, 161, 166, 178, 195,  18,  25,  27,  37, 108, 165, 174, 175, 176,
+        184, 185, 186, 197, 211, 212,  43,  51,  52, 147, 150, 173, 191, 192,
+        219,  30,  54,  58,  59,  60, 167, 177, 190, 196,  36, 142, 236, 179])
+[2024-09-21 20:05:02,017][root][INFO] - sorted scores:tensor([137.6875, 137.6875, 137.6562, 137.6562, 137.5938, 137.5625, 137.5625,
+        137.5625, 137.5625, 137.5625, 137.5625, 137.5625, 137.5625, 137.5625,
+        137.5312, 137.5312, 137.5000, 137.4688, 137.4688, 137.4688, 137.4688,
+        137.4688, 137.4688, 137.4375, 137.4375, 137.4375, 137.4375, 137.4062,
+        137.4062, 137.4062, 137.4062, 137.4062, 137.3750, 137.3750, 137.3750,
+        137.3750, 137.3750, 137.3750, 137.3438, 137.3438, 137.3438, 137.3438,
+        137.3438, 137.3438, 137.3438, 137.3125, 137.3125, 137.3125, 137.3125,
+        137.3125, 137.3125, 137.3125, 137.3125, 137.3125, 137.3125, 137.2812,
+        137.2812, 137.2812, 137.2812, 137.2812, 137.2812, 137.2812, 137.2812,
+        137.2812, 137.2500, 137.2500, 137.2500, 137.2500, 137.2500, 137.2500,
+        137.2188, 137.2188, 137.2188, 137.2188, 137.2188, 137.2188, 137.2188,
+        137.2188, 137.1875, 137.1875, 137.1875, 137.1875, 137.1875, 137.1875,
+        137.1875, 137.1875, 137.1562, 137.1562, 137.1562, 137.1562, 137.1562,
+        137.1562, 137.1562, 137.1562, 137.1562, 137.1562, 137.1562, 137.1562,
+        137.1562, 137.1562, 137.1562, 137.1562, 137.1562, 137.1562, 137.1562,
+        137.1562, 137.1250, 137.1250, 137.1250, 137.1250, 137.1250, 137.1250,
+        137.1250, 137.1250, 137.1250, 137.1250, 137.1250, 137.1250, 137.1250,
+        137.1250, 137.1250, 137.0938, 137.0938, 137.0938, 137.0938, 137.0938,
+        137.0938, 137.0938, 137.0938, 137.0938, 137.0938, 137.0938, 137.0938,
+        137.0938, 137.0938, 137.0625, 137.0625, 137.0625, 137.0625, 137.0625,
+        137.0625, 137.0625, 137.0625, 137.0625, 137.0625, 137.0625, 137.0625,
+        137.0625, 137.0625, 137.0625, 137.0625, 137.0625, 137.0625, 137.0625,
+        137.0625, 137.0625, 137.0625, 137.0312, 137.0312, 137.0312, 137.0312,
+        137.0312, 137.0312, 137.0312, 137.0312, 137.0312, 137.0312, 137.0312,
+        137.0312, 137.0312, 137.0312, 137.0312, 137.0312, 137.0312, 137.0312,
+        137.0312, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000,
+        137.0000, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000,
+        137.0000, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000, 137.0000,
+        137.0000, 137.0000, 136.9688, 136.9688, 136.9688, 136.9688, 136.9688,
+        136.9688, 136.9688, 136.9688, 136.9688, 136.9688, 136.9688, 136.9688,
+        136.9688, 136.9688, 136.9688, 136.9688, 136.9688, 136.9375, 136.9375,
+        136.9375, 136.9375, 136.9375, 136.9375, 136.9375, 136.9375, 136.9375,
+        136.9375, 136.9375, 136.9375, 136.9375, 136.9375, 136.9375, 136.9062,
+        136.9062, 136.9062, 136.9062, 136.9062, 136.9062, 136.9062, 136.9062,
+        136.9062, 136.8750, 136.8750, 136.8750, 136.8750, 136.8750, 136.8750,
+        136.8750, 136.8750, 136.8750, 136.8438, 136.8438, 136.8438, 136.8125])
+[2024-09-21 20:05:07,100][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-21 20:05:08,550][websockets.server][INFO] - connection open
+[2024-09-21 20:05:09,996][root][INFO] - Succeeded to open port: /dev/ttyUSB0
+[2024-09-21 20:05:09,997][root][INFO] - Succeeded to set baudrate to 3000000
+[2024-09-21 20:05:10,032][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,067][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,107][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,142][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,176][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,210][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,245][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,279][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,314][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,348][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,382][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,417][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,451][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,486][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,520][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,554][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,589][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,623][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,623][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:10,907][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,941][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:10,976][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,010][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,044][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,078][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,112][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,146][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,180][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,215][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,249][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,283][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,317][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,351][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,385][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,419][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,419][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:11,704][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,738][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,772][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,807][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,841][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,875][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,909][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,943][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:11,977][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,011][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,045][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,080][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,114][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,148][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,182][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,216][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,216][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:12,501][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,535][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,569][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,604][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,638][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,672][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,707][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,741][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,775][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,810][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,844][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,879][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,913][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,947][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:12,982][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,016][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,016][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:13,301][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,335][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,370][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,404][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,438][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,473][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,507][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,541][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,576][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,610][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,644][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,679][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,713][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,747][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,781][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,816][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:13,816][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:14,101][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,135][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,169][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,204][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,238][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,272][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,307][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,341][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,376][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,410][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,444][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,479][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,513][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,547][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,582][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,616][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,616][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:14,901][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,935][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:14,970][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,004][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,038][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,073][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,107][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,141][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,176][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,210][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,244][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,279][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,313][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,347][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,382][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,416][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,416][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:15,701][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,735][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,770][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,804][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,838][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,873][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,907][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,941][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:15,976][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,010][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,044][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,079][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,113][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,147][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,182][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,216][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,216][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:16,501][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,535][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,570][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,604][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,638][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,672][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,707][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,741][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,776][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,810][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,844][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,879][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,913][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,947][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:16,982][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,016][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,016][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:17,300][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,335][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,369][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,404][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,438][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,472][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,506][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,541][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,575][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,609][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,644][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,678][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,712][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,746][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,780][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,815][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:17,815][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:18,100][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,134][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,168][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,203][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,237][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,271][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,306][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,340][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,374][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,409][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,443][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,477][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,512][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,546][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,580][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,615][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,615][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:18,899][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,934][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:18,968][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,002][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,037][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,071][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,105][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,140][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,174][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,208][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,243][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,277][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,311][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,346][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,380][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,415][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,415][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:19,699][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,734][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,768][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,802][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,836][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,871][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,905][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,939][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:19,974][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,008][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,043][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,077][root][ERROR] - > write_byte: [Motor ID: 11] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,111][root][ERROR] - > write_byte: [Motor ID: 12] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,145][root][ERROR] - > write_byte: [Motor ID: 13] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,180][root][ERROR] - > write_byte: [Motor ID: 14] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,214][root][ERROR] - > write_byte: [Motor ID: 15] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,214][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2024-09-21 20:05:20,499][root][ERROR] - > write_byte: [Motor ID: 0] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,533][root][ERROR] - > write_byte: [Motor ID: 1] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,567][root][ERROR] - > write_byte: [Motor ID: 2] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,601][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,635][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,670][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,704][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,738][root][ERROR] - > write_byte: [Motor ID: 7] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,772][root][ERROR] - > write_byte: [Motor ID: 8] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,806][root][ERROR] - > write_byte: [Motor ID: 9] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,840][root][ERROR] - > write_byte: [Motor ID: 10] [TxRxResult] There is no status packet!
+[2024-09-21 20:05:20,905][root][ERROR] - Could not set torque enabled for IDs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+[2024-09-21 20:05:21,717][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,753][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,796][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,832][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,873][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,908][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,948][root][ERROR] - > read: [TxRxResult] There is no status packet!
+[2024-09-21 20:05:21,984][root][ERROR] - > read: [TxRxResult] There is no status packet!

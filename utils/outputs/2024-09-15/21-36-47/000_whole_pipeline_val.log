@@ -1,0 +1,28 @@
+[2024-09-15 21:37:22,695][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-09-15 21:37:24,644][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:24,645][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:24,750][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:24,751][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:24,757][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:24,758][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:25,520][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:25,520][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:25,535][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:25,535][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:25,627][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:25,628][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:25,629][websockets.server][INFO] - connection open
+[2024-09-15 21:37:27,089][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:27,190][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:27,192][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:27,192][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:27,193][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:27,193][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:27,193][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:27,193][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:27,194][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:27,194][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:28,358][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:28,359][websockets.server][INFO] - connection closed
+[2024-09-15 21:37:28,365][websockets.server][INFO] - connection rejected (200 OK)
+[2024-09-15 21:37:28,365][websockets.server][INFO] - connection closed
