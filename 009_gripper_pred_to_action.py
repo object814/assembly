@@ -182,10 +182,9 @@ pregrasp_retreat_distance = 0.08
 def main(cfg):
     sv = viser.ViserServer()
 
-    object_name = 'apple' # 4/5 ; 9/10 # ok
-    # object_name = 'binoculars' # ??
+    # object_name = 'apple' # 4/5 ; 9/10 # ok
     # object_name = 'dinosaur'  #5/5 ； 9/10
-    # object_name = 'duck'  # 3/5 ; 8/10 # ok
+    object_name = 'duck'  # 3/5 ; 8/10 # ok
     # object_name = 'flashlight' # ok
     # object_name = 'toilet_cleaner'  # 5/5 ; 10/10 # ok
     # object_name = 'rubic_cube'  #  4/5 ; 9/10 # ok
