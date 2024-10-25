@@ -34,6 +34,7 @@ from xarm6_interface.utils.viser_utils import update_viser_mp_result
 from third_party.FoundationPose.estimater import *
 import pickle
 from segment_anything import sam_model_registry, SamPredictor
+from scipy.spatial.transform import Rotation
 
 
 def get_object_pc_fp(object_name):
@@ -44,7 +45,7 @@ def get_object_pc_fp(object_name):
     # sam_predictor = SamPredictor(sam)
         
     
-    mesh = trimesh.load(f"object_mesh_new/{object_name}/{object_name}.obj")
+    mesh = trimesh.load(f"object_mesh/{object_name}/{object_name}.obj")
     
     scorer = ScorePredictor()
     refiner = PoseRefinePredictor()
@@ -65,7 +66,7 @@ def get_object_pc_fp(object_name):
     multi_rs = MultiRealsense(camera_serial_nums)
     arm_right_cam_K_path = Path("third_party/xarm6/data/camera/mounted_white/K.npy")
     arm_right_cam_K = np.load(arm_right_cam_K_path)
-    arm_right_cam_X_BaseCamera_path = Path("third_party/xarm6/data/camera/mounted_white/1025_excalib_capture00/optimized_X_BaseCamera.npy")
+    arm_right_cam_X_BaseCamera_path = Path("third_party/xarm6/data/camera/mounted_white/1014_excalib_capture00/optimized_X_BaseCamera.npy")
     arm_right_cam_X_BaseCamera = np.load(arm_right_cam_X_BaseCamera_path)
     multi_rs.set_intrinsics(0, arm_right_cam_K[0, 0], arm_right_cam_K[1, 1], arm_right_cam_K[0, 2], arm_right_cam_K[1, 2])
     camera_wxyzs = [
@@ -174,20 +175,7 @@ def filter_top_down_grasps(X_WorldEE, clip_min_z=0.05, approach_direction="z"):
 # object_name = 'triangle_cad' 
 # object_name = 'qianzi'
 # object_name = 'zhijia'
-# object_name = 'apple' # 4/5 ; 9/10 # ok
-# object_name = 'gun' # ok
-# object_name = 'stage' # ok
-# object_name = 'hand_grips' # woliqi
-# object_name = 'light_blue_cup' # no
-# object_name = 'angle_iron' # no fail once
-# object_name = 'whiteboard_pen'
-# object_name = 'u_iron' # fail once
-# object_name = 'clipper'
-# object_name = 'blue_cup'
-# object_name = 'gripper'
-# object_name = 'spatula'
-# object_name = 'chu'
-
+    
 planner_timestep = 1.0 / 20.0
 cmd_timestep = 1.0 / 100.0 
 pregrasp_retreat_distance = 0.08
@@ -195,30 +183,18 @@ pregrasp_retreat_distance = 0.08
 def main(cfg):
     sv = viser.ViserServer()
 
-    
-    object_name = 'dinosaur'  #5/5 ； 9/10
-    # object_name = 'duck'  # 3/5 ; 8/10 # ok
+    # object_name = 'apple' # 4/5 ; 9/10 # ok
+    # object_name = 'dinosaur'  #5/5 ； 9/10
+    object_name = 'duck'  # 3/5 ; 8/10 # ok
     # object_name = 'flashlight' # ok
     # object_name = 'toilet_cleaner'  # 5/5 ; 10/10 # ok
     # object_name = 'rubic_cube'  #  4/5 ; 9/10 # ok
     # object_name = 'fish' # ok
+    # object_name = 'gun' # ok
+    # object_name = 'stage' # ok
     # object_name = 'iphone_box' # 2/5 ; 3/10 # ok
     # object_name = 'realsense_box' # 3/5 ; 5/10 # ok
     # object_name = 'brown_bottle' # ok
-    # object_name = 'black_teabox' # ok
-    # object_name = "wheel"
-    # object_name = 'fan'
-    # object_name = 'screwdriver' # luosidao
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
     
     batch_size = cfg.dataset.batch_size
     device = torch.device(f'cuda:{cfg.gpu}')
@@ -226,7 +202,7 @@ def main(cfg):
     # object_pc_o3d, masked_pc_o3d_fusion = get_object_pc()
     t1 = time.time()
     object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name)
-    object_grasp_pkl_path = Path("object_mesh_new") / object_name / "grasp_new.pkl"
+    object_grasp_pkl_path = Path("object_mesh_grasp") / object_name / "grasp.pkl"
     hand_open_mesh_path = Path("data/data_urdf/robot/xarm_gripper/hand_open.obj")
     hand_open_mesh = trimesh.load_mesh(hand_open_mesh_path)
     with open(object_grasp_pkl_path, "rb") as f:
@@ -264,6 +240,35 @@ def main(cfg):
     workspace_ymax_pc = create_plane_pc(env_params.xmin, env_params.ymax, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
     env_pc = np.concatenate([workspace_pc, table_plane_pc, workspace_xmin_pc, workspace_ymin_pc, workspace_ymax_pc], axis=0)
     env_pc = env_pc_post_process(env_pc, filter_norm_thresh=0.1, n_save_pc=None)
+    # TODO: receive quaternion from rebocap, get the position(xyz) of the end-effector
+    # base: Pelvis; end-effector: L_Wrist, R_Wrist
+    # rebocap coordinate: x:left, y:up, z:backward
+    
+    human_frame_rebocap = { # cm
+        "Spine": 31.8,
+        "Breast": 24.2,
+        "shoulders": 35.0,
+        "Arm_upper": 25.7,
+        "Arm_lower": 26.6
+    }
+    # TPose: Pelvis: (0.0, 0.0, 0.0) L_Wrist: (35/2+25.7+26.6, 31.8+24.2, 0.0); R_Wrist: (-35/2-25.7-26.6, 31.8+24.2, 0.0)
+    pelvis_position = [0.0, 0.0, 0.0]
+    lwrist_position = [69.8, 152.0, 0.0]
+    rwrist_position = [-69.8, 152.0, 0.0]
+    
+    while True:
+        # read pose from rebocap
+        quaternions_rebocap = { # assumption, this should be read from rebocap
+            "L_Wrist": [1.0, 0.0, 0.0, 0.0],
+            "R_Wrist": [1.0, 0.0, 0.0, 0.0]
+        }
+        rot_mat_lwrist = Rotation.from_quat(quaternions_rebocap["L_Wrist"]).as_matrix()
+        rot_mat_rwrist = Rotation.from_quat(quaternions_rebocap["R_Wrist"]).as_matrix()
+        lwrist_position = rot_mat_lwrist @ lwrist_position
+        rwrist_position = rot_mat_rwrist @ rwrist_position
+        
+        break
+        
     xarm6_planner.mplib_add_point_cloud(env_pc, name="env_pc")
     xarm6_planner.mplib_add_point_cloud(object_pc_np, name="object_pc")
     
