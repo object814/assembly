@@ -187,6 +187,9 @@ def filter_top_down_grasps(X_WorldEE, clip_min_z=0.05, approach_direction="z"):
 # object_name = 'gripper'
 # object_name = 'spatula'
 # object_name = 'chu'
+# object_name = "wheel"
+
+
 
 planner_timestep = 1.0 / 20.0
 cmd_timestep = 1.0 / 100.0 
@@ -201,24 +204,15 @@ def main(cfg):
     # object_name = 'flashlight' # ok
     # object_name = 'toilet_cleaner'  # 5/5 ; 10/10 # ok
     # object_name = 'rubic_cube'  #  4/5 ; 9/10 # ok
-    # object_name = 'fish' # ok
+    object_name = 'fish' # ok
     # object_name = 'iphone_box' # 2/5 ; 3/10 # ok
     # object_name = 'realsense_box' # 3/5 ; 5/10 # ok
     # object_name = 'brown_bottle' # ok
     # object_name = 'black_teabox' # ok
-    # object_name = "wheel"
+    
     # object_name = 'fan'
     # object_name = 'screwdriver' # luosidao
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
+    # object_name = 'u_iron'
     
     batch_size = cfg.dataset.batch_size
     device = torch.device(f'cuda:{cfg.gpu}')
