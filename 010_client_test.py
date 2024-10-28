@@ -26,7 +26,7 @@ context =zmq.Context()
 # talk to server windows machine
 print("Connecting to windows server...")
 socket = context.socket(zmq.REQ)
-socket.connect("tcp://172.25.109.87:5555")
+socket.connect("tcp://172.25.110.96:5555")
 
 memory = []
 lwrist_position = np.array([0.698, 1.52, 0.0]) # meter
@@ -112,11 +112,12 @@ while True:
     pose24_np = np.frombuffer(pose24_byte, dtype=np.float64)
     # # memory.append(pose24_np)
     pose24_np = np.reshape(pose24_np,[4,4])
-    print("EE_shape")
-    print(pose24_np) # wxyz
-
+    # print("EE_shape")
+    # print(pose24_np) # wxyz
+    
     EE_np = pose24_np[:3,3]
     EE_rot_np = pose24_np[:3,:3]
+    
     if i == 0:
       EE_np_init = EE_np
       EE_rot_np_init = EE_rot_np
@@ -124,6 +125,8 @@ while True:
       continue
     else:
       EE_rel = EE_np - EE_np_init
+      EE_rot = EE_rot_np.copy()
+      EE_euler = R.from_matrix(EE_rot).as_euler('xyz', degrees=True)
       
     #   EE_rel_rotation = EE_rot_np @ EE_rot_np_init.transpose()
     #   EE_rel_rotation = R.from_matrix(EE_rel_rotation).as_rotvec()
@@ -135,21 +138,35 @@ while True:
       
     xarm_EE_init = np.array([0,0,0.5])
     
-    targetPosition = EE_rel + xarm_EE_init
-    print(targetPosition)
+    # targetPosition = EE_rel + xarm_EE_init
+    # print(targetPosition)
     
     # xarm [2] --- hand [1]
     # xarm [0] --- hand [2]0
     # xarm [1] --- hand [0]
     
     xarm_target_pose = xarm_init_pos + EE_rel
-    xarm_target_pose[0] = xarm_init_pos[0] + EE_rel[2]*1000
+    # xarm_target_pose[0] = xarm_init_pos[0] + EE_rel[2]*1000
+    # xarm_target_pose[1] = xarm_init_pos[1] + EE_rel[0]*1000
+    # xarm_target_pose[2] = xarm_init_pos[2] + EE_rel[1]*1000
+    
+    xarm_target_pose[0] = xarm_init_pos[0] - EE_rel[1]*1000
     xarm_target_pose[1] = xarm_init_pos[1] + EE_rel[0]*1000
-    xarm_target_pose[2] = xarm_init_pos[2] + EE_rel[1]*1000
+    xarm_target_pose[2] = xarm_init_pos[2] + EE_rel[2]*1000
+    # print(xarm_target_pose)
+    print(EE_euler)
     # arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2],
                     #  roll=EE_rel_new_euler[0], pitch=EE_rel_new_euler[1], yaw=EE_rel_new_euler[2],
                     #  speed=speed, wait=False)
-    arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], roll=-180, pitch=0, yaw=0, speed=speed, wait=False)
+    # arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], 
+    #                  roll=-180, pitch=0, yaw=0, 
+    #                  speed=speed, wait=False)
+    arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], 
+                      roll=EE_euler[0]+90, pitch=EE_euler[1], yaw=EE_euler[2]+45, 
+                      speed=speed, wait=False)
+    # arm.set_position(x=xarm_target_pose[1], y=xarm_target_pose[0], z=xarm_target_pose[2], 
+    #                   roll=EE_euler[0]+90, pitch=EE_euler[1], yaw=EE_euler[2], 
+    #                   speed=speed, wait=False)
     
     
     
