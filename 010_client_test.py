@@ -26,7 +26,7 @@ context =zmq.Context()
 # talk to server windows machine
 print("Connecting to windows server...")
 socket = context.socket(zmq.REQ)
-socket.connect("tcp://172.25.110.96:5555")
+socket.connect("tcp://172.25.104.11:5555")
 
 memory = []
 lwrist_position = np.array([0.698, 1.52, 0.0]) # meter
@@ -89,7 +89,8 @@ arm.set_mode(7)
 arm.set_state(0)
 time.sleep(1)
 
-speed = 100
+speed = 150
+scale = 1.5
 
 # for i in range(10):
 #     # run on mode(7)
@@ -150,9 +151,9 @@ while True:
     # xarm_target_pose[1] = xarm_init_pos[1] + EE_rel[0]*1000
     # xarm_target_pose[2] = xarm_init_pos[2] + EE_rel[1]*1000
     
-    xarm_target_pose[0] = xarm_init_pos[0] - EE_rel[1]*1000
-    xarm_target_pose[1] = xarm_init_pos[1] + EE_rel[0]*1000
-    xarm_target_pose[2] = xarm_init_pos[2] + EE_rel[2]*1000
+    xarm_target_pose[0] = xarm_init_pos[0] - scale * EE_rel[1]*1000
+    xarm_target_pose[1] = xarm_init_pos[1] + scale * EE_rel[0]*1000
+    xarm_target_pose[2] = xarm_init_pos[2] + scale * EE_rel[2]*1000
     # print(xarm_target_pose)
     print(EE_euler)
     # arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2],
@@ -161,11 +162,12 @@ while True:
     # arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], 
     #                  roll=-180, pitch=0, yaw=0, 
     #                  speed=speed, wait=False)
+    
     arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], 
                       roll=EE_euler[0]+90, pitch=EE_euler[1], yaw=EE_euler[2]+45, 
                       speed=speed, wait=False)
-    # arm.set_position(x=xarm_target_pose[1], y=xarm_target_pose[0], z=xarm_target_pose[2], 
-    #                   roll=EE_euler[0]+90, pitch=EE_euler[1], yaw=EE_euler[2], 
+    # arm.set_position(x=xarm_target_pose[0], y=xarm_target_pose[1], z=xarm_target_pose[2], 
+    #                   roll=EE_euler[0], pitch=EE_euler[1], yaw=EE_euler[2], 
     #                   speed=speed, wait=False)
     
     
