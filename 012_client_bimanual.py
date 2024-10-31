@@ -40,7 +40,7 @@ arm_right.set_mode(0)
 arm_left.set_state(state=0)
 arm_right.set_state(state=0)
 
-arm_left.set_position(x=100, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
+arm_left.set_position(x=400, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
 arm_right.set_position(x=400, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
 
 xarm_left_init_pos = [400, 0, 350]
@@ -102,9 +102,9 @@ while True:
     xarm_right_target_position[2] = xarm_right_init_pos[2] + scale * EE_right_rel[2]*1000
     
     arm_left.set_position(x=xarm_left_target_position[0], y=xarm_left_target_position[1], z=xarm_left_target_position[2], 
-                      roll=EE_left_euler[0]+90, pitch=EE_left_euler[1], yaw=EE_left_euler[2]+45, 
+                      roll=EE_left_euler[0]+90, pitch=EE_left_euler[1], yaw=EE_left_euler[2]+60, 
                       speed=speed, wait=False)
     
-    arm_right.set_position(x=xarm_right_target_position[0], y=xarm_right_target_position[1], z=xarm_right_target_position[2], 
-                      roll=EE_right_euler[0]+90, pitch=EE_right_euler[1], yaw=EE_right_euler[2]-90, 
-                      speed=speed, wait=False)
+    # arm_right.set_position(x=xarm_right_target_position[0], y=xarm_right_target_position[1], z=xarm_right_target_position[2], 
+    #                   roll=EE_right_euler[0]+90, pitch=EE_right_euler[1], yaw=EE_right_euler[2]-90, 
+    #                   speed=speed, wait=False)
