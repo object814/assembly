@@ -41,10 +41,10 @@ arm_left.set_state(state=0)
 arm_right.set_state(state=0)
 
 arm_left.set_position(x=400, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
-arm_right.set_position(x=400, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
+arm_right.set_position(x=100, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, is_radian=False, wait=True)
 
 xarm_left_init_pos = [400, 0, 350]
-xarm_right_init_pos = [400, 0, 350]
+xarm_right_init_pos = [100, 0, 350]
 
 # set mode: cartesian online trajectory planning mode
 # the running command will be interrupted when the next command is received
