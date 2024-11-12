@@ -62,11 +62,12 @@ def get_object_pc_fp(object_name):
     prompt_drawer = SAMPromptDrawer(window_name="Prompt Drawer", screen_scale=2.0, sam_checkpoint=SAM_PATH, device="cuda", model_type=SAM_TYPE)
     
     arm_right_cam_serial = "241122074374"
-    camera_serial_nums = [arm_right_cam_serial]
+    top_cam_serial = '233622079809'
+    camera_serial_nums = [top_cam_serial]
     multi_rs = MultiRealsense(camera_serial_nums)
-    arm_right_cam_K_path = Path("third_party/xarm6/data/camera/mounted_white/K.npy")
+    arm_right_cam_K_path = Path("third_party/xarm6/data/camera/mounted_top/K.npy")
     arm_right_cam_K = np.load(arm_right_cam_K_path)
-    arm_right_cam_X_BaseCamera_path = Path("third_party/xarm6/data/camera/mounted_white/1014_excalib_capture00/optimized_X_BaseCamera.npy")
+    arm_right_cam_X_BaseCamera_path = Path("third_party/xarm6/data/camera/mounted_top/1109_excalib_capture00/optimized_X_BaseCamera.npy")
     arm_right_cam_X_BaseCamera = np.load(arm_right_cam_X_BaseCamera_path)
     multi_rs.set_intrinsics(0, arm_right_cam_K[0, 0], arm_right_cam_K[1, 1], arm_right_cam_K[0, 2], arm_right_cam_K[1, 2])
     camera_wxyzs = [
