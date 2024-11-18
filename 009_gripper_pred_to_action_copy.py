@@ -35,27 +35,12 @@ from third_party.FoundationPose.estimater import *
 import pickle
 from segment_anything import sam_model_registry, SamPredictor
 
-def get_object_pc_fp(object_name):
-    object_name_dino = object_name.replace("_", " ") + "."
+def get_object_pc_fp():
     # Initialize the SAM predictor
     # sam = sam_model_registry[SAM_TYPE](checkpoint=SAM_PATH)
     # sam.to(device="cuda")
     # sam_predictor = SamPredictor(sam)
         
-    
-    mesh = trimesh.load(f"object_mesh_new/{object_name}/{object_name}.obj")
-    
-    scorer = ScorePredictor()
-    refiner = PoseRefinePredictor()
-    glctx = dr.RasterizeCudaContext()
-    est = FoundationPose(
-        model_pts=mesh.vertices, 
-        model_normals=mesh.vertex_normals, 
-        mesh=mesh, 
-        scorer=scorer, 
-        refiner=refiner,
-        glctx=glctx
-    )
     
     prompt_drawer = SAMPromptDrawer(window_name="Prompt Drawer", screen_scale=2.0, sam_checkpoint=SAM_PATH, device="cuda", model_type=SAM_TYPE)
     
@@ -82,38 +67,33 @@ def get_object_pc_fp(object_name):
         rtr_dict = rtr_dict_list[camera_idx]
         
         rgb = rtr_dict["rgb"]
-        depth = (rtr_dict["depth"].astype(np.float32) / 1000).astype(np.float32)
+        depth = (rtr_dict["depth"].astype(np.float32)).astype(np.float32)
         pc_o3d = rtr_dict["pointcloud_o3d"]
-        
-        # input_boxes = grounding_dino_get_bbox(rgb, object_name_dino)
-        # sam_predictor.set_image(rgb)
-        
-        # masks, scores, logits = sam_predictor.predict(
-        #     point_coords=None,
-        #     point_labels=None,
-        #     box=input_boxes,
-        #     multimask_output=False,
-        # )
-        # if masks.ndim == 4:
-        #     masks = masks.squeeze(1)
-        # mask_np = masks[0]
         prompt_drawer.reset()
         mask_np = prompt_drawer.run(rgb)  # (720, 1280)
         
+        ###### 
+        h, w = mask_np.shape[-2:]
+            
+        masked_pc_o3d = get_masked_pointcloud(rgb, depth, mask_np.reshape(h,w), multi_rs.camera_data[camera_idx]["pinhole_camera_intrinsic"])
         
-        pose = est.register(K=arm_right_cam_K, rgb=rgb, depth=depth, ob_mask=mask_np, iteration=5)
-        pose = arm_right_cam_X_BaseCamera @ pose
+        X_BaseCamera = X_BaseCamera_list[camera_idx]
+        rs_pc_in_C_np = np.asarray(masked_pc_o3d.points) 
+        rs_pc_in_B = X_BaseCamera @ np.vstack([rs_pc_in_C_np.T, np.ones(rs_pc_in_C_np.shape[0])])
+        rs_pc_in_B = rs_pc_in_B[:3].T
+        masked_pc_o3d_W = o3d.geometry.PointCloud()
+        masked_pc_o3d_W.points = o3d.utility.Vector3dVector(rs_pc_in_B)
+        masked_pc_o3d_W.colors = masked_pc_o3d.colors
         
-        points, face_indices = mesh.sample(512, return_index=True)
-        normals = mesh.face_normals[face_indices]
+        print(np.mean(np.array(masked_pc_o3d_W.points),0))
+        target_pos = np.mean(np.array(masked_pc_o3d_W.points),0)
+        xarm = XArm6RealWorld(is_radian=False)
+        #arm.set_position(x=300, y=0, z=150, roll=-180, pitch=0, yaw=0, speed=100, wait=True)
+        xarm.arm.set_position(x=target_pos[0]*1000.0,y=target_pos[1]*1000.0,z=target_pos[2]*1000.0,roll=-180, pitch=0, yaw=0, speed=100, wait=True)
+        return masked_pc_o3d_W
         
-        object_pc_o3d = o3d.geometry.PointCloud()
-        object_pc_o3d.points = o3d.utility.Vector3dVector(points)
-        object_pc_o3d.normals = o3d.utility.Vector3dVector(normals)
-        object_pc_o3d.transform(pose)
-                
-        return object_pc_o3d, pose
 
+        
     
 def get_inter_rot(batch_size):
     top_down_rot = R.from_euler('Y', 90, degrees=True)
@@ -219,13 +199,14 @@ def main(cfg):
     
     # object_pc_o3d, masked_pc_o3d_fusion = get_object_pc()
     t1 = time.time()
-    object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name)
+    object_pc_o3d = get_object_pc_fp()
     object_grasp_pkl_path = Path("object_mesh_new") / object_name / "grasp_new.pkl"
     hand_open_mesh_path = Path("data/data_urdf/robot/xarm_gripper/hand_open.obj")
     hand_open_mesh = trimesh.load_mesh(hand_open_mesh_path)
     with open(object_grasp_pkl_path, "rb") as f:
         X_ObjectEE = pickle.load(f)  # (n, 4, 4)
     # X_WorldObject: shape=(4, 4)
+    exit()
     X_WorldEE = X_WorldObject[np.newaxis, ...] @ X_ObjectEE  
     X_WorldEE = filter_top_down_grasps(X_WorldEE, clip_min_z=0.18, approach_direction="z")
     
