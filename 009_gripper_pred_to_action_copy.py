@@ -175,18 +175,18 @@ planner_timestep = 1.0 / 20.0
 cmd_timestep = 1.0 / 100.0 
 pregrasp_retreat_distance = 0.08
 @hydra.main(version_base="1.2", config_path="", config_name="validate")
+
 def main(cfg):
     sv = viser.ViserServer()
 
-    
-    object_name = 'dinosaur'  #5/5 ； 9/10
+    # object_name = 'dinosaur'  #5/5 ； 9/10
     # object_name = 'duck'  # 3/5 ; 8/10 # ok
-    # object_name = 'flashlight' # ok
+    object_name = 'flashlight' # ok
     # object_name = 'toilet_cleaner'  # 5/5 ; 10/10 # ok
-    object_name = 'rubic_cube'  #  4/5 ; 9/10 # ok
-    object_name = 'fish' # ok
-    # object_name = 'iphone_box' # 2/5 ; 3/10 # ok
-    object_name = 'realsense_box' # 3/5 ; 5/10 # ok
+    # object_name = 'rubic_cube'  #  4/5 ; 9/10 # ok
+    # object_name = 'fish' # ok
+    # # object_name = 'iphone_box' # 2/5 ; 3/10 # ok
+    # object_name = 'realsense_box' # 3/5 ; 5/10 # ok
     # object_name = 'brown_bottle' # ok
     # object_name = 'black_teabox' # ok
     
