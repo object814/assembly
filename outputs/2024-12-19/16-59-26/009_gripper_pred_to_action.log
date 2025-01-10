@@ -1,0 +1,209 @@
+[2024-12-19 16:59:26,597][websockets.server][INFO] - server listening on 0.0.0.0:8080
+[2024-12-19 16:59:26,727][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: 'Infinity'
+debug: null
+n_view: 1
+run_id: 3wy8qqex
+use_BN: true
+exp_name: 2024-01-11-20-02-45
+n_epochs: 62
+save_dir: /home/bowenw/debug/2024-01-11-20-02-45/
+use_mask: false
+loss_type: pairwise_valid
+optimizer: adam
+batch_size: 64
+crop_ratio: 1.1
+enable_amp: true
+use_normal: false
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+vis_interval: 1000
+weight_decay: 0
+normalize_xyz: true
+resume_run_id: null
+clip_grad_norm: 'Infinity'
+lr_epoch_decay: 500
+render_backend: nvdiffrast
+train_num_pair: 5
+lr_decay_epochs:
+- 50
+n_epochs_warmup: 1
+make_pair_online: false
+gradient_max_norm: 'Infinity'
+max_step_per_epoch: 10000
+n_rendering_workers: 1
+save_epoch_interval: 100
+n_dataloader_workers: 100
+split_objects_across_gpus: true
+ckpt_dir: /data/zjx/rw/third_party/FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+
+[2024-12-19 16:59:26,727][root][INFO] - self.h5_file:None
+[2024-12-19 16:59:26,852][root][INFO] - Using pretrained model from /data/zjx/rw/third_party/FoundationPose/learning/training/../../weights/2024-01-11-20-02-45/model_best.pth
+[2024-12-19 16:59:26,911][root][INFO] - init done
+[2024-12-19 16:59:26,912][root][INFO] - welcome
+[2024-12-19 16:59:26,915][root][INFO] - self.cfg: 
+ lr: 0.0001
+c_in: 6
+zfar: .inf
+debug: null
+w_rot: 0.1
+n_view: 1
+run_id: null
+use_BN: true
+rot_rep: axis_angle
+ckpt_dir: /data/zjx/rw/third_party/FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+exp_name: 2023-10-28-18-33-37
+save_dir: /tmp/2023-10-28-18-33-37/
+loss_type: l2
+optimizer: adam
+trans_rep: tracknet
+batch_size: 64
+crop_ratio: 1.2
+use_normal: false
+BN_momentum: 0.1
+max_num_key: null
+warmup_step: -1
+input_resize:
+- 160
+- 160
+max_step_val: 1000
+normal_uint8: false
+vis_interval: 1000
+weight_decay: 0
+n_max_objects: null
+normalize_xyz: true
+clip_grad_norm: 'Infinity'
+rot_normalizer: 0.3490658503988659
+trans_normalizer:
+- 0.019999999552965164
+- 0.019999999552965164
+- 0.05000000074505806
+max_step_per_epoch: 25000
+val_epoch_interval: 10
+n_dataloader_workers: 60
+enable_amp: true
+use_mask: false
+
+[2024-12-19 16:59:26,915][root][INFO] - self.h5_file:
+[2024-12-19 16:59:26,965][root][INFO] - Using pretrained model from /data/zjx/rw/third_party/FoundationPose/learning/training/../../weights/2023-10-28-18-33-37/model_best.pth
+[2024-12-19 16:59:26,988][root][INFO] - init done
+[2024-12-19 16:59:27,505][websockets.server][INFO] - connection open
+[2024-12-19 16:59:28,058][root][INFO] - self.diameter:0.15243421826573095, vox_size:0.007621710913286547
+[2024-12-19 16:59:28,073][root][INFO] - self.pts:torch.Size([464, 3])
+[2024-12-19 16:59:28,999][root][INFO] - reset done
+[2024-12-19 16:59:29,000][root][INFO] - cam_in_obs:(42, 4, 4)
+[2024-12-19 16:59:29,001][root][INFO] - rot_grid:(252, 4, 4)
+[2024-12-19 16:59:29,002][root][INFO] - after cluster, rot_grid:(252, 4, 4)
+[2024-12-19 16:59:29,002][root][INFO] - self.rot_grid: torch.Size([252, 4, 4])
+[2024-12-19 16:59:50,828][root][INFO] - Welcome
+[2024-12-19 16:59:50,848][root][INFO] - poses:(252, 4, 4)
+[2024-12-19 16:59:50,858][root][INFO] - after viewpoint, add_errs min:-1.0
+[2024-12-19 16:59:50,890][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-12-19 16:59:50,890][root][INFO] - self.cfg.use_normal:False
+[2024-12-19 16:59:50,890][root][INFO] - trans_normalizer:[0.019999999552965164, 0.019999999552965164, 0.05000000074505806], rot_normalizer:0.3490658503988659
+[2024-12-19 16:59:50,903][root][INFO] - making cropped data
+[2024-12-19 16:59:50,903][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:50,917][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:50,944][root][INFO] - render done
+[2024-12-19 16:59:50,950][root][INFO] - warp done
+[2024-12-19 16:59:50,955][root][INFO] - pose batch data done
+[2024-12-19 16:59:50,955][root][INFO] - forward start
+[2024-12-19 16:59:51,087][root][INFO] - forward done
+[2024-12-19 16:59:51,099][root][INFO] - making cropped data
+[2024-12-19 16:59:51,099][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:51,099][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:51,114][root][INFO] - render done
+[2024-12-19 16:59:51,117][root][INFO] - warp done
+[2024-12-19 16:59:51,120][root][INFO] - pose batch data done
+[2024-12-19 16:59:51,120][root][INFO] - forward start
+[2024-12-19 16:59:51,122][root][INFO] - forward done
+[2024-12-19 16:59:51,122][root][INFO] - making cropped data
+[2024-12-19 16:59:51,122][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:51,221][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:51,236][root][INFO] - render done
+[2024-12-19 16:59:51,240][root][INFO] - warp done
+[2024-12-19 16:59:51,243][root][INFO] - pose batch data done
+[2024-12-19 16:59:51,243][root][INFO] - forward start
+[2024-12-19 16:59:51,244][root][INFO] - forward done
+[2024-12-19 16:59:51,244][root][INFO] - making cropped data
+[2024-12-19 16:59:51,244][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:51,347][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:51,362][root][INFO] - render done
+[2024-12-19 16:59:51,365][root][INFO] - warp done
+[2024-12-19 16:59:51,368][root][INFO] - pose batch data done
+[2024-12-19 16:59:51,368][root][INFO] - forward start
+[2024-12-19 16:59:51,369][root][INFO] - forward done
+[2024-12-19 16:59:51,370][root][INFO] - making cropped data
+[2024-12-19 16:59:51,370][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:51,473][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:51,488][root][INFO] - render done
+[2024-12-19 16:59:51,491][root][INFO] - warp done
+[2024-12-19 16:59:51,494][root][INFO] - pose batch data done
+[2024-12-19 16:59:51,494][root][INFO] - forward start
+[2024-12-19 16:59:51,495][root][INFO] - forward done
+[2024-12-19 16:59:51,613][root][INFO] - ob_in_cams:(252, 4, 4)
+[2024-12-19 16:59:51,614][root][INFO] - self.cfg.use_normal:False
+[2024-12-19 16:59:51,614][root][INFO] - making cropped data
+[2024-12-19 16:59:51,621][root][INFO] - Welcome make_crop_data_batch
+[2024-12-19 16:59:51,622][root][INFO] - make tf_to_crops done
+[2024-12-19 16:59:51,636][root][INFO] - render done
+[2024-12-19 16:59:51,768][root][INFO] - pose batch data done
+[2024-12-19 16:59:51,768][root][INFO] - pose_data.rgbAs.shape[0]: 252
+[2024-12-19 16:59:51,867][root][INFO] - forward done
+[2024-12-19 16:59:51,885][root][INFO] - final, add_errs min:-1.0
+[2024-12-19 16:59:51,894][root][INFO] - sort ids:tensor([  4,  76, 100, 105, 189, 226, 244,   3,  34,  75,  99, 106, 130,  72,
+        187,   7,  43,  73, 104, 126, 133, 163, 170, 216,   8,  42,  74,  98,
+        127, 134, 145, 146, 202,   6,  47, 101, 227, 245,   5, 103, 137, 203,
+         77, 131, 132, 169, 188, 220,   9,  32,  33,   0, 171, 164, 194, 221,
+         87, 183, 231,  21,  50, 184,  27,  81,  93, 251,  15,  18,  36, 114,
+        120,  78, 161,  12, 150, 211, 116,  88, 206,  22, 121,  13,  28,  65,
+         79, 185,  17,  82,  84,  85,  94, 115, 124, 154, 178, 179, 229,  14,
+         92, 205, 212, 235,  26,  86, 160,  37,  41,  95, 123, 141, 196, 230,
+        236,  23,  80, 119, 125, 210, 237,  20,  62,  68,  71, 162,  83, 156,
+        198, 247,  19, 111, 155, 225,  70, 197,  58,  53,  59, 204,  61, 102,
+        108,  52,  55, 109, 122, 177, 243,  64, 110, 117, 129, 248,  67,  56,
+        112, 165, 193, 250, 140, 144,  49, 113,  96, 118,  90,  91, 138, 139,
+        190, 200,  45, 143,   1, 173, 218,  30,  97, 172, 224, 191, 241, 148,
+        242, 107, 217,  31,  46, 213, 239, 240,  29,  38, 136, 157, 166, 199,
+         10,  35, 167, 175,   2, 128, 214, 219, 223, 149, 151, 158,  11,  39,
+         44, 135, 180, 208, 238,  25,  40, 222, 232,  24, 142, 181, 182,  16,
+         89, 152, 176, 209, 215, 233, 159, 186, 234, 174, 207, 147, 153, 168,
+        228, 201,  54,  51,  60,  66, 192, 249,  48,  63,  69, 195, 246,  57])
+[2024-12-19 16:59:51,898][root][INFO] - sorted scores:tensor([82.9375, 82.9375, 82.9375, 82.9375, 82.9375, 82.9375, 82.9375, 82.9219,
+        82.9219, 82.9219, 82.9219, 82.9219, 82.9219, 82.8125, 82.8125, 82.7969,
+        82.7969, 82.7969, 82.7969, 82.7969, 82.7969, 82.7969, 82.7969, 82.7969,
+        82.7812, 82.7812, 82.7812, 82.7812, 82.7812, 82.7812, 82.7812, 82.7812,
+        82.7812, 82.7656, 82.7656, 82.7656, 82.7656, 82.7656, 82.7500, 82.7500,
+        82.7500, 82.7500, 82.7344, 82.7344, 82.7344, 82.7344, 82.7344, 82.7344,
+        82.7188, 82.7188, 82.7188, 82.7031, 82.7031, 82.6875, 82.6875, 82.6875,
+        82.5938, 82.5938, 82.5938, 82.5781, 82.5781, 82.5781, 82.5625, 82.5625,
+        82.5625, 82.5625, 82.5469, 82.5312, 82.5312, 82.5312, 82.5312, 82.5156,
+        82.5156, 82.5000, 82.5000, 82.5000, 82.4844, 82.4688, 82.4688, 82.4531,
+        82.4531, 82.4375, 82.4375, 82.4375, 82.4375, 82.4375, 82.4219, 82.4219,
+        82.4219, 82.4219, 82.4219, 82.4219, 82.4219, 82.4219, 82.4219, 82.4219,
+        82.4219, 82.4062, 82.4062, 82.4062, 82.4062, 82.4062, 82.3906, 82.3906,
+        82.3906, 82.3750, 82.3750, 82.3750, 82.3750, 82.3750, 82.3750, 82.3750,
+        82.3750, 82.3594, 82.3594, 82.3594, 82.3438, 82.3438, 82.3438, 82.3281,
+        82.3281, 82.3281, 82.3281, 82.3281, 82.3125, 82.3125, 82.3125, 82.3125,
+        82.2969, 82.2969, 82.2969, 82.2969, 82.2812, 82.2812, 82.2656, 82.2500,
+        82.2500, 82.2500, 82.2344, 82.2344, 82.2344, 82.2188, 82.2188, 82.2031,
+        82.2031, 82.2031, 82.2031, 82.1875, 82.1875, 82.1719, 82.1719, 82.1719,
+        82.1562, 82.1406, 82.1406, 82.1250, 82.1250, 82.1250, 82.0938, 82.0938,
+        82.0781, 82.0781, 82.0625, 82.0469, 82.0312, 82.0000, 81.9844, 81.9531,
+        81.8594, 81.8438, 81.8281, 81.8281, 81.7969, 81.7969, 81.7969, 81.7812,
+        81.7812, 81.7812, 81.7812, 81.7656, 81.7656, 81.7500, 81.7500, 81.7344,
+        81.7344, 81.7188, 81.7188, 81.7188, 81.7188, 81.7188, 81.7031, 81.7031,
+        81.7031, 81.7031, 81.7031, 81.7031, 81.6875, 81.6875, 81.6875, 81.6875,
+        81.6719, 81.6719, 81.6719, 81.6719, 81.6719, 81.6562, 81.6562, 81.6562,
+        81.6406, 81.6406, 81.6406, 81.6406, 81.6406, 81.6406, 81.6406, 81.6250,
+        81.6250, 81.6250, 81.6250, 81.6094, 81.6094, 81.6094, 81.6094, 81.5938,
+        81.5938, 81.5938, 81.5938, 81.5938, 81.5781, 81.5625, 81.5156, 81.5156,
+        81.5156, 81.4688, 81.4219, 81.3906, 81.3281, 81.2969, 81.2969, 81.2812,
+        81.2500, 81.2344, 81.2344, 81.2344, 81.2344, 81.2344, 81.2188, 81.2188,
+        81.2188, 81.2188, 81.2188, 81.2031])

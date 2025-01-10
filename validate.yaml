@@ -2,7 +2,8 @@ defaults:
     - model: model.yaml
     # - dataset: cmap_dataset.yaml
     - _self_
-
+XARM6_IP: "192.168.1.208"
+XARM6LEFT_IP: "192.168.1.232"
 model:  # override model.yaml
     encoder:
         pretrain: null

@@ -1,0 +1,12 @@
+LICENSE
+README.md
+setup.py
+gdino/__init__.py
+gdino/model_wrapper.py
+gdino/version.py
+gdino/visualize.py
+gdino.egg-info/PKG-INFO
+gdino.egg-info/SOURCES.txt
+gdino.egg-info/dependency_links.txt
+gdino.egg-info/requires.txt
+gdino.egg-info/top_level.txt

@@ -1,0 +1,13 @@
+Input two images:
+- The first image is one page of the setup manual, containing the setup instruction of the furniture for the current step. You can see that in each page, the furniture is segmented with different colors. This is to better aid your understanding of which furniture parts are involved in each step of the furniture assembly.
+- The second image is a top view of all the parts of the furniture used in this step, with each part labeled with a number.
+
+Let's think step by step:
+1. Choose 1 base part for this assembly step and put it into the initially empty order list. The base part should be the one with biggest visual area in the second image, or the one on the bottom in the first image.
+2. Then sort the rest parts from left to right in the second image and append them to the order list.
+
+Your output order list should be like the following example without any other explanation. In this example, part 2 is the base part, and part 3, 0, 1 is assembled in order.
+
+```json
+[2, 3, 0, 1]
+```

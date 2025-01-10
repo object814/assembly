@@ -1,0 +1,24 @@
+model:
+  encoder:
+    name: dgcnn
+    emb_dims: 512
+    pretrain: null
+  center_feature: true
+  frozen_embedding: true
+  block_computing: true
+XARM6_IP: 192.168.1.208
+XARM6LEFT_IP: 192.168.1.232
+dataset:
+  batch_size: 32
+split_batch_size: 100
+gpu: 0
+name: '[3hands_latent128]'
+validate_epochs:
+- 30
+- 40
+- 50
+- 60
+- 70
+- 80
+- 90
+- 100
