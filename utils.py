@@ -242,3 +242,38 @@ class PointCloudUtils:
 
         xarm.arm.set_gripper_position(gripper_open, wait=True)
         print("螺旋运动完成，夹爪已松开。")
+
+class Grasp_Policy():
+
+    @staticmethod
+    def pick_policy_z_axis(pose_box, pcd_center, lengths):
+
+        length = lengths[0]
+        width = lengths[1]
+        height = lengths[2]
+
+        '''policy1 is to pick along the z axis of the object pose get from foundation psoe with 30cm pregrasp distance'''
+        adjustment_rotation = R.from_euler('x', 90, degrees=True).as_matrix()
+        reverse_rotation = R.from_euler('x' , -90, degrees= True).as_matrix()
+        # Embed the adjustment rotation into a 4x4 transformation matrix
+        rotation_z_towards_down = pose_box @ adjustment_rotation
+        if rotation_z_towards_down[2,2]>0:
+            rotation_z_towards_down = pose_box @ reverse_rotation
+
+        # to see the origin pose
+
+        # we need to grasp the top side of the board and its offset is half of width
+        z_axis_offset = 0.5*width-0.03+0.17+0.1
+        offset_in_object_frame = np.array([0, 0, -z_axis_offset]) 
+
+        # 将偏移量从物体坐标系转换到世界坐标系
+        offset_in_world_frame = rotation_z_towards_down @ offset_in_object_frame
+
+        center_grasp = np.eye(4,4)
+        center_grasp[:3, 3] = pcd_center+offset_in_world_frame
+        center_grasp[:3, :3] = rotation_z_towards_down
+
+        policy = "z_axis"
+
+        print(f"center_grasp: {center_grasp}")
+        return center_grasp, rotation_z_towards_down, policy
