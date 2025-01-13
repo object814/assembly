@@ -6,6 +6,7 @@ import open3d as o3d
 import hydra
 import torch
 import warnings
+from utils import PointCloudUtils
 from xarm6_interface import XARM6_IP, XARM6LEFT_IP
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -351,6 +352,7 @@ def canonicalize_point_cloud_with_icp(point_pcd):
 
     return canonicalized_pcd, rotation_matrix.T, centroid
 def test():
+    pass
     
 if __name__ == "__main__":
     sv = viser.ViserServer()
@@ -365,20 +367,22 @@ if __name__ == "__main__":
         random_t_list.append(random_t)
 
     # mesh_dir = "object_mesh_new/board00/board00.obj"
-    mesh_dir = "object_mesh_new/original_part_00/original_part_00.obj"
-    mesh = trimesh.load_mesh(mesh_dir)
-    pts_0= sample_points_from_mesh(mesh, 10000)
+    # mesh_dir = "object_mesh_new/original_part_00/original_part_00.obj"
+    # mesh = trimesh.load_mesh(mesh_dir)
+    # pts_0= sample_points_from_mesh(mesh, 10000)
     for i in range(10):
-        pts = sample_points_from_mesh(mesh, 10000)
+        # pts = sample_points_from_mesh(mesh, 10000)
+        pts = np.load("pts2.npy")
         random_R = random_R_list[i]
         random_t = random_t_list[i]
         new_point_cloud = o3d.geometry.PointCloud()
         rotated_pcd = pts @ random_R + random_t
         new_point_cloud.points = o3d.utility.Vector3dVector(rotated_pcd)
-        canonicalized_pcd, rotation_matrix0, centroid0 = canonicalize_point_cloud_heu(np.asarray(new_point_cloud.points))
+        # canonicalized_pcd, rotation_matrix0, centroid0 = canonicalize_point_cloud_heu(np.asarray(new_point_cloud.points))
+        canonicalized_pcd, rotation_matrix0, centroid0 = PointCloudUtils.canonical_bbo(new_point_cloud, visualize = False)
         print(np.linalg.det((rotation_matrix0)))
         rotation_matrix_writable = np.array(rotation_matrix0, copy=True)
         sv.scene.add_point_cloud(f"ori{i}",points = np.asarray(new_point_cloud.points),colors=(255,0,0),point_size=0.002,point_shape="circle")
-        sv.scene.add_point_cloud(f"pts{i}",points =np.asarray(canonicalized_pcd.points),colors=(0,255,0),point_size=0.002,point_shape="circle")
+        sv.scene.add_point_cloud(f"pts{i}",points =canonicalized_pcd,colors=(0,255,0),point_size=0.002,point_shape="circle")
         sv.scene.add_frame(f"PCA{i}", wxyz=R.from_matrix(rotation_matrix_writable[:3, :3].T).as_quat()[[3, 0, 1, 2]], position=centroid0, axes_length=0.3, axes_radius=0.01)
     input("Press Enter to continue...")

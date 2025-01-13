@@ -1,3 +1,9 @@
+import sys
+import os
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR)
+sys.path.append(os.path.join(ROOT_DIR+"3rd_party/segment-anything"))
+sys.path.append(os.path.join(ROOT_DIR+"3rd_party/xarm6"))
 import cv2
 import time
 import viser 
@@ -6,14 +12,12 @@ import open3d as o3d
 import hydra
 import torch
 import warnings
+
 from xarm6_interface import XARM6_IP, XARM6LEFT_IP
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
-import sys
-import os
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR)
-sys.path.append(os.path.join(ROOT_DIR+"/third_party/segment-anything"))
+
+
 print(sys.path)
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
@@ -41,6 +45,43 @@ from sklearn.decomposition import PCA
 from pdb import set_trace as bp
 from order_planing import order_planing
 from utils import PointCloudUtils
+
+def update_attach(xarm6_planner = None, object_name='sticker', pose_tool=None, pose_frank = None):
+
+    grippermount_data_dir = Path("data/data_urdf/robot/xarm_gripper/hand_open_cvx_hull.obj")
+    gripper_trimesh = trimesh.load_mesh(grippermount_data_dir).apply_scale(1.1)
+    position = pose_tool[:3, 3]
+    rotation_matrix = pose_tool[:3, :3]
+    wxyz = R.from_matrix(rotation_matrix).as_quat()[[3, 0, 1, 2]]  # Convert to wxyz format
+    xarm6_planner.mplib_update_attached_object(
+        gripper_trimesh,
+        pose_frank,
+    )
+    sv.scene.add_mesh_simple(
+        "attached_gripper",
+        vertices=gripper_trimesh.vertices,
+        faces=gripper_trimesh.faces,
+        wxyz=wxyz,
+        position=position,
+        opacity=0.5,
+    )
+    #####################################
+    
+    ####zjx, attach trimesh
+    attached_trimesh = trimesh.load(f"object_mesh_new/{object_name}/{object_name}.obj").apply_scale(1.2)
+    # attached_trimesh_cvx_hull = attached_trimesh.convex_hull
+    # Create a transformation matrix for attaching (identity for testing)
+    
+    attach_transform = pose_tool  # 4x4 transformation matrix, identity for testing
+
+    # Get position and rotation from the transformation matrix
+    position = attach_transform[:3, 3]
+    rotation_matrix = attach_transform[:3, :3]
+    wxyz = R.from_matrix(rotation_matrix).as_quat()[[3, 0, 1, 2]]  # Convert to wxyz format
+
+    # Update the planner with the attached object
+    xarm6_planner.mplib_update_attached_object(attached_trimesh, attach_transform)
+    
 def read_matrices_from_npy(file_path):
 
     # Load data from .npy file
@@ -56,33 +97,38 @@ def read_matrices_from_npy(file_path):
     return matrices
 
 def se3_distance(pose1, pose2):
-    """
-    计算两个 SE(3) 矩阵之间的平移和旋转距离。
-    
-    Parameters:
-    pose1, pose2: numpy.ndarray
-        4x4 的变换矩阵,分别表示两个 SE(3) 位姿。
-    
-    Returns:
-    float
-        平移和旋转的综合距离。
-    """
-    # 平移分量的平方距离
+
     trans_diff = np.linalg.norm(pose1[:3, 3] - pose2[:3, 3]) ** 2
 
-    # # 计算旋转分量的测地线距离
-    # R1 = pose1[:3, :3]  # 提取 pose1 的旋转矩阵
-    # R2 = pose2[:3, :3]  # 提取 pose2 的旋转矩阵
-    # relative_rotation = np.dot(R1.T, R2)  # 计算相对旋转矩阵
-    # angle = np.arccos(
-    #     (np.trace(relative_rotation) - 1) / 2
-    # )  # 根据旋转矩阵的迹计算测地线距离（旋转角度)
-
-    # # 防止浮点误差导致 acos 输入超出 [-1, 1]
-    # angle = np.clip(angle, 0, np.pi)
-
-    # 平移和旋转平方和的平方根
     return trans_diff
+
+def update_collision_pcd(current_target_pcd):
+        """
+        Updates the collision point cloud by merging the current target point cloud
+        into the existing collision point cloud in the scene.
+        
+        Args:
+            current_target_pcd: The point cloud of the current target object.
+        """
+        global collision_pcd  # Ensure we update the global collision_pcd
+        if isinstance(current_target_pcd, o3d.geometry.PointCloud):
+            current_target_pcd = np.asarray(current_target_pcd.points)
+        elif not isinstance(current_target_pcd, np.ndarray):
+            raise ValueError("Invalid type of point_cloud")
+        # Convert the existing collision_pcd to a numpy array
+        existing_points = np.asarray(collision_pcd.points)
+        # Convert the current target_pcd to a numpy array
+        target_points = current_target_pcd
+        
+        # Concatenate the two point clouds
+        merged_points = np.vstack((existing_points, target_points))
+        
+        # Update the global collision_pcd with the merged points
+        collision_pcd = o3d.geometry.PointCloud()
+        collision_pcd.points = o3d.utility.Vector3dVector(merged_points)
+        
+        # Update the visualization server
+        lgr.info("Updated collision point cloud with the current target.")
 
 def enviroment_constraint(xarm6_planner_cfg):
     env_params = WoodenTableMount()
@@ -104,29 +150,6 @@ def sample_points_from_mesh(mesh, num_points, seed=None):
 def get_pcd(object_name):
     mesh = trimesh.load(f"object_mesh_new/{object_name}/{object_name}.obj")
 
-def extract_rectangle_with_pose(point_cloud):
-
-    if isinstance(point_cloud, o3d.geometry.PointCloud):
-        point_cloud = np.asarray(point_cloud.points)
-    elif isinstance(point_cloud, np.ndarray):
-        point_cloud = point_cloud
-    else:
-        raise ValueError("Invalid type of point_cloud")
-
-    # Step 1: 创建 Open3D 点云对象
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(point_cloud)
-
-    # Step 2: 计算最小外接矩形
-    obb = pcd.get_oriented_bounding_box()
-
-    # Step 3: 提取矩形的姿态信息
-    center = obb.center  # 矩形中心点
-    rotation_matrix = obb.R  # 矩形的旋转矩阵
-    extents = obb.extent  # 矩形的长宽高
-
-    # 返回结果
-    return center, rotation_matrix
 
 # 使用PCA对批量点云进行规范化
 def canonicalize_point_cloud(point_cloud):
@@ -189,14 +212,13 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
         # # input(f"xor mask: {np.sum(manual_mask_np ^ mask_np)}, and mask: {np.sum(manual_mask_np & mask_np)}")
         # bbox = bbox_list.pop(0)
         # print(f"bbox: {bbox}\nlen(mask_list) remained: {len(mask_list)}")
-        pose = est.register(K=arm_cam_K, rgb=rgb, depth=depth, ob_mask=manual_mask_np, iteration=10 if arm_ip == XARM6LEFT_IP else 20)
+        pose = est.register(K=arm_cam_K, rgb=rgb, depth=depth, ob_mask=manual_mask_np, iteration=20)
         pose = arm_cam_X_BaseCamera @ pose
 
         points = sample_points_from_mesh(mesh, 50000, seed=0)
 
         object_pc_o3d = o3d.geometry.PointCloud()
         object_pc_o3d.points = o3d.utility.Vector3dVector(points)
-        sv.scene.add_point_cloud("scan_pcd", points=np.asarray(object_pc_o3d.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
         object_pc_o3d.transform(pose)
 
     return object_pc_o3d, pose
@@ -217,66 +239,6 @@ def get_closest_joint_value(current_joint_value, target_joint_values):
 
 def get_pcd_center(pcd):
     return np.mean(np.asarray(pcd.points), axis=0)
-
-import time
-def spiral_motion_dynamic_x_axis(
-    xarm, initial_radius=10, final_radius=2, pitch=2, loops=3, steps_per_loop=20,
-    speed=50, mvacc=500, gripper_open=850, gripper_close=600, control_frequency=50
-):
-    """
-    实现螺旋线绕机械臂动态工具点的 X 轴运动，工具点随着运动更新。
-    """
-    total_steps = loops * steps_per_loop  # 总步数
-    step_time = 1.0 / control_frequency  # 控制周期
-
-    # 初始化时间控制
-    start_time = time.time()
-
-    for i in range(total_steps):
-        # 计算当前角度和半径
-        theta = 2 * np.pi * (i / steps_per_loop)
-        radius = initial_radius + (final_radius - initial_radius) * (i / total_steps)
-
-        # 工具坐标系中的偏移量
-        y_offset = radius * np.sin(theta)
-        z_offset = radius * np.cos(theta) + pitch * (i / steps_per_loop)
-
-        # 获取当前末端工具的位姿
-        _, current_pose = xarm.get_position_se3(is_radian=False)
-
-        # 提取位置部分
-        current_position = current_pose[:3, 3] # 4x4 矩阵中的位移
-
-        # 提取旋转矩阵部分
-        current_rotation = current_pose[:3, :3]  # 4x4 矩阵中的旋转矩阵
-        rotation = R.from_matrix(current_rotation)
-        r, p, y = rotation.as_euler("XYZ", degrees=False)  # 提取当前姿态的欧拉角
-        # 在工具坐标系下计算目标点
-        tool_offset = np.array([0, y_offset, z_offset])  # 偏移量 (x 固定绕 y-z 平面)
-        world_target = current_position + current_rotation @ tool_offset  # 转换到世界坐标系
-
-        # 更新目标位置
-        xarm.set_tool_position(
-            x=world_target[0], y=world_target[1], z=world_target[2],
-            roll=r, pitch=p, yaw=y,
-            speed=speed, mvacc=mvacc, is_radian=False, wait=False
-        )
-
-        # 动态调整夹爪位置
-        gripper_position = int(gripper_close + (gripper_open - gripper_close) * (i / total_steps))
-        xarm.arm.set_gripper_position(gripper_position, wait=False)
-
-        # 控制频率
-        elapsed_time = time.time() - start_time
-        sleep_time = step_time - elapsed_time
-        if sleep_time > 0:
-            time.sleep(sleep_time)
-        start_time = time.time()  # 更新下一步的开始时间
-
-    # 确保夹爪完全松开
-    xarm.arm.set_gripper_position(gripper_open, wait=True)
-
-    lgr.info("螺旋运动完成，夹爪已松开。")
     
 
 def average_direction_principal_axes(point_cloud, k=3):
@@ -344,40 +306,48 @@ def calculate_transform_matrix(rotation_path, center_path, base_pcd):
         base_pcd = np.asarray(base_pcd.points)
         rotation_mats = read_matrices_from_npy(rotation_path)
         centers = read_matrices_from_npy(center_path)
-        base_rotation_cam  = rotation_mats[0]
-        base_center_cam = centers[0]
-
+        base_rotation_cam  = rotation_mats[1]
+        base_center_cam = centers[1]
+        '''temple test!'''
         base_cam = np.eye(4)
-        base_cam[:3, :3] = base_rotation_cam.T
+        base_cam[:3, :3] = base_rotation_cam
         base_cam[:3, 3] = base_center_cam
-        canonical_base_pcd, base_mat, base_center = canonicalize_point_cloud_heu(base_pcd)
+        if len(centers)>2:
+            canonical_base_pcd, base_mat, base_center = canonicalize_point_cloud_heu(base_pcd)
+        else:
+            # input('calculating with bbo')
+            canonical_base_pcd, base_mat, base_center = PointCloudUtils.canonical_bbo(base_pcd, reverse_xy = True)
+        sv.scene.add_point_cloud("canonical_pcd", points=canonical_base_pcd, colors=(0, 255, 0), point_size=0.002, point_shape="circle")
         canonical_base_mat = np.eye(4)
         canonical_base_mat[:3, :3] = base_mat.T
         canonical_base_mat[:3, 3] = base_center
         canonical_transform_base_cam = canonical_base_mat @ np.linalg.inv(base_cam) 
 
         sv.scene.add_frame("canonical_base_pose", wxyz=R.from_matrix(canonical_base_mat[:3, :3]).as_quat()[[3, 0, 1, 2]], position=canonical_base_mat[:3, 3], axes_length=0.3, axes_radius=0.01)
-
         return canonical_transform_base_cam, rotation_mats, centers
 
 
-def pick(object_name='box01', arm_ip=XARM6_IP):  
-    # object_pc_o3d, masked_pc_o3d_fusion = get_object_pc()
-    t1 = time.time()
+def pick(object_name='box03', arm_ip=XARM6_IP):  
 
-    def pose_reevaluate_and_attach():
-        pass
+    def pick_policy_z_axis(pose_box, pcd_center, lengths):
 
-    def pick_policy_z_axis(pose_box, center_box):
+        length = lengths[0]
+        width = lengths[1]
+        height = lengths[2]
+
         '''policy1 is to pick along the z axis of the object pose get from foundation psoe with 30cm pregrasp distance'''
         adjustment_rotation = R.from_euler('x', 90, degrees=True).as_matrix()
+        reverse_rotation = R.from_euler('x' , -90, degrees= True).as_matrix()
         # Embed the adjustment rotation into a 4x4 transformation matrix
         rotation_z_towards_down = pose_box @ adjustment_rotation
+        if rotation_z_towards_down[2,2]>0:
+            rotation_z_towards_down = pose_box @ reverse_rotation
 
         # to see the origin pose
 
-        # 偏移量在物体坐标系下
-        offset_in_object_frame = np.array([0, 0, -0.3])  # 物体局部坐标系下的Z轴上方30cm
+        # we need to grasp the top side of the board and its offset is half of width
+        z_axis_offset = 0.5*width-0.03+0.17+0.1
+        offset_in_object_frame = np.array([0, 0, -z_axis_offset]) 
 
         # 将偏移量从物体坐标系转换到世界坐标系
         offset_in_world_frame = rotation_z_towards_down @ offset_in_object_frame
@@ -385,6 +355,7 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
         center_grasp = np.eye(4,4)
         center_grasp[:3, 3] = center_box+offset_in_world_frame
         center_grasp[:3, :3] = rotation_z_towards_down
+
         # center_grasp[2,3] += 0.3
         policy = "z_axis"
 
@@ -409,44 +380,7 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
         
         return pre_grasp, pose, policy
     
-    def update_attach(object_name='sticker', pose_tool=None, pose_frank = None):
-            grippermount_data_dir = Path("data/data_urdf/robot/xarm_gripper/hand_open_cvx_hull.obj")
-            gripper_trimesh = trimesh.load_mesh(grippermount_data_dir).apply_scale(1.1)
-            position = pose_tool[:3, 3]
-            rotation_matrix = pose_tool[:3, :3]
-            wxyz = R.from_matrix(rotation_matrix).as_quat()[[3, 0, 1, 2]]  # Convert to wxyz format
-            xarm6_planner.mplib_update_attached_object(
-                gripper_trimesh,
-                pose_frank,
-            )
-            sv.scene.add_mesh_simple(
-                "attached_gripper",
-                vertices=gripper_trimesh.vertices,
-                faces=gripper_trimesh.faces,
-                wxyz=wxyz,
-                position=position,
-                opacity=0.5,
-            )
-            #####################################
-            
-            ####zjx, attach trimesh
-            attached_trimesh = trimesh.load(f"object_mesh_new/{object_name}/{object_name}.obj").apply_scale(1.2)
-            # attached_trimesh_cvx_hull = attached_trimesh.convex_hull
-            # Create a transformation matrix for attaching (identity for testing)
-            
-            attach_transform = pose_tool  # 4x4 transformation matrix, identity for testing
-
-            # Get position and rotation from the transformation matrix
-            position = attach_transform[:3, 3]
-            rotation_matrix = attach_transform[:3, :3]
-            wxyz = R.from_matrix(rotation_matrix).as_quat()[[3, 0, 1, 2]]  # Convert to wxyz format
-
-            # Update the planner with the attached object
-            xarm6_planner.mplib_update_attached_object(attached_trimesh, attach_transform)
-    
-    
-    
- 
+   
     ''' setup the planner and vis '''
     # sv = viser.ViserServer()
     xarm6_pk = XArm6WOEE()
@@ -459,25 +393,26 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
     xarm = XArm6RealWorld(ip = arm_ip)
     xarm.arm.set_gripper_position(850, wait=True)
     home_joint_values = xarm.default_joint_values  # 默认的回到初始位置的关节角
+    print(f"home joint value is {home_joint_values}")
     xarm.set_joint_values(home_joint_values, speed=0.35, wait=True)
 
     object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name, arm_ip = arm_ip)
     center_box, pose_box, lengths = PointCloudUtils.extract_rectangle_with_pose(object_pc_o3d)
     print(f"lengths is {lengths}")
-    bp()
     pose_box = np.array(pose_box, copy=True)
     print(f"center_box: {center_box}, pose_box: {pose_box}")
+    pcd_center = get_pcd_center(object_pc_o3d)
     sv.scene.add_point_cloud("original_pc", points=np.asarray(object_pc_o3d.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
     # sv.scene.add_point_cloud("canonical_pc", points=np.asarray(canonicalized_pcd.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
-    sv.scene.add_frame("canonical_pose", wxyz=R.from_matrix(pose_box).as_quat()[[3, 0, 1, 2]], position=center_box, axes_length=0.03, axes_radius=0.001)
-    pre_grasp, adjusted_rotation_matrix, policy = pick_policy_z_axis(pose_box, center_box)
+    sv.scene.add_frame("canonical_pose", wxyz=R.from_matrix(pose_box).as_quat()[[3, 0, 1, 2]], position=pcd_center, axes_length=0.03, axes_radius=0.001)
+    grasp_pose, adjusted_rotation_matrix, policy = pick_policy_z_axis(pose_box, pcd_center, lengths)
     wxyz = R.from_matrix(adjusted_rotation_matrix[:3, :3]).as_quat()[[3, 0, 1, 2]]  # 转换为 wxyz 格式
     sv.scene.add_frame("z_down_pose", wxyz=wxyz, position=center_box, axes_length=0.03, axes_radius=0.001)
     sv.scene.add_point_cloud("object_pc", points=np.asarray(object_pc_o3d.points), colors=(255, 0, 0), point_size=0.002, point_shape="circle")
     current_joint_values = np.array(xarm.get_joint_values())
 
     # REAL PALNNING IS HERE! 
-    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, pre_grasp)
+    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, grasp_pose)
     if planning_result['status'] != 'Success':
         lgr.info(f"Collision-free planning: Fail")
         return
@@ -506,7 +441,7 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
     validated = False
     xarm.set_joint_values_sequence(waypt_joint_values_np, planning_timestep=planner_timestep)
     xarm.set_joint_values(waypt_joint_values_np[-1], speed=0.35, wait=True)
-    
+
     # input("Press Enter to continue...")
     
     xarm6_planner = XARM6Planner(xarm6_planner_cfg)
@@ -516,24 +451,21 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
     if arm_ip==XARM6_IP:
         offset_grasp_in_object_frame = np.array([0, 0, +0.1]) 
     elif arm_ip==XARM6LEFT_IP:
-        offset_in_grasp = lengths[1]# haven't down
-        offset_grasp_in_object_frame = np.array([0, 0, offset_in_grasp]) # 物体局部坐标系下向下偏移
+        offset_grasp_in_object_frame = np.array([0, 0, +0.1]) # 物体局部坐标系下向下偏移
     if policy == "top_down":
-        center_grasp = pre_grasp.copy()
-        center_grasp[:3, 3] = pre_grasp[:3,3]- offset_grasp_in_object_frame
+        center_grasp = grasp_pose.copy()
+        center_grasp[:3, 3] = grasp_pose[:3,3]- offset_grasp_in_object_frame
         print(f"center_grasp: {center_grasp}")
-    
     elif policy=="z_axis":
-        center_grasp = pre_grasp.copy()
+        center_grasp = grasp_pose.copy()
         offset_grasp_in_world_frame = adjusted_rotation_matrix @ offset_grasp_in_object_frame
-        center_grasp[:3, 3] = pre_grasp[:3,3] + offset_grasp_in_world_frame
+        center_grasp[:3, 3] = grasp_pose[:3,3] + offset_grasp_in_world_frame
 
         print(f"center_grasp: {center_grasp}")
     
     
     status, grasp_arm_joint_values = xarm6_planner.mplib_ik(current_joint_values, center_grasp)
     print(f"status: {status}")
-    bp()
     closest_grasp_arm_joint_values = get_closest_joint_value(current_joint_values, grasp_arm_joint_values)
     mp_is_success = status == 'Success'
     if not mp_is_success:
@@ -549,11 +481,12 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
         X_WorldEeflift[:3, 3] += np.array([0, 0, 0.2])
         status, lifted_arm_joint_values = xarm6_planner.mplib_ik(current_joint_values, X_WorldEeflift)
         mp_is_success = status == 'Success'
-        closest_lifted_arm_joint_value = get_closest_joint_value(current_joint_values, lifted_arm_joint_values)
+        
         if not mp_is_success:
             lgr.info(f"Lift planning: Fail")
         else:
             lgr.info(f"Lift planning: Success")
+            closest_lifted_arm_joint_value = get_closest_joint_value(current_joint_values, lifted_arm_joint_values)
             xarm.arm.set_servo_angle(angle=xarm.to_list(closest_lifted_arm_joint_value), speed=0.2, wait=True, is_radian=True)
             # time.sleep(2)
             # xarm.arm.set_gripper_position(850, wait=True)
@@ -579,34 +512,39 @@ def pick(object_name='box01', arm_ip=XARM6_IP):
             # go_to_test(pose)
         status, ee_pose = xarm.get_position_se3()
         status2, frank_pose = xarm.get_position()
-        update_attach(object_name='sticker', pose_tool=ee_pose,pose_frank = frank_pose)
-        # bp()
+        print(f"ee pose is {ee_pose}, frank pose is {frank_pose}")
+        update_attach(object_name=object_name, pose_tool=ee_pose,pose_frank = frank_pose)
+        # bp()           
 
-
-            
-
-def pose_initialization(arm_ip = XARM6LEFT_IP, rotation_path = None , center_path = None):
+def get_target_pose(arm_ip = XARM6LEFT_IP, rotation_path = None , center_path = None):
 
     global collision_pcd
     '''here we get all the target pose based on the left arm base'''
     # sv = viser.ViserServer()
-    base_pcd, pose = get_object_pc_fp(object_name='original_part_00',arm_ip=arm_ip)
+    base_pcd, pose = get_object_pc_fp(object_name='box02',arm_ip=arm_ip)
     collision_pcd = base_pcd
-    sv.scene.add_point_cloud("base_pcd", points=np.asarray(base_pcd.points), colors=(255, 0, 0), point_size=0.002, point_shape="circle")
+    update_collision_pcd(collision_pcd)
+    sv.scene.add_point_cloud("base_pcd", points = np.asarray(base_pcd.points), colors = (0,255,0),point_size = 0.01, point_shape = 'circle')
+
     '''' get taget pose based on the canonical pose and assume the base in the real-world is static'''
     trans_mat, rotation_mats, centers= calculate_transform_matrix(rotation_path, center_path, base_pcd)
     
-    for i in range(1,len(rotation_mats)):
-        target_pose = np.eye(4)
-        target_pose[:3, :3] = rotation_mats[i].T
-        target_pose[:3, 3] = centers[i]
-        target_pose = trans_mat @ target_pose
-        target_list.append(target_pose)
-        sv.scene.add_frame(f"target_pose{i}", wxyz=R.from_matrix(target_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=target_pose[:3, 3], axes_length=0.3, axes_radius=0.01)
+    # for i in range(1,len(rotation_mats)):
+    target_pose = np.eye(4)
+    # in the box case, the rotation definition is little bit different from the stool
+    target_pose[:3, :3] = rotation_mats[0]
+    target_pose[:3, 3] = centers[0]
+    target_pose = trans_mat @ target_pose
+    target_list.append(target_pose)
+        # sv.scene.add_frame(f"target_pose{i}", wxyz=R.from_matrix(target_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=target_pose[:3, 3], axes_length=0.3, axes_radius=0.01)
     sorted_list = sorted(target_list, key = lambda x: x[0,3])
     global target_left, target_right
-    target_left = sorted_list[:len(sorted_list)//2]
-    target_right = sorted_list[len(sorted_list)//2:]
+    if len(target_list) > 1 and len(target_list)%2==0 :
+        target_left = sorted_list[:len(sorted_list)//2]
+        target_right = sorted_list[len(sorted_list)//2:]
+    else:
+        target_left = sorted_list
+        target_right = sorted_list
     # print(f"cam2leftbase: {cam2leftbase}")
     # print(f"cam2rightbase: {cam2rightbase}")
     mat_left_to_right = cam2rightbase@ np.linalg.inv(cam2leftbase)
@@ -614,210 +552,28 @@ def pose_initialization(arm_ip = XARM6LEFT_IP, rotation_path = None , center_pat
     target_right = [mat_left_to_right @ mat for mat in target_right]
     # print(f"target_right: {target_right}")
 
-
-def insert(arm_ip=XARM6_IP, target_pose = None, mesh = None):
-    global collision_pcd  # 声明使用全局变量
-    maximun_planning_time = 10
- 
-    
-
-
-    def get_pre_pose_from_target_pose(arm_ip, target_pose, ee_offset=0.166):
-        ee_offset = ee_offset  # 末端执行器距离法兰的距离
-        ee_offset_vector = np.array([0, 0, -ee_offset])  # 在目标坐标系下的偏移向量
-
-        ee_target_pose = target_pose.copy()
-        # 应用偏移
-        ee_target_pose[:3, 3] += target_pose[:3, :3] @ ee_offset_vector.reshape(3)
-        # ee_target_pose[:3, 3] -= ee_offset_grasp
-        # 沿目标姿态的 x 轴偏移 
-        if arm_ip ==  XARM6LEFT_IP:
-            x_axis_offset = -0.011
-        elif arm_ip == XARM6_IP:
-            x_axis_offset = -0.02
-        pre_align_pose = ee_target_pose.copy()
-        x_offset_vector = np.array([x_axis_offset, 0, 0])  # 在目标坐标系下的 x 方向偏移向量
-        pre_align_pose[:3, 3] += target_pose[:3, :3] @ x_offset_vector  # 应用偏移
-
-        return pre_align_pose, ee_target_pose
-    
-    def update_collision_pcd(current_target_pcd):
-        """
-        Updates the collision point cloud by merging the current target point cloud
-        into the existing collision point cloud in the scene.
-        
-        Args:
-            current_target_pcd: The point cloud of the current target object.
-        """
-        global collision_pcd  # Ensure we update the global collision_pcd
-
-        # Convert the existing collision_pcd to a numpy array
-        existing_points = np.asarray(collision_pcd.points)
-        # Convert the current target_pcd to a numpy array
-        target_points = current_target_pcd
-        
-        # Concatenate the two point clouds
-        merged_points = np.vstack((existing_points, target_points))
-        
-        # Update the global collision_pcd with the merged points
-        collision_pcd = o3d.geometry.PointCloud()
-        collision_pcd.points = o3d.utility.Vector3dVector(merged_points)
-        
-        # Update the visualization server
-        lgr.info("Updated collision point cloud with the current target.")
-
-    ''''start the main insert function'''
+def get_ee_target_from_initial(object_name = 'box01', target_pose = None):
+    initial_pcd, initial_pose = get_object_pc_fp(object_name='box01', arm_ip=XARM6_IP)
+    cano_pcd, rotation_mat, center = PointCloudUtils.canonical_bbo(initial_pcd, visualize = True)
+    initial_cano_pose = np.eye(4)
+    initial_cano_pose[:3,:3] = rotation_mat.T
+    initial_cano_pose[:3,3] = center
+    transfer_mat = target_right[0] @ np.linalg.inv(initial_cano_pose)
+    bp()
+    xarm = XArm6RealWorld(ip = XARM6_IP)
     xarm6_pk = XArm6WOEE()
-    xarm = XArm6RealWorld(ip = arm_ip)
     xarm6_planner_cfg = XARM6PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
     xarm6_planner = XARM6Planner(xarm6_planner_cfg)
-    ra = RobotArm(urdf_path= XARM6_WO_EE_URDF_PATH)
-    env_pc = enviroment_constraint(xarm6_planner_cfg)
-    xarm6_planner.mplib_add_point_cloud(env_pc, name="env_pc")
-    xarm6_planner.mplib_add_point_cloud(np.asarray(collision_pcd.points), name = "collison_pcd")
-    sv.scene.add_point_cloud("collision_pcd", points=np.asarray(collision_pcd.points), colors=(0, 0, 255), point_size=0.002, point_shape="circle")
-    current_joint_values = np.array(xarm.get_joint_values())
-    pre_align_pose, ee_target_pose = get_pre_pose_from_target_pose(arm_ip,target_pose)
-    pcd_align_pose = target_pose.copy()
-    pcd_align_pose[:3, 0] *= -1
-    target_pcd = sample_points_from_mesh(mesh, 1000, seed=0)
-    target_pcd, rotation_matrix, centroid = canonicalize_point_cloud_heu(target_pcd)
-    homogenerous =  np.hstack((np.asarray(target_pcd.points), np.ones((np.asarray(target_pcd.points).shape[0],1))))
-    transformed_points = (pcd_align_pose @ homogenerous.T).T
-    transformed_points = transformed_points[:, :3] 
-    sv.scene.add_point_cloud("target_pcd", points=transformed_points, colors=(0, 255, 0), point_size=0.002, point_shape="circle")
-    # print(f"pre_align_pose: {pre_align_pose}")
-    ''' pick ten of the possible target pose, and sorted them according to the distance to the current pose'''
-    # current_arm_mesh = ra.get_state_trimesh(current_joint_values, visual=True, collision=False)["visual"]
-    # sv.scene.add_mesh_trimesh("current_arm_mesh", current_arm_mesh)
-    status, ee_pose = xarm.get_position_se3()
-    
-    possible_target_pose = []
-    for i in range(10):
-        rotation = R.from_euler('x', 30 * i, degrees=True).as_matrix()
-        target_pose[:3, :3] = target_pose[:3, :3] @ rotation
-        pre_align_pose, ee_target_pose = get_pre_pose_from_target_pose(arm_ip, target_pose)
-        possible_target_pose.append([pre_align_pose,ee_target_pose])
-    print(f"shape of possible_target_pose: {np.array(possible_target_pose).shape}")
-    possible_target_pose = sorted(possible_target_pose, key = lambda pose: se3_distance(pose[0], ee_pose))
-    # print(f"possible target pose {possible_target_pose}")
-    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, possible_target_pose[0][0])
-    # print(planning_result['status'])
-    if planning_result['status']:
-        pre_align_pose = possible_target_pose [0][0]
-        ee_target_pose = possible_target_pose [0][1]
-    # print(pre_align_pose)
-    # print(ee_target_pose)
-    
-    '''try to change the rotation and plan again if is not success'''
-    trial = 1
-    while planning_result['status'] != 'Success' and trial < maximun_planning_time:
-        lgr.info(f"Trial {trial}: Collision-free planning to pre-align position: Fail")
-        planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, possible_target_pose[trial][0]) 
-        if planning_result['status'] == 'Success':
-            pre_align_pose = possible_target_pose[trial][0]
-            ee_target_pose = possible_target_pose[trial][1]
-            break     
-        trial += 1
+    _, xarm_frank = xarm.get_position()
+    bp()
+    ee_target_pose = transfer_mat @ xarm_frank
+    bp()
 
-    if trial == maximun_planning_time:
-        lgr.info("Collision-free planning to pre-align position: Fail")
-        return
-    # print(f"planing_result: {planning_result}")
-    lgr.info("Collision-free planning to pre-align position: Success")
-    
-    '''visualize the pre-align pose'''
-    sv.scene.add_frame("pre_align_pose", wxyz=R.from_matrix(pre_align_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pre_align_pose[:3, 3], axes_length=0.03, axes_radius=0.001)
-    hand_open_mesh_path = Path("data/data_urdf/robot/xarm_gripper/hand_open.obj")
-    gripper_trimesh = trimesh.load_mesh(hand_open_mesh_path).apply_scale(1.1)
-    sv.scene.add_mesh_simple("hand_open", vertices=gripper_trimesh.vertices, faces=gripper_trimesh.faces, wxyz=R.from_matrix(pre_align_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pre_align_pose[:3, 3], opacity=0.5)
-    waypt_joint_values_np = planning_result['position']
-    end_joint_values = waypt_joint_values_np[-1]
-    update_viser_mp_result(sv, xarm6_pk, current_joint_values, end_joint_values, waypt_joint_values_np)
-    # validated = False
-    # validate_button = sv.gui.add_button("Execute",)
-    # # turn validated to True]
-    # def validate_true():
-    #     nonlocal validated
-    #     validated = True
-    #     lgr.info("validated")
-    # validate_button.on_click(lambda _: validate_true())
-    # while True:
-    #     time.sleep(0.2)
-    #     if validated:
-    #         break
-    # validated = False
 
-    xarm.set_joint_values_sequence(waypt_joint_values_np, planning_timestep=planner_timestep)
-    xarm.set_joint_values(waypt_joint_values_np[-1], speed=0.1, wait=True)
+    pass
+def base_to_target_pose():
 
-    # bp()
-
-    # # 规划运动到最终插入位置
-    # current_joint_values = np.array(xarm.get_joint_values())
-
-    # planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, ee_target_pose)
-    # if planning_result['status'] != 'Success':
-    #     lgr.info(f"Collision-free planning to target pose: Fail")
-    #     xarm.arm.set_gripper_position(850, wait=True)
-    #     home_joint_values = xarm.default_joint_values  # 默认的回到初始位置的关节角
-    #     xarm.set_joint_values(home_joint_values, speed=0.35, wait=True)
-    #     return
-    # lgr.info(f"Collision-free planning to target pose: Success")
-    # waypt_joint_values_np = planning_result['position']
-
-    # # 设置慢速插入
-    # slow_speed = 0.01  # 插入速度
-    # xarm.set_joint_values_sequence(waypt_joint_values_np, planning_timestep=planner_timestep)
-    # xarm.set_joint_values(waypt_joint_values_np[-1], speed=slow_speed, wait=True)
-
-    # 松开物体
-    xarm.arm.set_gripper_position(330, wait=True)
-    time.sleep(1)
-    xarm.arm.set_gripper_position(850, wait=True)  # 松开夹爪
-    # time.sleep(2)  # 确保物体释放完成
-
-    # 当前末端执行器的位姿
-    status, cur_ee_pose = xarm.get_position_se3()   # 获取末端执行器的当前位姿（4x4矩阵)
-    # input("Press Enter to continue to lift the arm...")
-    # 沿末端的 z 方向平移 10cm
-    offset = np.array([0, 0, -0.24])  # 平移的偏移量
-    translation_matrix = np.eye(4)
-    translation_matrix[:3, 3] = offset
-    lifted_pose = cur_ee_pose @ translation_matrix  # 计算平移后的新位姿
-
-    # 规划并执行移动
-    status, lifted_joint_values = xarm6_planner.mplib_ik(np.array(xarm.get_joint_values()), lifted_pose)
-    mp_is_success = status == 'Success'
-    
-    while not mp_is_success and offset[2] < -0.20:
-        lgr.info(f"replanning z motiom")
-        offset[2]+= 0.01
-        translation_matrix = np.eye(4)
-        translation_matrix[:3, 3] = offset
-        lifted_pose = cur_ee_pose @ translation_matrix  # 计算平移后的新位姿
-        status, lifted_joint_values = xarm6_planner.mplib_ik(np.array(xarm.get_joint_values()), lifted_pose)
-        mp_is_success = status == 'Success'
-        
-    if not mp_is_success:
-        lgr.info(f"Z planning: Fail")
-        xarm.arm.set_gripper_position(850, wait=True)
-        home_joint_values = xarm.default_joint_values
-        xarm.set_joint_values(home_joint_values, speed=0.35, wait=True)
-    else:
-        closest_lifted_arm_joint_value = get_closest_joint_value(current_joint_values, lifted_joint_values)
-        lgr.info(f"z planning: Success")
-        xarm.arm.set_servo_angle(angle=xarm.to_list(closest_lifted_arm_joint_value), speed=0.2, wait=True, is_radian=True)
-#     time.sleep(3)
-
-    # bp()
-    
-    # 返回初始位置
-    home_joint_values = xarm.default_joint_values  # 默认的回到初始位置的关节角
-    xarm.set_joint_values(home_joint_values, speed=0.35, wait=True)
-
-    lgr.info("Operation completed. Returned to home position.")
-    update_collision_pcd(transformed_points)
+    pass
 
                   
 if __name__ == "__main__":
@@ -840,17 +596,69 @@ if __name__ == "__main__":
     cam2rightbase = np.load(arm_cam_X_BaseCamera_path_r)
     arm_cam_X_BaseCamera_path_l = Path(f"third_party/xarm6/data/camera/{cam_serial}/1219_excalib_capture00/optimized_X_BaseCamera.npy")
     cam2leftbase = np.load(arm_cam_X_BaseCamera_path_l)
-    rotation_mat_path = '/home/shaol/data/zjx/rw/data/17_2/rotation_matrix.npy'
-    center_path = '/home/shaol/data/zjx/rw/data/17_2/center.npy'
+    rotation_mat_path = '/home/shaol/data/zjx/rw/data/box111/rotation_matrix.npy'
+    center_path = '/home/shaol/data/zjx/rw/data/box111/center.npy'
     target = 'original_part_01'
     mesh = trimesh.load(f"object_mesh_new/{target}/{target}.obj")
 
-
-    
+    # sv.scene.add_frame("target_right", wxyz=R.from_matrix(target_right[:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_right[:3,3], axes_length=0.3, axes_radius=0.01)
+    # sv.scene.add_frame("initial_ee_pose", wxyz=R.from_matrix(initial_ee_pose[:3,:3]).as_quat()[[3, 0, 1, 2]], position=initial_ee_pose[:3,3], axes_length=0.3, axes_radius=0.01)
+    # # sv.scene.add_frame("initial_frank_pose", wxyz=R.from_matrix(initial_frank_pose[:3,:3]).as_quat()[[3, 0, 1, 2]], position=initial_frank_pose[:3,3], axes_length=0.3, axes_radius=0.01)
+    # bp()
     # pose_initialization(rotation_path=rotation_mat_path, center_path=center_path)
     # target_left.sort(key = lambda x: x[1,3], reverse=True)
     # target_right.sort(key = lambda x: x[1,3])
-    pick(arm_ip=XARM6LEFT_IP)
+    pick(arm_ip=XARM6_IP, object_name='box01')
+    pick(arm_ip=XARM6LEFT_IP, object_name='box02')
+    xarm = XArm6RealWorld(ip = XARM6LEFT_IP)
+    first_base_joints = np.array([ 0.03665191, -0.93724181, -0.44331363,  0.12042772,  0.5969026 ,  1.57603231 ])
+    xarm.set_joint_values(first_base_joints, speed=0.35, wait=True)
+    get_target_pose(arm_ip=XARM6LEFT_IP, rotation_path = rotation_mat_path, center_path= center_path)
+    print(f"target left is{target_left}, target right is {target_right}")
+    target_right = target_right[0]
+    target_left = target_left[0]
+    sv.scene.add_frame("target_left", wxyz=R.from_matrix(target_left[:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_left[:3, 3], axes_length=0.3, axes_radius=0.01)
+    bp()
+    '''add a viser for right arm'''
+    sv2 = viser.ViserServer()
+    initial_pcd, initial_pose = get_object_pc_fp(object_name='box01', arm_ip=XARM6_IP)
+    cano_pcd, rotation_mat, center = PointCloudUtils.canonical_bbo(initial_pcd, visualize = False, reverse_xy = True)
+    sv2.scene.add_point_cloud("cano_pcd", points = cano_pcd, colors = (0,255,0),point_size = 0.01, point_shape = 'circle')
+    sv2.scene.add_point_cloud("ini_pcd", points = np.asarray(initial_pcd.points), colors = (0,255,0),point_size = 0.01, point_shape = 'circle')
+    
+    # bp()
+    initial_cano_pose = np.eye(4)
+    initial_cano_pose[:3,:3] = rotation_mat.T
+    initial_cano_pose[:3,3] = center
+
+    # sv.scene.add_frame("canonical_pose", wxyz=R.from_matrix(initial_cano_pose[:3,:3]).as_quat()[[3, 0, 1, 2]], position=initial_cano_pose[:3,3], axes_length=0.3, axes_radius=0.01)
+    # bp()
+    transfer_mat = target_right @ np.linalg.inv(initial_cano_pose)
+    bp()
+    xarm = XArm6RealWorld(ip = XARM6_IP)
+    xarm6_pk = XArm6WOEE()
+    xarm6_planner_cfg = XARM6PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
+    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    _, xarm_ee = xarm.get_position()
+    sv2.scene.add_frame("xarm_ee", wxyz=R.from_matrix(xarm_ee[:3,:3]).as_quat()[[3, 0, 1, 2]], position=xarm_ee[:3,3], axes_length=0.3, axes_radius=0.01)
+    bp()
+    ee_target_pose = transfer_mat @ xarm_ee
+    sv2.scene.add_frame("frank_target_pose", wxyz=R.from_matrix(ee_target_pose[:3,:3]).as_quat()[[3, 0, 1, 2]], position=ee_target_pose[:3,3], axes_length=0.3, axes_radius=0.01)
+    bp()
+
+    status, ee_pose = xarm.get_position_se3()
+    status2, frank_pose = xarm.get_position()
+    print(f"ee pose is {ee_pose}, frank pose is {frank_pose}")
+    update_attach(object_name='box01', pose_tool=ee_pose,pose_frank = frank_pose)
+    
+    planning_result = xarm6_planner.mplib_plan_pose(np.array(xarm.get_joint_values()), ee_target_pose) 
+    
+    waypt_joint_values_np = planning_result['position']
+    end_joint_values = waypt_joint_values_np[-1]
+    xarm.set_joint_values_sequence(waypt_joint_values_np, planning_timestep=planner_timestep)
+    xarm.set_joint_values(waypt_joint_values_np[-1], speed=0.1, wait=True)
+    # second_base_joints = np.array([ 0.04712389, -0.27925268, -1.37357412,  0.06283185,  1.57603231,  1.57603231 ])
+    # xarm.set_joint_values(second_base_joints, speed=0.35, wait=True)
     # insert(arm_ip=XARM6LEFT_IP, target_pose=target_left[0], mesh = mesh)
     # pick(arm_ip=XARM6_IP)
     # insert(arm_ip=XARM6_IP, target_pose=target_right[0], mesh = mesh)

@@ -294,15 +294,15 @@ def read_matrices_from_npy(file_path):
 length, width, height = 1, 0.5, 0.3  # Dimensions of the rectangular prism
 num_points = 10000  # Number of points in the point cloud
 rectangular_pcd, points= create_rectangular_point_cloud(length, width, height, num_points)
-file_path = '/home/shaol/data/zjx/rw/data/16/point_cloud.npy'
+file_path = '/home/shaol/data/zjx/rw/data/box111/point_cloud.npy'
 test_pcd_path = '/home/shaol/data/zjx/rw/original_part_00_pcd.npy'
 data_test = np.load(test_pcd_path, allow_pickle=True)  # 加载数据
 data = np.load(file_path, allow_pickle=True)  # 加载数据
-file_path = "/home/shaol/data/zjx/rw/data/16/rotation_matrix.npy"  # Replace with the actual path
+file_path = "/home/shaol/data/zjx/rw/data/box111/rotation_matrix.npy"  # Replace with the actual path
 matrices = read_matrices_from_npy(file_path)
 rotation_board = matrices[0]
 rotation_stick = matrices[1]
-center_path = "/home/shaol/data/zjx/rw/data/16/center.npy"
+center_path = "/home/shaol/data/zjx/rw/data/box111/center.npy"
 center = read_matrices_from_npy(center_path)
 # Print the loaded matrices
 center_board = center[0]
@@ -389,8 +389,8 @@ restored_pcd2 = o3d.geometry.PointCloud()
 restored_pcd2.points = o3d.utility.Vector3dVector(pcd_restore2)
 sv.scene.add_point_cloud("board_pcd",points = np.asarray(restored_pcd.points),colors=(0,255,0),point_size=0.002,point_shape="circle")
 sv.scene.add_point_cloud("stick_pcd",points = np.asarray(restored_pcd2.points),colors=(255,0,0),point_size=0.002,point_shape="circle")
-sv.scene.add_frame("board_pose", wxyz=R.from_matrix(rotation_board.T).as_quat()[[3, 0, 1, 2]], position=center_board, axes_length=0.3, axes_radius=0.01)
-sv.scene.add_frame("stick_pose", wxyz=R.from_matrix(rotation_stick.T).as_quat()[[3, 0, 1, 2]], position=center_stick, axes_length=0.3, axes_radius=0.01)
+sv.scene.add_frame("board_pose", wxyz=R.from_matrix(rotation_board).as_quat()[[3, 0, 1, 2]], position=center_board, axes_length=0.3, axes_radius=0.01)
+sv.scene.add_frame("stick_pose", wxyz=R.from_matrix(rotation_stick).as_quat()[[3, 0, 1, 2]], position=center_stick, axes_length=0.3, axes_radius=0.01)
 bp()
 # load pts
 # stick = np.loadtxt("rw_pcd2.txt")

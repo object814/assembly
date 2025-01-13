@@ -69,7 +69,67 @@ class PointCloudUtils:
         center = obb.center
         rotation_matrix = obb.R
         lengths = obb.extent
+        pcd_center = np.mean(point_cloud)
+        vector1 = center-pcd_center
+        if np.dot(rotation_matrix[:3,2],vector1)<0:
+            rotation_matrix = rotation_matrix @ R.from_euler('x', 180, degrees=True).as_matrix()
+
+            
+
         return center, rotation_matrix, lengths
+    
+    @staticmethod
+    def canonical_bbo(point_cloud, visualize = False, reverse_xy = False):
+        if isinstance(point_cloud, o3d.geometry.PointCloud):
+            point_cloud = np.asarray(point_cloud.points)
+        elif not isinstance(point_cloud, np.ndarray):
+            raise ValueError("Invalid type of point_cloud")
+
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(point_cloud)
+        obb = pcd.get_oriented_bounding_box()
+        center = obb.center
+        rotation_matrix = obb.R
+        if np.linalg.det(rotation_matrix)<0:
+            rotation_matrix = -rotation_matrix
+        lengths = obb.extent
+        pcd_center = np.mean(point_cloud, axis = 0)
+        vector1 = center-pcd_center
+        if np.dot(rotation_matrix[:3,2],vector1)<0:
+            # bp()
+            rotation_matrix = rotation_matrix @ R.from_euler('x', 180, degrees=True).as_matrix()
+
+        canonical_pcd = (point_cloud-pcd_center) @ rotation_matrix
+
+        if reverse_xy:
+            rotation = R.from_euler('z', 180, degrees = True).as_matrix()
+            rotation_matrix = rotation_matrix @ rotation
+
+        if visualize:
+            # 原始点云
+            original_pcd = o3d.geometry.PointCloud()
+            original_pcd.points = o3d.utility.Vector3dVector(point_cloud)
+            original_pcd.paint_uniform_color([0, 1, 0])  # 绿色
+
+            # 规范化后的点云
+            canonical_pcd_o3d = o3d.geometry.PointCloud()
+            canonical_pcd_o3d.points = o3d.utility.Vector3dVector(canonical_pcd)
+            canonical_pcd_o3d.paint_uniform_color([0, 0, 1])  # 蓝色
+
+            # 包围盒
+            obb.color = (1, 0, 0)  # 红色
+
+            # 坐标系
+            axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0, origin=[0, 0, 0])
+
+            # 可视化
+            o3d.visualization.draw_geometries(
+                [original_pcd, obb, canonical_pcd_o3d, axes],
+                window_name="Point Cloud with OBB and Canonical View",
+                width=800, height=600
+            )
+
+        return canonical_pcd, rotation_matrix.T, pcd_center
 
     @staticmethod
     def canonicalize_point_cloud(point_cloud):
