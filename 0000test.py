@@ -39,6 +39,7 @@ from segment_anything import sam_model_registry, SamPredictor
 from graspnetAPI import GraspNet
 from sklearn.decomposition import PCA
 from pdb import set_trace as bp
+from utils import PointCloudUtils
 # def is_se3(pose, tol=1e-6):
 #     # 检查是否是 4x4 矩阵
 #     if not isinstance(pose, np.ndarray) or pose.shape != (4, 4):
@@ -294,19 +295,21 @@ def read_matrices_from_npy(file_path):
 length, width, height = 1, 0.5, 0.3  # Dimensions of the rectangular prism
 num_points = 10000  # Number of points in the point cloud
 rectangular_pcd, points= create_rectangular_point_cloud(length, width, height, num_points)
-file_path = '/home/shaol/data/zjx/rw/data/box111/point_cloud.npy'
+file_path = '/home/shaol/data/zjx/rw/data/shelf118_2/point_cloud.npy'
 test_pcd_path = '/home/shaol/data/zjx/rw/original_part_00_pcd.npy'
 data_test = np.load(test_pcd_path, allow_pickle=True)  # 加载数据
 data = np.load(file_path, allow_pickle=True)  # 加载数据
-file_path = "/home/shaol/data/zjx/rw/data/box111/rotation_matrix.npy"  # Replace with the actual path
+file_path = "/home/shaol/data/zjx/rw/data/shelf118_2/rotation_matrix.npy"  # Replace with the actual path
 matrices = read_matrices_from_npy(file_path)
 rotation_board = matrices[0]
 rotation_stick = matrices[1]
-center_path = "/home/shaol/data/zjx/rw/data/box111/center.npy"
+rotation_3 = matrices[2]
+center_path = "/home/shaol/data/zjx/rw/data/shelf118_2/center.npy"
 center = read_matrices_from_npy(center_path)
 # Print the loaded matrices
 center_board = center[0]
 center_stick= center[1]
+center3 = center[2]
 # rw_pcd1, rw_pose1 = get_object_pc_fp(object_name='banzi',arm_ip=arm_ip)
 # rw_pcd2,rw_pose2 = get_object_pc_fp(object_name='sticker',arm_ip=arm_ip)
 '''big one, which can work in 1.4'''
@@ -371,8 +374,10 @@ for i, centroid in enumerate(centroids):
 
 pcd_1 = pcd[0]
 pcd_2 = pcd[1]
+pcd_3 = pcd[2]
 print(f"Point cloud 1 shape: {pcd_1.shape}")
 print(f"Point cloud 2 shape: {pcd_2.shape}")
+print(f"Point cloud 3 shape: {pcd_3.shape}")
 # output_file = "groundtruth.npy"
 # np.save(output_file, pcd_1)
 # print(f"Point cloud saved to {output_file}")
@@ -381,16 +386,24 @@ print(f"Point cloud 2 shape: {pcd_2.shape}")
 # recanonical_pcd2, rotaion2,center2 = canonicalize_point_cloud(pcd_2)
 # points_recanonical1 = np.asarray(recanonical_pcd1.points)
 # points_recanonical2 = np.asarray(recanonical_pcd2.points)
+# pcd, rotation, center = PointCloudUtils.canonical_bbo(pcd_2)
+# sv.scene.add_frame("canonical_pose", wxyz=R.from_matrix(rotation.T).as_quat()[[3, 0, 1, 2]], position=center, axes_length=0.3, axes_radius=0.01)
 pcd_restore = pcd_1 @ rotation_board + center_board
 pcd_restore2 = pcd_2 @ rotation_stick + center_stick
+pcd_restore3 = pcd_3 @ rotation_3 + center3
 restored_pcd = o3d.geometry.PointCloud()
 restored_pcd.points = o3d.utility.Vector3dVector(pcd_restore)
 restored_pcd2 = o3d.geometry.PointCloud()
 restored_pcd2.points = o3d.utility.Vector3dVector(pcd_restore2)
+restored_pcd3 = o3d.geometry.PointCloud()
+restored_pcd3.points = o3d.utility.Vector3dVector(pcd_restore3)
 sv.scene.add_point_cloud("board_pcd",points = np.asarray(restored_pcd.points),colors=(0,255,0),point_size=0.002,point_shape="circle")
 sv.scene.add_point_cloud("stick_pcd",points = np.asarray(restored_pcd2.points),colors=(255,0,0),point_size=0.002,point_shape="circle")
-sv.scene.add_frame("board_pose", wxyz=R.from_matrix(rotation_board).as_quat()[[3, 0, 1, 2]], position=center_board, axes_length=0.3, axes_radius=0.01)
-sv.scene.add_frame("stick_pose", wxyz=R.from_matrix(rotation_stick).as_quat()[[3, 0, 1, 2]], position=center_stick, axes_length=0.3, axes_radius=0.01)
+sv.scene.add_point_cloud("pcd_3",points = np.asarray(restored_pcd3.points),colors=(255,0,0),point_size=0.002,point_shape="circle")
+sv.scene.add_frame("pose_3", wxyz=R.from_matrix(rotation_3.T).as_quat()[[3, 0, 1, 2]], position=center3, axes_length=0.3, axes_radius=0.01)
+sv.scene.add_frame("board_pose", wxyz=R.from_matrix(rotation_board.T).as_quat()[[3, 0, 1, 2]], position=center_board, axes_length=0.3, axes_radius=0.01)
+sv.scene.add_frame("stick_pose", wxyz=R.from_matrix(rotation_stick.T).as_quat()[[3, 0, 1, 2]], position=center_stick, axes_length=0.3, axes_radius=0.01)
+
 bp()
 # load pts
 # stick = np.loadtxt("rw_pcd2.txt")
@@ -403,7 +416,7 @@ for i in range(5):
     new_point_cloud = o3d.geometry.PointCloud()
     rotated_pcd = np.asarray(data_test) @ random_R + random_t
     new_point_cloud.points = o3d.utility.Vector3dVector(rotated_pcd)
-    canonicalized_pcd, rotation_matrix0, centroid0 = canonicalize_point_cloud(new_point_cloud)
+    canonicalized_pcd, rotation_matrix0, centroid0 = canonicalize_point_cloud(new_point_cloud, visulaize = True)
     print(np.linalg.det((rotation_matrix0)))
     sv.scene.add_point_cloud(f"pts{i}",points = np.asarray(new_point_cloud.points),colors=(0,255,0),point_size=0.002,point_shape="circle")
     # sv.scene.add_point_cloud("after",points = np.asarray(canonicalized_pcd2.points),colors=(255,0,0),point_size=0.002,point_shape="circle")

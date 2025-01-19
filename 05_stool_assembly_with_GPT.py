@@ -150,22 +150,22 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
         rgb, depth = rtr_dict["rgb"], (rtr_dict["depth"].astype(np.float32) / 1000).astype(np.float32)  # rgb: np.array
         
         # # Method 1: manually select the object
-        # prompt_drawer.reset()
-        # manual_mask_np = prompt_drawer.run(rgb)  # mask_np: binary mask, True for object, False for background, (720, 1280)
+        prompt_drawer.reset()
+        manual_mask_np = prompt_drawer.run(rgb)  # mask_np: binary mask, True for object, False for background, (720, 1280)
 
         # Method 2: upstream provide the mask
         # Note that the manual image should be provided in ./order_planing/img/manual.png
-        if initial:
-            plt.imsave(os.path.join(os.path.dirname(__file__), "order_planing", "img", "input.png"), rgb)
-            mask_list, bbox_list = order_planing()
-            initial = False
-            # 针对凳子的特判
-            mask_list = [mask_list[i] for i in [0, 2, 3, 1, 4]]
-        mask_np = mask_list.pop(0)  # (720, 1280)
-        # input(f"xor mask: {np.sum(manual_mask_np ^ mask_np)}, and mask: {np.sum(manual_mask_np & mask_np)}")
-        bbox = bbox_list.pop(0)
-        print(f"bbox: {bbox}\nlen(mask_list) remained: {len(mask_list)}")
-        pose = est.register(K=arm_cam_K, rgb=rgb, depth=depth, ob_mask=mask_np, iteration=10 if arm_ip == XARM6LEFT_IP else 20)
+        # if initial:
+        #     plt.imsave(os.path.join(os.path.dirname(__file__), "order_planing", "img", "input.png"), rgb)
+        #     mask_list, bbox_list = order_planing()
+        #     initial = False
+        #     # 针对凳子的特判
+        #     mask_list = [mask_list[i] for i in [0, 2, 3, 1, 4]]
+        # mask_np = mask_list.pop(0)  # (720, 1280)
+        # # input(f"xor mask: {np.sum(manual_mask_np ^ mask_np)}, and mask: {np.sum(manual_mask_np & mask_np)}")
+        # bbox = bbox_list.pop(0)
+        # print(f"bbox: {bbox}\nlen(mask_list) remained: {len(mask_list)}")
+        pose = est.register(K=arm_cam_K, rgb=rgb, depth=depth, ob_mask=manual_mask_np, iteration=10 if arm_ip == XARM6LEFT_IP else 20)
         pose = arm_cam_X_BaseCamera @ pose
 
         points = sample_points_from_mesh(mesh, 50000, seed=0)
@@ -563,7 +563,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
             # go_to_test(pose)
         status, ee_pose = xarm.get_position_se3()
         status2, frank_pose = xarm.get_position()
-        update_attach(object_name='sticker', pose_tool=ee_pose,pose_frank = frank_pose)
+        # update_attach(object_name='sticker', pose_tool=ee_pose,pose_frank = frank_pose)
         # bp()
 
 
@@ -765,7 +765,7 @@ def insert(arm_ip=XARM6_IP, target_pose = None, mesh = None):
     status, cur_ee_pose = xarm.get_position_se3()   # 获取末端执行器的当前位姿（4x4矩阵)
     # input("Press Enter to continue to lift the arm...")
     # 沿末端的 z 方向平移 10cm
-    offset = np.array([0, 0, -0.24])  # 平移的偏移量
+    offset = np.array([0, 0, -0.28])  # 平移的偏移量
     translation_matrix = np.eye(4)
     translation_matrix[:3, 3] = offset
     lifted_pose = cur_ee_pose @ translation_matrix  # 计算平移后的新位姿

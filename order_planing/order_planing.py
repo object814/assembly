@@ -25,7 +25,7 @@ def annotate(img_path, output_path, text_prompt="board.stick", box_threshold=0.2
         results = gdino.inference(prompts, return_mask=True, box_threshold=box_threshold)
         redo = False  # 如果检测到的物体面积太大就重新做一遍
         for box in results["boxes"]:
-            if bbox_area(box) > 0.5 * PIL_area(image_pil):
+            if bbox_area(box) > 0.8 * PIL_area(image_pil):
                 redo = True
                 break
         if not redo:

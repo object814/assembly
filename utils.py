@@ -48,6 +48,31 @@ class PointCloudUtils:
     def se3_distance(pose1, pose2):
         trans_diff = np.linalg.norm(pose1[:3, 3] - pose2[:3, 3]) ** 2
         return trans_diff
+    
+    @staticmethod
+    def transform_point_cloud(points, transform_matrix):
+        """
+        将点云从一个坐标系转换到另一个坐标系。
+        
+        :param points: numpy 数组, 点云 (N, 3)
+        :param transform_matrix: numpy 数组, 4x4 的转换矩阵
+        :return: numpy 数组, 转换后的点云 (N, 3)
+        """
+        # 将点云扩展为齐次坐标
+        if isinstance(points, o3d.geometry.PointCloud):
+            points = np.asarray(points.points)
+        elif not isinstance(points, np.ndarray):
+            raise ValueError("Invalid type of point_cloud")
+        num_points = points.shape[0]
+        points_h = np.hstack((points, np.ones((num_points, 1))))  # (N, 4)
+        
+        # 应用转换矩阵
+        transformed_points_h = (transform_matrix @ points_h.T).T  # (N, 4)
+        
+        # 去掉齐次坐标的最后一列，恢复到 (N, 3)
+        transformed_points = transformed_points_h[:, :3]
+        
+        return transformed_points
 
     @staticmethod
     def sample_points_from_mesh(mesh, num_points, seed=None):
@@ -57,7 +82,7 @@ class PointCloudUtils:
         return points
 
     @staticmethod
-    def extract_rectangle_with_pose(point_cloud):
+    def extract_rectangle_with_pose(point_cloud, visualize=False):
         if isinstance(point_cloud, o3d.geometry.PointCloud):
             point_cloud = np.asarray(point_cloud.points)
         elif not isinstance(point_cloud, np.ndarray):
@@ -68,18 +93,51 @@ class PointCloudUtils:
         obb = pcd.get_oriented_bounding_box()
         center = obb.center
         rotation_matrix = obb.R
+        if np.linalg.det(rotation_matrix)<0:
+            rotation_matrix = -rotation_matrix
         lengths = obb.extent
         pcd_center = np.mean(point_cloud)
         vector1 = center-pcd_center
         if np.dot(rotation_matrix[:3,2],vector1)<0:
             rotation_matrix = rotation_matrix @ R.from_euler('x', 180, degrees=True).as_matrix()
+        canonical_pcd = (point_cloud-pcd_center) @ rotation_matrix
+        if visualize:
+            # 原始点云
+            original_pcd = o3d.geometry.PointCloud()
+            original_pcd.points = o3d.utility.Vector3dVector(point_cloud)
+            original_pcd.paint_uniform_color([0, 1, 0])  # 绿色
+
+            # 规范化后的点云
+            canonical_pcd_o3d = o3d.geometry.PointCloud()
+            canonical_pcd_o3d.points = o3d.utility.Vector3dVector(canonical_pcd)
+            canonical_pcd_o3d.paint_uniform_color([0, 0, 1])  # 蓝色
+
+            # 包围盒
+            obb.color = (1, 0, 0)  # 红色
+
+            # 坐标系
+            axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0, origin=[0, 0, 0])
+
+            # 可视化
+            o3d.visualization.draw_geometries(
+                [original_pcd, obb, canonical_pcd_o3d, axes],
+                window_name="Point Cloud with OBB and Canonical View",
+                width=800, height=600
+            )
 
             
 
         return center, rotation_matrix, lengths
     
     @staticmethod
-    def canonical_bbo(point_cloud, visualize = False, reverse_xy = False):
+    def canonical_bbo(point_cloud, visualize = False, reverse_xy = False, reverse_xz = False, symetric = False):
+        if isinstance(point_cloud, o3d.geometry.PointCloud):
+            point_cloud = np.asarray(point_cloud.points)
+        elif not isinstance(point_cloud, np.ndarray):
+            raise ValueError("Invalid type of point_cloud")
+
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(point_cloud)
         if isinstance(point_cloud, o3d.geometry.PointCloud):
             point_cloud = np.asarray(point_cloud.points)
         elif not isinstance(point_cloud, np.ndarray):
@@ -100,6 +158,16 @@ class PointCloudUtils:
             rotation_matrix = rotation_matrix @ R.from_euler('x', 180, degrees=True).as_matrix()
 
         canonical_pcd = (point_cloud-pcd_center) @ rotation_matrix
+        
+        if symetric:
+            if rotation_matrix[1,2]>0:
+                rotation_matrix = rotation_matrix @ R.from_euler('y', 180, degrees=True).as_matrix()
+            if rotation_matrix[2,1]<0:
+                rotation_matrix = rotation_matrix @ R.from_euler('z', 180, degrees=True).as_matrix()
+
+        if reverse_xz:
+            rotation = R.from_euler('y', 180, degrees = True).as_matrix()
+            rotation_matrix = rotation_matrix @ rotation
 
         if reverse_xy:
             rotation = R.from_euler('z', 180, degrees = True).as_matrix()
@@ -128,7 +196,7 @@ class PointCloudUtils:
                 window_name="Point Cloud with OBB and Canonical View",
                 width=800, height=600
             )
-
+        rotation_matrix  = rotation_matrix.copy()
         return canonical_pcd, rotation_matrix.T, pcd_center
 
     @staticmethod
@@ -277,3 +345,46 @@ class Grasp_Policy():
 
         print(f"center_grasp: {center_grasp}")
         return center_grasp, rotation_z_towards_down, policy
+    
+    @staticmethod
+    def pick_policy_top_down(pose, pcd_center):
+        # Ensure z points down
+        pose[:3, 2] = np.array([0, 0, -1])
+        x_axis = pose[:3, 0]
+        x_axis /= np.linalg.norm(x_axis)
+
+        y_axis = np.cross([0,0,-1], x_axis)
+        y_axis /= np.linalg.norm(y_axis)  # Normalize y
+
+        pose[:3, 1] = y_axis
+
+        offset_in_world_frame = np.array([0, 0, 0.3])
+        pre_grasp = pose.copy()
+        pre_grasp[:3, 3] = pcd_center + offset_in_world_frame  
+        policy = "top_down"
+        
+        return pre_grasp, pose, policy
+    
+    @staticmethod
+    def pick_policy_for_shelf(pose, pcd_center, width):
+        # Ensure z points down
+        z_axis_offset = pose[:3, :3] @ np.array([0,0,0.062])
+        rotation_y = R.from_euler('y', 90,  degrees=True).as_matrix()
+        rotation_y2 = R.from_euler('y', 180,  degrees=True).as_matrix()
+        rotation_z_half = R.from_euler('z', 90,  degrees=True).as_matrix()
+        print('z_axis',pose[2,2])
+        if  pose[2,2]>-0.1 :
+            pose[:3, :3] = pose[:3, :3] @ rotation_y
+        z_axis = pose[:3,2].copy()
+        y_axis = z_axis_offset / np.linalg.norm(z_axis_offset)
+        x_axis = np.cross(y_axis, z_axis)
+        x_axis /= np.linalg.norm(x_axis)  # Normalize x
+        grasp_pose = np.eye(4)
+        grasp_pose[:3, 0] = x_axis
+        grasp_pose[:3, 1] = y_axis
+        grasp_pose[:3, 2] = z_axis
+        grasp_pose[:3, 3] = pcd_center + z_axis_offset + np.array([0, 0, 0.02])  
+        policy = "shelf"
+
+        return grasp_pose, pose, policy
+    
