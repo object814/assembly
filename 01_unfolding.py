@@ -10,6 +10,7 @@ import hydra
 import torch
 import warnings
 from xarm6_interface import XARM6_IP, XARM6LEFT_IP
+from xarm.wrapper import XArmAPI
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -23,7 +24,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 print(sys.path)
 PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
 sys.path.append(PARENT_DIR)
-from ..BiMo import models, utils
+from ..BiMo.code import models, utils
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
 from scipy.spatial.transform import Rotation as R
@@ -157,6 +158,39 @@ def get_object_pc(object_name='Box'):
     gpis, fitted_pcd = gpis_fit(masked_pc_o3d_fusion,)
 
     return fitted_pcd, masked_pc_o3d_fusion, rgb
+
+
+def canonicalize_point_cloud(point_cloud):
+    '''get center'''
+    points = np.asarray(point_cloud.points)
+    centroid = np.mean(points, axis=0)
+    centered_pcd = points - centroid
+    # 3. 使用 PCA 计算主轴方向
+    pca = PCA(n_components=3)
+    pca.fit(centered_pcd)
+    # 4. 获取旋转矩阵（主轴方向）
+    rotation_matrix = pca.components_
+    print(f"rotation_matrix: {rotation_matrix}")
+    transformed_pcd = np.dot(centered_pcd, rotation_matrix.T)
+    # restored_pcd = centered_pcd + centroid
+
+    # 将还原的点云转换回 Open3D 点云对象
+    canonicalized_pcd = o3d.geometry.PointCloud()
+    canonicalized_pcd.points = o3d.utility.Vector3dVector(transformed_pcd)
+    return canonicalized_pcd, rotation_matrix, centroid
+
+
+def get_closest_joint_value(current_joint_value, target_joint_values):
+    min_diff = 1000000
+    closest_target_joint_value = None
+    for target_joint_value in target_joint_values:
+        diff_list = np.abs(current_joint_value - target_joint_value)
+        diff = diff_list.sum()
+        if diff < min_diff:
+            min_diff = diff
+            closest_target_joint_value = target_joint_value
+
+    return closest_target_joint_value
 
 
 def get_inter_rot(batch_size):
@@ -373,8 +407,8 @@ def cal_rotmat(CAM_In_mat,
     forward = np.cross(left, up)
     forward /= np.linalg.norm(forward)
 
-    # forward_cam = np.linalg.inv(CAM_In_mat) @ forward
-    # up_cam = np.linalg.inv(CAM_In_mat) @ up
+    forward_cam = np.linalg.inv(CAM_In_mat) @ forward
+    up_cam = np.linalg.inv(CAM_In_mat) @ up
 
     if is_given_action:
         action_direction_world /= np.linalg.norm(action_direction_world)
@@ -416,25 +450,78 @@ def cal_rotmat(CAM_In_mat,
     return pre_pose, pre_rotmat, start_pose, start_rotmat, final_pose, final_rotmat
 
 
-def unfolding(object_name='box', arm_ip=XARM6_IP):
-
-    pass
-
-
 def retreive_pipline(trg_rgb):
     pass
 
 
-if __name__ == "__main__":
-    # from hydra.core.global_hydra import GlobalHydra
-    # GlobalHydra.instance().clear()  # 清除全局状态
-    # Global variables
-    initial = True
-    collision_pcd = None
-    sv = viser.ViserServer()
+def init_dual_arm(ip_l="192.168.1.232", ip_r="192.168.1.208"):
+    arm_l = XArmAPI(ip_l)
+    arm_l.motion_enable(enable=True)
+    arm_l.set_mode(0)
+    arm_l.set_state(state=0)
+    arm_r = XArmAPI(ip_r)
+    arm_r.motion_enable(enable=True)
+    arm_r.set_mode(0)
+    arm_r.set_state(state=0)
 
-    batch_size = 1  #TODO
-    device = args.device
+    # init gripper
+    arm_l.set_gripper_mode(0)
+    arm_r.set_gripper_mode(0)
+
+    arm_l.set_gripper_enable(True)
+    arm_r.set_gripper_enable(True)
+
+    arm_l.set_gripper_speed(5000)
+    arm_r.set_gripper_speed(5000)
+
+    arm_l.set_gripper_position(450, wait=False)
+    arm_r.set_gripper_position(450, wait=True)
+
+    # set cartesian velocity control mode
+    arm_l.set_mode(0)
+    arm_l.set_state(state=0)
+    arm_r.set_mode(0)
+    arm_r.set_state(state=0)
+
+    # init position
+    arm_l.set_position(x=200, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, wait=False)
+    arm_r.set_position(x=200, y=0, z=350, roll=-180, pitch=0, yaw=0, speed=100, wait=True)
+    time.sleep(1)
+
+    return arm_l, arm_r
+
+
+def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
+
+    t1 = time.time()
+    ''' setup the planner and vis '''
+    # sv = viser.ViserServer()
+    xarm6_pk = XArm6WOEE()
+    xarm6_planner_cfg = XARM6PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
+    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    env_params = WoodenTableMount()
+    workspace_pc = create_bounding_box_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax,
+                                          env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
+    table_plane_pc = create_plane_pc(env_params.table_plane_xmin, env_params.table_plane_ymin,
+                                     env_params.table_plane_zmin, env_params.table_plane_xmax,
+                                     env_params.table_plane_ymax, env_params.table_plane_zmax,
+                                     xarm6_planner_cfg.n_env_pc)
+    workspace_xmin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmin,
+                                        env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
+    workspace_ymin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax,
+                                        env_params.ymin, env_params.zmax, xarm6_planner_cfg.n_env_pc)
+    workspace_ymax_pc = create_plane_pc(env_params.xmin, env_params.ymax, env_params.zmin, env_params.xmax,
+                                        env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
+    env_pc = np.concatenate([workspace_pc, table_plane_pc, workspace_xmin_pc, workspace_ymin_pc, workspace_ymax_pc],
+                            axis=0)
+    env_pc = env_pc_post_process(env_pc, filter_norm_thresh=0.1, n_save_pc=None)
+    xarm6_planner.mplib_add_point_cloud(env_pc, name="env_pc")
+    ''' setup the planner and vis '''
+    '''init dual arm'''
+
+    print('Initial dual arms')
+    xarm1, xarm2 = init_dual_arm()
+    ''' get the object pc and rgb'''
     #get obj pc
     object_pc_o3d, masked_pc_o3d_fusion, rgb = get_object_pc()
     object_pc_np = np.asarray(object_pc_o3d.points)
@@ -447,10 +534,178 @@ if __name__ == "__main__":
     object_normals = torch.tensor(object_normals_np[object_selected_indices.flatten().detach().cpu().numpy()],
                                   dtype=torch.float32,
                                   device=device).unsqueeze(0).repeat(batch_size, 1, 1)
-
+    canonicalized_pcd, rotation_matrice, centroid = canonicalize_point_cloud(object_pc_o3d)
+    ''' get the object pc and rgb'''
+    '''retrieve and correspond'''
     trg_img_PIL = rgb
     src_img_np = retreive_pipline(trg_img_PIL)  #TODO
     ctpt1_list, ctpt2_list = correspond_pipline(src_img_np)  #TODO
+    '''retrieve and correspond'''
+    '''inference'''
     position1, up1, forward1, position2, up2, forward2 = get_predictions(object_pc, ctpt1_list, ctpt2_list)  #TODO
-    pre_pose1, pre_rotmat1, start_pose1, start_rotmat1, final_pose1, final_rotmat1 = cal_rotmat() #TODO
+    '''inference'''
+    action_dir1, action_dir2 = utils.get_action_dir(args.primact_type, up1, forward1, up2, forward2)
+    '''cal pose'''
+    pre_pose1, pre_rotmat1, start_pose1, start_rotmat1, final_pose1, final_rotmat1 = cal_rotmat(
+        CAM_IN_MAT,  #TODO
+        position1,
+        up1,
+        forward1,
+        number='1',
+        start_dist=start_dist1,
+        displacement=displacement1,
+        maneuver_dist=maneuver_dist1,
+        is_given_action=True,
+        action_direction_world=action_dir1)
+    pre_pose2, pre_rotmat2, start_pose2, start_rotmat2, final_pose2, final_rotmat2 = cal_rotmat(
+        CAM_IN_MAT,  #TODO
+        position2,
+        up2,
+        forward2,
+        number='2',
+        start_dist=start_dist2,
+        displacement=displacement2,
+        maneuver_dist=maneuver_dist2,
+        is_given_action=True,
+        action_direction_world=action_dir2)
+    '''cal pose'''
 
+    sv.scene.add_point_cloud("canonical_pc",
+                             points=np.asarray(canonicalized_pcd.points),
+                             colors=(0, 255, 0),
+                             point_size=0.002,
+                             point_shape="circle")
+    sv.scene.add_frame("canonical_pose",
+                       wxyz=R.from_matrix(rotation_matrice[:3, :3]).as_quat()[[3, 0, 1, 2]],
+                       position=centroid,
+                       axes_length=0.03,
+                       axes_radius=0.001)
+    pcd_center = get_pcd_center(object_pc_o3d)
+    sv.scene.add_point_cloud("object_pc",
+                             points=np.asarray(object_pc_o3d.points),
+                             colors=(255, 0, 0),
+                             point_size=0.002,
+                             point_shape="circle")
+
+    # REAL PALNNING IS HERE!
+    current_joint_values1 = np.array(xarm1.get_joint_values())
+    planning_result1 = xarm6_planner.mplib_plan_pose(current_joint_values1, pre_pose1)
+    if planning_result1['status'] != 'Success':
+        lgr.info(f"Collision-free planning: Fail")
+        return
+    lgr.info(f"Collision-free planning 1: Success")
+
+    waypt_joint_values_np1 = planning_result1['position']
+    end_joint_values1 = waypt_joint_values_np1[-1]
+    update_viser_mp_result(sv, xarm6_pk, current_joint_values1, end_joint_values1, waypt_joint_values_np1)
+
+    current_joint_values2 = np.array(xarm2.get_joint_values())
+    planning_result2 = xarm6_planner.mplib_plan_pose(current_joint_values2, pre_pose2)
+    if planning_result2['status'] != 'Success':
+        lgr.info(f"Collision-free planning: Fail")
+        return
+
+    lgr.info(f"Collision-free planning 2: Success")
+
+    waypt_joint_values_np2 = planning_result2['position']
+    end_joint_values2 = waypt_joint_values_np2[-1]
+    update_viser_mp_result(sv, xarm6_pk, current_joint_values2, end_joint_values2, waypt_joint_values_np2)
+
+    xarm1.set_joint_values_sequence(waypt_joint_values_np1, planning_timestep=planner_timestep)
+    xarm1.set_joint_values(waypt_joint_values_np1[-1], speed=0.35, wait=True)
+
+    input("Press Enter to continue...")
+    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    current_joint_values1 = np.array(xarm1.get_joint_values())  # yiwen
+    status1, grasp_arm_joint_values1 = xarm6_planner.mplib_ik(current_joint_values1, pre_pose1)
+    closest_grasp_arm_joint_values1 = get_closest_joint_value(current_joint_values1, grasp_arm_joint_values1)
+    mp_is_success1 = status1 == 'Success'
+
+    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    current_joint_values2 = np.array(xarm2.get_joint_values())  # yiwen
+    status2, grasp_arm_joint_values2 = xarm6_planner.mplib_ik(current_joint_values2, pre_pose2)
+    closest_grasp_arm_joint_values2 = get_closest_joint_value(current_joint_values2, grasp_arm_joint_values2)
+    mp_is_success2 = status2 == 'Success'
+
+    mp_is_success = (mp_is_success1 and mp_is_success2)
+    if not mp_is_success:
+        lgr.info(f"Grasp planning: Fail")
+    else:
+        grasp_joint_values1 = closest_grasp_arm_joint_values1
+        grasp_joint_values2 = closest_grasp_arm_joint_values2
+
+        xarm1.arm.set_servo_angle(angle=xarm1.to_list(grasp_joint_values1), speed=0.2, wait=True, is_radian=True)
+        xarm2.arm.set_servo_angle(angle=xarm2.to_list(grasp_joint_values2), speed=0.2, wait=True, is_radian=True)
+
+        xarm1.arm.set_gripper_position(-10, wait=True)
+        xarm2.arm.set_gripper_position(-10, wait=True)
+        '''grasping success, lift it up'''
+        current_joint_values1 = np.array(xarm1.get_joint_values())
+        status1, lifted_arm_joint_values1 = xarm6_planner.mplib_ik(current_joint_values1, final_pose1)
+        mp_is_success1 = status1 == 'Success'
+        closest_lifted_arm_joint_value1 = get_closest_joint_value(current_joint_values1, lifted_arm_joint_values1)
+
+        current_joint_values2 = np.array(xarm2.get_joint_values())
+        status2, lifted_arm_joint_values2 = xarm6_planner.mplib_ik(current_joint_values2, final_pose2)
+        mp_is_success2 = status2 == 'Success'
+        closest_lifted_arm_joint_value2 = get_closest_joint_value(current_joint_values2, lifted_arm_joint_values2)
+
+        mp_is_success = (mp_is_success1 and mp_is_success2)
+        if not mp_is_success:
+            lgr.info(f"Lift planning: Fail")
+        else:
+            lgr.info(f"Lift planning: Success")
+            xarm1.arm.set_servo_angle(angle=xarm1.to_list(closest_lifted_arm_joint_value1),
+                                      speed=0.2,
+                                      wait=True,
+                                      is_radian=True)
+
+            xarm2.arm.set_servo_angle(angle=xarm2.to_list(closest_lifted_arm_joint_value2),
+                                      speed=0.2,
+                                      wait=True,
+                                      is_radian=True)
+            time.sleep(2)
+
+            # xarm.arm.set_gripper_position(850, wait=True)
+
+            input("Press Enter to continue...")
+
+            # obstacle_pcd, pose = get_object_pc_fp(object_name='chair2')
+            # print(f"current pose: {pose}")
+            # sv.scene.add_frame("obstacle_pose", wxyz=R.from_matrix(pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pose[:3, 3], axes_length=0.03, axes_radius=0.001)
+            # sv.scene.add_point_cloud("object_pc", points=np.asarray(obstacle_pcd.points), colors=(255, 0, 0), point_size=0.002, point_shape="circle")
+            # xarm6_planner.mplib_add_point_cloud(np.asarray(obstacle_pcd.points), name="obstacle_pc")
+
+            go_home_duration = 2
+            waypt_joint_values_np1 = []
+            waypt_joint_values_np2 = []
+            current_joint_values1 = np.array(xarm1.get_joint_values())
+            current_joint_values2 = np.array(xarm2.get_joint_values())
+            waypt_joint_values_np1.append(current_joint_values1)
+            waypt_joint_values_np1.append(xarm1.default_joint_values)
+            waypt_joint_values_np1 = np.array(waypt_joint_values_np1)
+
+            waypt_joint_values_np2.append(current_joint_values2)
+            waypt_joint_values_np2.append(xarm2.default_joint_values)
+            waypt_joint_values_np2 = np.array(waypt_joint_values_np2)
+
+            xarm1.set_joint_values_sequence(waypt_joint_values_np1, go_home_duration)
+            xarm2.set_joint_values_sequence(waypt_joint_values_np2, go_home_duration)
+            xarm1.set_joint_values(waypt_joint_values_np1[-1], speed=0.2, wait=True)
+            xarm2.set_joint_values(waypt_joint_values_np2[-1], speed=0.2, wait=True)
+
+            # get_current_attach_pose_offset(object_name='sticker')
+
+
+if __name__ == "__main__":
+    # from hydra.core.global_hydra import GlobalHydra
+    # GlobalHydra.instance().clear()  # 清除全局状态
+    # Global variables
+    initial = True
+    collision_pcd = None
+    sv = viser.ViserServer()
+
+    batch_size = 1  #TODO
+    device = args.device
+
+    unfolding()
