@@ -52,11 +52,11 @@ def se3_distance(pose1, pose2):
 def enviroment_constraint(xarm6_planner_cfg):
     env_params = WoodenTableMount()
     workspace_pc = create_bounding_box_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
-    table_plane_pc = create_plane_pc(env_params.table_plane_xmin, env_params.table_plane_ymin, env_params.table_plane_zmin, env_params.table_plane_xmax, env_params.table_plane_ymax, env_params.table_plane_zmax, xarm6_planner_cfg.n_env_pc)
+    # table_plane_pc = create_plane_pc(env_params.table_plane_xmin, env_params.table_plane_ymin, env_params.table_plane_zmin, env_params.table_plane_xmax, env_params.table_plane_ymax, env_params.table_plane_zmax, xarm6_planner_cfg.n_env_pc)
     workspace_xmin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmin, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
     workspace_ymin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymin, env_params.zmax, xarm6_planner_cfg.n_env_pc)
     workspace_ymax_pc = create_plane_pc(env_params.xmin, env_params.ymax, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
-    env_pc = np.concatenate([workspace_pc, table_plane_pc, workspace_xmin_pc, workspace_ymin_pc, workspace_ymax_pc], axis=0)
+    env_pc = np.concatenate([workspace_pc, workspace_xmin_pc, workspace_ymin_pc, workspace_ymax_pc], axis=0)
     env_pc = env_pc_post_process(env_pc, filter_norm_thresh=0.1, n_save_pc=None)
     return env_pc
 
@@ -137,7 +137,7 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
                 time.sleep(0.2)
 
             if validated:
-                return object_pc_o3d, pose
+                return object_pc_o3d, pose, pcd_center
 
             if retry:
                 lgr.info("Retrying...")
@@ -205,7 +205,9 @@ def pick(object_name='box03', xarm = None, policy = None):
     xarm.move_gripper(open = True, wait = True)
     xarm.move_to_home()
     '''get the pose by foundation pose'''
-    object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name, arm_ip = xarm.ip)
+    object_pc_o3d, X_WorldObject, pcd_center = get_object_pc_fp(object_name, arm_ip = xarm.ip)
+    sv_right.scene.add_frame("pose_from_fdp", wxyz=R.from_matrix(X_WorldObject[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pcd_center, axes_length=0.03, axes_radius=0.001)
+
     center_box, pose_box, lengths = PointCloudUtils.extract_rectangle_with_pose(object_pc_o3d)
     print(f"width is {lengths[1]}")
     pose_box = np.array(pose_box, copy=True)
@@ -216,13 +218,15 @@ def pick(object_name='box03', xarm = None, policy = None):
     elif policy == 'box':
         grasp_pose, adjusted_rotation_matrix, policy = Grasp_Policy.pick_policy_z_axis(pose_box, pcd_center, lengths)
     if xarm.ip==XARM6_IP:
-        sv_right.scene.add_frame("grasp_pose", wxyz=R.from_matrix(adjusted_rotation_matrix[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pcd_center, axes_length=0.03, axes_radius=0.001)
+        sv_right.scene.add_frame("grasp_pose", wxyz=R.from_matrix(grasp_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=grasp_pose[:3,3], axes_length=0.03, axes_radius=0.001)
         # sv_right.scene.add_point_cloud("object_in_world", points=np.asarray(object_pc_o3d.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
     else:
         sv_left.scene.add_frame("grasp_pose", wxyz=R.from_matrix(grasp_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=grasp_pose[:3,3], axes_length=0.03, axes_radius=0.001)
         # sv_left.scene.add_point_cloud("object_in_world", points=np.asarray(object_pc_o3d.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
     if policy == "shelf":
         center_grasp = grasp_pose.copy()
+        # if center_grasp[2, 2]> 0:
+        #     center_grasp[:3, :3] = center_grasp[:3, :3] @ R.from_euler('y', 180, degrees=True).as_matrix()
         X_WorldEeflift =  center_grasp.copy()
         X_WorldEeflift[:3, 3] += adjusted_rotation_matrix @ np.array([0, 0, -0.15])
         xarm.plan_and_execute(X_WorldEeflift)
@@ -236,13 +240,14 @@ def pick(object_name='box03', xarm = None, policy = None):
     if xarm.ip==XARM6_IP:
         offset_grasp_in_object_frame = np.array([0, 0, +0.12]) 
     elif xarm.ip==XARM6LEFT_IP:
-        offset_grasp_in_object_frame = np.array([0, 0, +0.1]) # 物体局部坐标系下向下偏移
+        offset_grasp_in_object_frame = np.array([0, 0, +0.11]) # 物体局部坐标系下向下偏移
     if policy == "top_down":
         center_grasp = grasp_pose.copy()
         center_grasp[:3, 3] = grasp_pose[:3,3]- offset_grasp_in_object_frame
         print(f"center_grasp: {center_grasp}")
     elif policy=="z_axis":
         center_grasp = grasp_pose.copy()
+        center_grasp[:3, :3] = grasp_pose[:3,:3]@ R.from_euler('z', 180, degrees=True).as_matrix()
         offset_grasp_in_world_frame = adjusted_rotation_matrix @ offset_grasp_in_object_frame
         center_grasp[:3, 3] = grasp_pose[:3,3] + offset_grasp_in_world_frame
 
@@ -267,17 +272,19 @@ def specify_a_base_and_get_target_pose(object_name = None, arm_ip = XARM6LEFT_IP
         sv = sv_right
     '''here we get all the target pose based on the left arm base'''
     # sv = viser.ViserServer()
-    base_pcd_world, pose = get_object_pc_fp(object_name=object_name,arm_ip=arm_ip)
+    base_pcd_world, pose, _ = get_object_pc_fp(object_name=object_name,arm_ip=arm_ip)
     # sv.scene.add_point_cloud("base_pcd", points = np.asarray(base_pcd_world.points), colors = (0,255,0),point_size = 0.002, point_shape = 'circle')
     if step == 2:
         reverse_xy = True
     if step == 6:
         reverse_xy = True
-    base_pcd_world_canonical, base_mat, base_center = PointCloudUtils.canonical_bbo(base_pcd_world, symetric= symetric, visualize= False,reverse_xy= reverse_xy,reverse_xz=reverse_xz)
+    base_pcd_world_canonical, base_mat, base_center = PointCloudUtils.canonicalize_point_cloud(base_pcd_world)
+    base_pcd_world_canonical = np.asarray(base_pcd_world_canonical.points)
+    # base_pcd_world_canonical, base_mat, base_center = PointCloudUtils.canonical_bbo(base_pcd_world, symetric= symetric, visualize= False,reverse_xy= reverse_xy,reverse_xz=reverse_xz)
     sv.scene.add_point_cloud("canonical_pcd", points=base_pcd_world_canonical, colors=(0, 255, 0), point_size=0.002, point_shape="circle")
     sv.scene.add_frame("canonical_pose", wxyz=R.from_matrix(base_mat.T).as_quat()[[3, 0, 1, 2]], position=base_center, axes_length=0.3, axes_radius=0.01)
     base_pose_world_canonical = np.eye(4)
-    base_pose_world_canonical[:3, :3] = base_mat.T
+    base_pose_world_canonical[:3, :3] = base_mat.T @ R.from_euler('y' , 180, degrees= True).as_matrix()
     base_pose_world_canonical[:3, 3] = base_center
     canonical_transform_base_cam = base_pose_world_canonical @ np.linalg.inv(base_pose_cam_canonical)
     '''' get taget pose based on the canonical pose and assume the base in the real-world is static'''
@@ -287,13 +294,16 @@ def specify_a_base_and_get_target_pose(object_name = None, arm_ip = XARM6LEFT_IP
     # # in the box case, the rotation definition is little bit different from the stool
     # target_pose_world_canonical[:3, :3] = rotation_mats[0]
     # target_pose_world_canonical[:3, 3] = centers[0]
-    target_pose_world_canonical = canonical_transform_base_cam @ target_pose_cam_canonical
+    for target_pose_cam_canonical in target_pose_cam_canonical:
+        target_pose_world_canonical = canonical_transform_base_cam @ target_pose_cam_canonical
 
-    global target_left, target_right
-    target_left = target_pose_world_canonical
-    
-    # print(f"mat_left_to_right: {mat_left_to_right}")
-    target_right = mat_left_to_right@target_left
+        global target_left, target_right
+        target_left.append(target_pose_world_canonical)
+        
+        # print(f"mat_left_to_right: {mat_left_to_right}")
+    for mat in target_left:
+        target_right.append(mat_left_to_right @ mat)
+
 
     return base_pcd_world, target_left, target_right
     # print(f"target_right: {target_right}")
@@ -309,11 +319,14 @@ def move_to_ee_target_from_initial(object_name = 'box01', target_pose = None, xa
     status = False
     while not status:
         reverse_xy = not reverse_xy
-        initial_pcd, initial_pose = get_object_pc_fp(object_name = object_name, arm_ip = xarm.ip)
-        # xarm_right.update_attach(object_name=object_name, pose = initial_pose)
-        # xarm_right.update_collision_pcd(base_pcd, name='collision')
-        
-        cano_pcd, rotation_mat, center = PointCloudUtils.canonical_bbo(initial_pcd, reverse_xz = reverse_xz, visualize = False, symetric=symetric, reverse_xy=reverse_xy)
+        initial_pcd, initial_pose, _ = get_object_pc_fp(object_name = object_name, arm_ip = xarm.ip)
+        xarm_right.update_attach(object_name=object_name, pose = initial_pose)
+        xarm_right.update_collision_pcd(base_pcd, name='collision')
+        cano_pcd, rotation_mat, center = PointCloudUtils.canonicalize_point_cloud(initial_pcd)
+        if rotation_mat[2,2]>0:
+            rotation_mat = rotation_mat @ R.from_euler('y' , 180, degrees= True).as_matrix()
+        cano_pcd = np.asarray(cano_pcd.points)
+        # cano_pcd, rotation_mat, center = PointCloudUtils.canonical_bbo(initial_pcd, reverse_xz = reverse_xz, visualize = False, symetric=symetric, reverse_xy=reverse_xy)
         pcd_handler1 = sv_right.scene.add_point_cloud("cano_pcd", points = cano_pcd, colors = (0,255,0),point_size = 0.001, point_shape = 'circle')
         # pcd_handler2 = sv_right.scene.add_point_cloud("ini_pcd", points = np.asarray(initial_pcd.points), colors = (0,255,0),point_size = 0.001, point_shape = 'circle')
         sv_right.scene.add_frame("canonical_pose", wxyz=R.from_matrix(rotation_mat[:3,:3].T).as_quat()[[3, 0, 1, 2]], position=center, axes_length=0.3, axes_radius=0.01)
@@ -336,6 +349,7 @@ def move_to_ee_target_from_initial(object_name = 'box01', target_pose = None, xa
         ee_target_pose = transfer_mat @ xarm_frank
         print("ee_target_pose", ee_target_pose)
         sv_right.scene.add_frame("frank_target_pose", wxyz=R.from_matrix(ee_target_pose[:3,:3]).as_quat()[[3, 0, 1, 2]], position=ee_target_pose[:3,3], axes_length=0.3, axes_radius=0.01)
+        xarm.move_to_home()
         status = xarm.plan_and_execute(ee_target_pose)
     
     # # Patch
@@ -363,10 +377,10 @@ def move_to_ee_target_from_initial(object_name = 'box01', target_pose = None, xa
 
 
     # xarm.move_down(distance = 0.02)
-    # pcd_handler1.remove()
+    pcd_handler1.remove()
     # pcd_handler2.remove()
-    # xarm.remove_collision_pcd(name = "collision")
-    # xarm.remove_attachment(name = object_name)
+    xarm.remove_collision_pcd(name = "collision")
+    xarm.remove_attachment(name = object_name)
     return ee_target_pose
 
 
@@ -551,7 +565,7 @@ class XArmController:
             sv = sv_right
         _, pose_frank = self.arm.get_position()
         mesh_path = f"object_mesh_new/{object_name}/{object_name}.obj"
-        mesh = trimesh.load_mesh(mesh_path)
+        mesh = trimesh.load_mesh(mesh_path).apply_scale(0.9)
         pose_mesh = np.linalg.inv(pose_frank) @ pose
         self.planner.mplib_update_attached_object(
             mesh,
@@ -571,6 +585,8 @@ if __name__ == "__main__":
     cam2rightbase = None
     cam_K = None
     step = None
+    target_right = []
+    target_left = []
     sv_left = viser.ViserServer()
     sv_right = viser.ViserServer()
     cam_serial = "241122074374"
@@ -580,8 +596,8 @@ if __name__ == "__main__":
     cam2rightbase = np.load(arm_cam_X_BaseCamera_path_r)
     arm_cam_X_BaseCamera_path_l = Path(f"third_party/xarm6/data/camera/{cam_serial}/1219_excalib_capture00/optimized_X_BaseCamera.npy")
     cam2leftbase = np.load(arm_cam_X_BaseCamera_path_l)
-    rotation_path = '/home/shaol/data/zjx/rw/data/shelf118/rotation_matrix.npy'
-    center_path = '/home/shaol/data/zjx/rw/data/shelf118/center.npy'
+    rotation_path = '/home/shaol/data/zjx/rw/data/shelf119/rotation_matrix.npy'
+    center_path = '/home/shaol/data/zjx/rw/data/shelf119/center.npy'
     rotation_mats = PointCloudUtils.read_matrices_from_npy(rotation_path)
     print(f'rotation mats{rotation_mats}')
 
@@ -604,38 +620,49 @@ if __name__ == "__main__":
     xarm6_pk = XArm6WOEE()
     xarm_left = XArmController(ip=XARM6LEFT_IP)
     xarm_right = XArmController(ip=XARM6_IP)
-
+    last_base_pose = None
     env_pcd = enviroment_constraint(XARM6PlannerCfg)
-    # xarm_left.planner.mplib_add_point_cloud(env_pcd, name="env")
-    # xarm_right.planner.mplib_add_point_cloud(env_pcd, name="env")
+    sv_right.scene.add_point_cloud("env", points=env_pcd, colors=(0, 255, 0), point_size=0.002, point_shape="circle")
+    xarm_left.planner.mplib_add_point_cloud(env_pcd, name="env")
+    xarm_right.planner.mplib_add_point_cloud(env_pcd, name="env")
 
-    xarm_left.move_gripper(open = True, wait = True)
-    xarm_right.move_gripper(open = True, wait = True)
-    xarm_right.move_to_home()
-    xarm_left.move_to_home()
-
-    pick(xarm= xarm_right, object_name = 'shelf02', policy='shelf')
+    # xarm_left.move_gripper(open = True, wait = True)
+    # xarm_right.move_gripper(open = True, wait = True)
+    # xarm_right.move_to_home()
+    # xarm_left.move_to_home()
+    
     pick(xarm=xarm_left, object_name = 'shelf01' , policy='box')
-    first_base_joints = np.array([ -1.6, 14.6, -98.5,4.4, 65.4 ,84 ])/180*np.pi
+    pick(xarm=xarm_right, object_name = 'shelf02' , policy='shelf')
+   
+    first_base_joints = np.array([ 1.9, -16.1, -15.3, 1.1, -27.9, 91.2])/180*np.pi
+    # # # first_base_joints = np.array([ 0.3, -10.6, -53.9, 0.7, 16.8, 91.2])/180*np.pi
+    # # # first_base_joints = np.array([2.1, 15.9, -106.6, -0.7, 79.3 , 91.2 ])/180*np.pi
     xarm_left.move_by_joints_value(first_base_joints)
-    # seconda_joints = np.array([-38.5, 49.1, -113.1, 72.4, 116.4, -7.6])/180*np.pi
-    # xarm_right.move_by_joints_value(seconda_joints)
+   
     base_pose_cam_canonical = np.eye(4)
-    target_pose_cam_canonical = np.eye(4)
+    target_pose_cam_canonical1 = np.eye(4)
+    target_pose_cam_canonical2= np.eye(4)
     base_pose_cam_canonical[:3, :3] = rotation_mats[0].T
     base_pose_cam_canonical[:3, 3] = centers[0]
-    target_pose_cam_canonical[:3, :3] = rotation_mats[1].T
-    target_pose_cam_canonical[:3, 3] = centers[1]
+    target_pose_cam_canonical1[:3, :3] = rotation_mats[1].T
+    target_pose_cam_canonical1[:3, 3] = centers[1]
+    target_pose_cam_canonical2[:3, :3] = rotation_mats[2].T
+    target_pose_cam_canonical2[:3, 3] = centers[2]
+    target_pose_cam_canonical = [target_pose_cam_canonical1, target_pose_cam_canonical2]
     base_pcd, target_left, target_right = specify_a_base_and_get_target_pose(object_name='shelf01', arm_ip=XARM6LEFT_IP, base_pose_cam_canonical= base_pose_cam_canonical, target_pose_cam_canonical = target_pose_cam_canonical)
-    sv_left.scene.add_frame("target_left", wxyz=R.from_matrix(target_left[:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_left[:3, 3], axes_length=0.3, axes_radius=0.01)
-    move_to_ee_target_from_initial(object_name = 'shelf02', target_pose = target_right, xarm = xarm_right, base_pcd = base_pcd, switch_to_right  = True)
+    sv_left.scene.add_frame("target_left", wxyz=R.from_matrix(target_left[0][:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_left[0][:3, 3], axes_length=0.3, axes_radius=0.01)
+    sv_left.scene.add_frame("target_left2", wxyz=R.from_matrix(target_left[1][:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_left[1][:3, 3], axes_length=0.3, axes_radius=0.01)
+    # print(f"target_left is {target_left}, target right is {target_right}")
+
+    move_to_ee_target_from_initial(object_name = 'shelf02', target_pose = target_right[0], xarm = xarm_right, base_pcd = base_pcd, switch_to_right  = True)
+    # xarm_right.move_to_home()
+    input("press enter to continue")
+    target_right[1][:3, :3] = target_right[1][:3, :3] @ R.from_euler('y', 180, degrees=True).as_matrix()
     pick(xarm = xarm_right, object_name = 'shelf02', policy='shelf')
-    target_pose_cam_canonical[:3, :3] = rotation_mats[2].T
-    target_pose_cam_canonical[:3, 3] = centers[2]
-    base_pcd, target_left, target_right = specify_a_base_and_get_target_pose(object_name='shelf01', arm_ip=XARM6LEFT_IP, base_pose_cam_canonical= base_pose_cam_canonical, target_pose_cam_canonical = target_pose_cam_canonical)
-    sv_left.scene.add_frame("target_left", wxyz=R.from_matrix(target_left[:3,:3]).as_quat()[[3, 0, 1, 2]], position=target_left[:3, 3], axes_length=0.3, axes_radius=0.01)
-    last_ee = move_to_ee_target_from_initial(object_name = 'shelf02', target_pose = target_right, xarm = xarm_right, base_pcd = base_pcd, switch_to_right  = True)
-    bp()
+    right_hand_joints = np.array([ -7.5, -44.7, -30.2, 0, 75.1, 79.5])/180*np.pi
+    xarm_right.move_by_joints_value(right_hand_joints)
+    move_to_ee_target_from_initial(object_name = 'shelf02', target_pose = target_right[1], xarm = xarm_right, base_pcd = base_pcd, switch_to_right  = True)
+    # bp()
 
 
 

@@ -21,7 +21,7 @@ pipeline.start(config)
 
 # 动态生成文件名（根据当前时间）
 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = f"realsense_video_{current_time}.mp4"
+output_file = f"/media/shaol/04EC9164EC9150B2/realsense_video_{current_time}.mp4"
 
 # 设置视频保存参数
 fps = 30

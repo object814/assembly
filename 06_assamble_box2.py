@@ -321,25 +321,25 @@ def move_to_ee_target_from_initial(object_name = 'box01', target_pose = None, xa
     
     # Patch
     if step == 1:
-        xarm.plan_and_execute(ee_target_pose, z_axis_offset = 0.02)
-        xarm.move_z_axis(distance = 0.025)
+        sucess = xarm.plan_and_execute(ee_target_pose, z_axis_offset = 0.02)
+        if sucess :xarm.move_z_axis(distance = 0.03)
     if step == 2:
-        xarm.plan_and_execute(ee_target_pose,z_axis_offset = 0.02)
+        sucess = xarm.plan_and_execute(ee_target_pose,z_axis_offset = 0.02)
         # xarm.rotation(angle = 5)
-        xarm.move_z_axis(distance = 0.04)
+        if sucess :xarm.move_z_axis(distance = 0.04)
     if step == 3:
-        xarm.plan_and_execute(ee_target_pose,z_axis_offset = 0, y_axis_offset = -0.03)
-        xarm.move_y_axis(distance = -0.03)
+        sucess = xarm.plan_and_execute(ee_target_pose,z_axis_offset = 0, y_axis_offset = -0.03)
+        if sucess :xarm.move_y_axis(distance = -0.03)
     if step == 4 :
-        xarm.plan_and_execute(ee_target_pose,y_axis_offset = 0.02)
+        sucess = xarm.plan_and_execute(ee_target_pose,y_axis_offset = 0.02)
         # xarm.move_down(distance = -0.01)
-        xarm.move_y_axis(distance = 0.02)
+        if sucess :xarm.move_y_axis(distance = 0.02)
     if step == 5:
-        xarm.plan_and_execute(ee_target_pose,y_axis_offset = 0.03)
-        xarm.move_y_axis(distance = 0.03)
+        sucess = xarm.plan_and_execute(ee_target_pose,y_axis_offset = 0.03)
+        if sucess :xarm.move_y_axis(distance = 0.04)
     if step == 6:
-        xarm.plan_and_execute(ee_target_pose, y_axis_offset = -0.02)
-        xarm.move_y_axis(distance = -0.02)
+        sucess = xarm.plan_and_execute(ee_target_pose, y_axis_offset = -0.02)
+        if sucess :xarm.move_y_axis(distance = -0.02)
 
 
 
@@ -425,6 +425,7 @@ class XArmController:
         target_position[:3, 3] *= 1000
 
     def plan_and_execute(self, target_pose,z_axis_offset = None, y_axis_offset = None, x_axis_offset = None):
+        success = False
         if self.ip == XARM6LEFT_IP:
             sv = sv_left
         else:
@@ -463,11 +464,14 @@ class XArmController:
         while True:
             time.sleep(0.2)
             if validated:
+                success = True
                 break
         validated = False
         waypoints = planning_result['position']
         self.arm.set_joint_values_sequence(waypoints, planning_timestep=self.planner_cfg.timestep)
         self.arm.set_joint_values(waypoints[-1], speed=0.35, wait=True)
+
+        return success
 
     def move_gripper(self, open = None, close = None, position = None, wait = True):
         if  position is not None:
@@ -574,14 +578,16 @@ if __name__ == "__main__":
     xarm_left.planner.mplib_add_point_cloud(env_pcd, name="env")
     xarm_right.planner.mplib_add_point_cloud(env_pcd, name="env")
 
-    # xarm_left.move_gripper(open = True, wait = True)
-    # xarm_right.move_gripper(open = True, wait = True)
-    # xarm_right.move_to_home()
-    # xarm_left.move_to_home()
+    xarm_left.move_gripper(open = True, wait = True)
+    xarm_right.move_gripper(open = True, wait = True)
+    xarm_right.move_to_home()
+    xarm_left.move_to_home()
+    pick(xarm= xarm_right, object_name = 'box07')
+    bp()
+
 
     # # '''start excuting picking two objects'''
-
-    for step in range(1,7):
+    for step in range(6,7):
         lgr.info(f"Now step is {step}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         base_pose_cam_canonical, target_pose_cam_canonical, base_name, target_name = get_canonical_pose_cam_from_file(step)
         print(f"base_pose_cam_canonical: {base_pose_cam_canonical}, target_pose_cam_canonical: {target_pose_cam_canonical}", base_name, target_name)
