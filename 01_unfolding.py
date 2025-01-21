@@ -1,10 +1,12 @@
 from argparse import ArgumentParser
+import json
 import random
 import cv2
 import time
 
 import trimesh
 import viser
+from PIL import Image
 import numpy as np
 import open3d as o3d
 import hydra
@@ -27,6 +29,7 @@ PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
 sys.path.append(PARENT_DIR)
 from ..BiMo.code import models, utils
 from ..BiMo.code.Run_Realworld.utils import read_yaml_config
+from ..BiMo.code.run_featurizer import transfer_affordance, transfer_affordance_w_mask
 
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
@@ -203,42 +206,59 @@ pregrasp_retreat_distance = 0.08
 # @hydra.main(version_base="1.2", config_path="", config_name="validate")
 def creat_networks():
     # load models
-    aff1_def = utils.get_model_module(args.aff1_version)
-    affordance1 = aff1_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, task_input_dim=task_input_dim)
-    actor1_def = utils.get_model_module(args.actor1_version)
-    actor1 = actor1_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, z_dim=args.z_dim)
-    critic1_def = utils.get_model_module(args.critic1_version)
-    critic1 = critic1_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, task_input_dim=task_input_dim)
+    task_input_dim = 1
+    aff1_def = utils.get_model_module(cfgs['aff1_version'])
+    affordance1 = aff1_def.Network(cfgs['feat_dim'],
+                                   cfgs['cp_feat_dim'],
+                                   cfgs['dir_feat_dim'],
+                                   task_input_dim=task_input_dim)
+    actor1_def = utils.get_model_module(cfgs['actor1_version'])
+    actor1 = actor1_def.Network(cfgs['feat_dim'], cfgs['cp_feat_dim'], cfgs['dir_feat_dim'], z_dim=cfgs['z_dim'])
+    critic1_def = utils.get_model_module(cfgs['critic1_version'])
+    critic1 = critic1_def.Network(cfgs['feat_dim'],
+                                  cfgs['cp_feat_dim'],
+                                  cfgs['dir_feat_dim'],
+                                  task_input_dim=task_input_dim)
 
-    aff2_def = utils.get_model_module(args.aff2_version)
-    affordance2 = aff2_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, task_input_dim=task_input_dim)
-    actor2_def = utils.get_model_module(args.actor2_version)
-    actor2 = actor2_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, z_dim=args.z_dim)
+    aff2_def = utils.get_model_module(cfgs['affw_version'])
+    affordance2 = aff2_def.Network(cfgs['feat_dim'],
+                                   cfgs['cp_feat_dim'],
+                                   cfgs['dir_feat_dim'],
+                                   task_input_dim=task_input_dim)
+    actor2_def = utils.get_model_module(cfgs['actorw_version'])
+    actor2 = actor2_def.Network(cfgs['feat_dim'], cfgs['cp_feat_dim'], cfgs['dir_feat_dim'], z_dim=cfgs['z_dim'])
     critic2_def = utils.get_model_module(args.critic2_version)
-    critic2 = critic2_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, task_input_dim=task_input_dim)
+    critic2 = critic2_def.Network(cfgs['feat_dim'],
+                                  cfgs['cp_feat_dim'],
+                                  cfgs['dir_feat_dim'],
+                                  task_input_dim=task_input_dim)
 
-    if not args.use_CA:
+    if not cfgs['use_CA']:
         affordance1.load_state_dict(
-            torch.load(os.path.join(args.aff1_path, 'ckpts', '%s-network.pth' % args.aff1_eval_epoch)))
+            torch.load(os.path.join(cfgs['aff1_path'], 'ckpts', '%s-network.pth' % cfgs['aff1_eval_epoch'])))
         actor1.load_state_dict(
-            torch.load(os.path.join(args.actor1_path, 'ckpts', '%s-network.pth' % args.actor1_eval_epoch)))
+            torch.load(os.path.join(cfgs['actor1_path'], 'ckpts', '%s-network.pth' % cfgs['actor1_eval_epoch'])))
         critic1.load_state_dict(
-            torch.load(os.path.join(args.critic1_path, 'ckpts', '%s-network.pth' % args.critic1_eval_epoch)))
+            torch.load(os.path.join(cfgs['critic1_path'], 'ckpts', '%s-network.pth' % cfgs['critic1_eval_epoch'])))
         affordance2.load_state_dict(
-            torch.load(os.path.join(args.aff2_path, 'ckpts', '%s-network.pth' % args.aff2_eval_epoch)))
+            torch.load(os.path.join(cfgs['aff2_path'], 'ckpts', '%s-network.pth' % cfgs['aff2_eval_epoch'])))
         actor2.load_state_dict(
-            torch.load(os.path.join(args.actor2_path, 'ckpts', '%s-network.pth' % args.actor2_eval_epoch)))
+            torch.load(os.path.join(cfgs['actor2_path'], 'ckpts', '%s-network.pth' % cfgs['actor2_eval_epoch'])))
         critic2.load_state_dict(
-            torch.load(os.path.join(args.critic2_path, 'ckpts', '%s-network.pth' % args.critic2_eval_epoch)))
+            torch.load(os.path.join(cfgs['critic2_path'], 'ckpts', '%s-network.pth' % cfgs['critic2_eval_epoch'])))
     else:
         affordance1.load_state_dict(
-            torch.load(os.path.join(args.CA_path, 'ckpts', '%s-affordance1.pth' % args.CA_eval_epoch)))
-        actor1.load_state_dict(torch.load(os.path.join(args.CA_path, 'ckpts', '%s-actor1.pth' % args.CA_eval_epoch)))
-        critic1.load_state_dict(torch.load(os.path.join(args.CA_path, 'ckpts', '%s-critic1.pth' % args.CA_eval_epoch)))
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-affordance1.pth' % cfgs['CA_eval_epoch'])))
+        actor1.load_state_dict(
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-actor1.pth' % cfgs['CA_eval_epoch'])))
+        critic1.load_state_dict(
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-critic1.pth' % cfgs['CA_eval_epoch'])))
         affordance2.load_state_dict(
-            torch.load(os.path.join(args.CA_path, 'ckpts', '%s-affordance2.pth' % args.CA_eval_epoch)))
-        actor2.load_state_dict(torch.load(os.path.join(args.CA_path, 'ckpts', '%s-actor2.pth' % args.CA_eval_epoch)))
-        critic2.load_state_dict(torch.load(os.path.join(args.CA_path, 'ckpts', '%s-critic2.pth' % args.CA_eval_epoch)))
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-affordance2.pth' % cfgs['CA_eval_epoch'])))
+        actor2.load_state_dict(
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-actor2.pth' % cfgs['CA_eval_epoch'])))
+        critic2.load_state_dict(
+            torch.load(os.path.join(cfgs['CA_path'], 'ckpts', '%s-critic2.pth' % cfgs['CA_eval_epoch'])))
 
     affordance1.to(device).eval()
     actor1.to(device).eval()
@@ -253,12 +273,15 @@ def creat_networks():
 def get_predictions(network, pcs, ctpt1_list, ctpt2_list):
 
     raw_pair = len(ctpt1_list)
+    batch_size = 1
     ctpt1 = torch.tensor(np.array(ctpt1_list)).float().reshape(batch_size * raw_pair, -1).to(args.device)
     ctpt2 = torch.tensor(np.array(ctpt2_list)).float().reshape(batch_size * raw_pair, -1).to(args.device)
 
-    num_ctpt1, num_ctpt2, rv1, rv2 = raw_pair, raw_pair, args.rv1, args.rv2
-    num_pair1 = args.num_pair1
+    num_ctpt1, num_ctpt2, rv1, rv2 = raw_pair, raw_pair, cfgs['rv1'], cfgs['rv2']
+    num_pair1 = cfgs['num_pair1']
     batch_size = 1
+    affordance1, actor1, critic1, affordance2, actor2, critic2 = network
+
     #inference
     with torch.no_grad():  #TODO
         #aff1
@@ -361,19 +384,15 @@ def get_predictions(network, pcs, ctpt1_list, ctpt2_list):
                                       ctpt2=position2[0].detach().cpu().numpy(),
                                       type='2')
 
-        dir1 = dir1.view(6).detach().cpu().numpy()
-        dir2 = dir2.view(6).detach().cpu().numpy()
+    dir1 = dir1.view(6).detach().cpu().numpy()
+    dir2 = dir2.view(6).detach().cpu().numpy()
 
-        position1 = position1.view(3).detach().cpu().numpy()
-        position2 = position2.view(3).detach().cpu().numpy()
-        up1, forward1 = dir1[0:3], dir1[3:6]
-        up2, forward2 = dir2[0:3], dir2[3:6]
+    position1 = position1.view(3).detach().cpu().numpy()
+    position2 = position2.view(3).detach().cpu().numpy()
+    up1, forward1 = dir1[0:3], dir1[3:6]
+    up2, forward2 = dir2[0:3], dir2[3:6]
 
     return position1, up1, forward1, position2, up2, forward2
-
-
-def get_ctpts(src_img_PIL, trg_img_PIL):
-    pass
 
 
 def cal_rotmat(CAM_In_mat,
@@ -436,9 +455,75 @@ def cal_rotmat(CAM_In_mat,
     return pre_pose, pre_rotmat, start_pose, start_rotmat, final_pose, final_rotmat
 
 
-def retreive_pipline(trg_rgb):
+def retreive_pipeline(trg_rgb, src_img_dir):
     pass
 
+def correspond_pipeline(src_data_dir, src_img_dir, src_shape_list, src_trial_list, trg_img_PIL):
+    dir_name = 'succ_files'
+    ctpts_list = []
+    for idx in range(src_trial_list):
+        file_id = src_trial_list[idx]
+        file = f'result_{file_id}.json'
+
+        with open(os.path.join(src_data_dir, dir_name, file), 'r') as fin:
+            result_data = json.load(fin)
+
+        src_cat, src_shape_id = result_data['category'], result_data['shape_id']
+        src_ctpt1 = result_data['pixel_locs_1']
+        src_x1, src_y1 = src_ctpt1
+        src_ctpt2 = result_data['pixel_locs_2']
+        src_x2, src_y2 = src_ctpt2
+
+        src_img_path = os.path.join(src_img_dir, '')
+        src_img = Image.open(src_img_path).convert('RGB')
+        try:
+            cur_ctpt1 = transfer_affordance(src_img,
+                                            trg_img_PIL,
+                                            prompt=args.prompt,
+                                            src_pos_list=[[src_y1, src_x1], [src_y2, src_x2]],
+                                            save_root=out_path,
+                                            id=1)
+            y1, x1 = cur_ctpt1
+        except Exception:
+            print('DIFT ERROR')
+            continue
+        torch.cuda.empty_cache()
+
+        try:
+            cur_ctpt2 = transfer_affordance(src_img,
+                                            trg_img_PIL,
+                                            prompt=args.prompt,
+                                            src_pos_list=[[src_y2, src_x2], [src_y1, src_x1]],
+                                            save_root=out_path,
+                                            id=2)
+            y2, x2 = cur_ctpt2
+        except Exception:
+            print('DIFT ERROR')
+            continue
+
+        torch.cuda.empty_cache()
+        vis_img = utils.visualize_xy(x1=y1,
+                                     y1=x1,
+                                     x2=y2,
+                                     y2=x2,
+                                     img=trg_img_PIL,
+                                     rad=30,
+                                     save_root=os.path.join(out_path, 'vis_xy.png'))
+
+        ctpts_list.append([x1, y1, x2, y2])
+
+    return ctpts_list
+
+
+def ctpts_2d_to_3d(ctpts_2d_list,trg_img_PIL):
+
+    num_pairs = len(ctpts_2d_list)
+    for idx in range(num_pairs):
+        ctpts_2d = ctpts_2d_list[idx]
+        x1, y1, x2, y2 = ctpts_2d
+        position_world1, position_cam1, _ = cal_
+
+    
 
 def init_dual_arm(ip_l="192.168.1.232", ip_r="192.168.1.208"):
     arm_l = XArmAPI(ip_l)
@@ -504,7 +589,6 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
     xarm6_planner.mplib_add_point_cloud(env_pc, name="env_pc")
     ''' setup the planner and vis '''
     '''init dual arm'''
-
     print('Initial dual arms')
     xarm1, xarm2 = init_dual_arm()
     ''' get the object pc and rgb'''
@@ -524,8 +608,11 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
     ''' get the object pc and rgb'''
     '''retrieve and correspond'''
     trg_img_PIL = rgb
-    src_img_np = retreive_pipline(trg_img_PIL)  #TODO
-    ctpt1_list, ctpt2_list = correspond_pipline(src_img_np)  #TODO
+    src_img_dir = cfgs['src_img_dir']
+    src_data_dir = cfgs['src_data_dir']
+    src_shape_list, src_trial_list = retreive_pipeline(trg_img_PIL, src_img_dir)  #TODO
+    ctpts_2d_list = correspond_pipeline(src_data_dir, src_img_dir, src_shape_list, src_trial_list, trg_img_PIL)  #TODO
+    ctpt1_list, ctpt2_list = ctpts_2d_to_3d(ctpts_2d_list)  #TODO
     '''retrieve and correspond'''
     '''inference'''
     network = creat_networks()
@@ -604,13 +691,13 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
 
     input("Press Enter to continue...")
     xarm6_planner = XARM6Planner(xarm6_planner_cfg)
-    current_joint_values1 = np.array(xarm1.get_joint_values())  # yiwen
+    current_joint_values1 = np.array(xarm1.get_joint_values())
     status1, grasp_arm_joint_values1 = xarm6_planner.mplib_ik(current_joint_values1, pre_pose1)
     closest_grasp_arm_joint_values1 = get_closest_joint_value(current_joint_values1, grasp_arm_joint_values1)
     mp_is_success1 = status1 == 'Success'
 
     xarm6_planner = XARM6Planner(xarm6_planner_cfg)
-    current_joint_values2 = np.array(xarm2.get_joint_values())  # yiwen
+    current_joint_values2 = np.array(xarm2.get_joint_values())
     status2, grasp_arm_joint_values2 = xarm6_planner.mplib_ik(current_joint_values2, pre_pose2)
     closest_grasp_arm_joint_values2 = get_closest_joint_value(current_joint_values2, grasp_arm_joint_values2)
     mp_is_success2 = status2 == 'Success'

@@ -34,7 +34,7 @@ z_dim: 10
 feat_dim: 128
 cp_feat_dim: 32
 dir_feat_dim: 32
-num_point_per_shape: 8192
+num_point_per_shape: 8192 
 
 aff1_topk: 0.1
 aff2_topk: 0.1
