@@ -1,0 +1,56 @@
+SAVE_ROOT: "run_realworld/gym_outputs/drawer_open"
+device: cuda:0
+#task setting
+primact_type: "unfolding"
+categories: Box
+
+#NETWORK
+aff1_version: model_aff_fir
+aff1_path: ''
+aff1_eval_epoch: 0
+actor1_version: model_actor_fir
+actor1_path:
+actor1_eval_epoch: 0
+critic1_version: model_critic_fir
+critic1_path:
+critic1_eval_epoch: 0
+aff2_version: model_aff_sec
+aff2_path: ''
+aff2_eval_epoch: 0
+actor2_version: model_actor_sec
+actor2_path:
+actor2_eval_epoch: 0
+critic2_version: model_critic_sec
+critic2_path:
+critic2_eval_epoch: 0
+
+use_CA: True
+CA_path: ''
+CA_eval_epoch: 1-0
+
+rv_cnt: 100
+rvs_ctpt: 10
+z_dim: 10
+feat_dim: 128
+cp_feat_dim: 32
+dir_feat_dim: 32
+num_point_per_shape: 8192
+
+aff1_topk: 0.1
+aff2_topk: 0.1
+aff_topk: 0.1
+critic_topk1: 0.01
+critic_topk: 0.01
+num_ctpt1: 10
+num_ctpt2: 10
+rv1: 100
+rv2: 100
+num_pair1: 10
+num_ctpts: 10
+rvs: 100
+
+#src data info
+src_data_dir: 
+src_img_dir:
+
+#CAM INFO

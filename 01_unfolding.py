@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import random
 import cv2
 import time
 
@@ -25,6 +26,8 @@ print(sys.path)
 PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
 sys.path.append(PARENT_DIR)
 from ..BiMo.code import models, utils
+from ..BiMo.code.Run_Realworld.utils import read_yaml_config
+
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
 from scipy.spatial.transform import Rotation as R
@@ -50,34 +53,11 @@ from sklearn.decomposition import PCA
 
 parser = ArgumentParser()
 parser.add_argument('--device', type=str, default='cuda:0')
-parser.add_argument('--categories',
-                    type=str,
-                    help='list all categories [Default: None, meaning all 10 categories]',
-                    default=None)
-parser.add_argument('--primact_type', type=str)
-parser.add_argument('--aff1_version', type=str, default=None)
-parser.add_argument('--aff1_path', type=str, default=None)
-parser.add_argument('--aff1_eval_epoch', type=str, default=None)
-parser.add_argument('--actor1_version', type=str, default=None, help='model def file')
-parser.add_argument('--actor1_path', type=str)
-parser.add_argument('--actor1_eval_epoch', type=str)
-parser.add_argument('--critic1_version', type=str, default=None, help='model def file')
-parser.add_argument('--critic1_path', type=str)
-parser.add_argument('--critic1_eval_epoch', type=str)
+parser.add_argument('--config', type=str, required=True,
+                    help='path to the config file')  # e.g. configs/drawer_open.yaml
+parser.add_argument('--seed', type=int, default=100)
+parser.add_argument('--retrieve', action='store_true')
 
-parser.add_argument('--aff2_version', type=str, default=None)
-parser.add_argument('--aff2_path', type=str, default=None)
-parser.add_argument('--aff2_eval_epoch', type=str, default=None)
-parser.add_argument('--actor2_version', type=str, default=None, help='model def file')
-parser.add_argument('--actor2_path', type=str)
-parser.add_argument('--actor2_eval_epoch', type=str)
-parser.add_argument('--critic2_version', type=str, default=None, help='model def file')
-parser.add_argument('--critic2_path', type=str)
-parser.add_argument('--critic2_eval_epoch', type=str)
-
-parser.add_argument('--use_CA', action='store_true', default=False)
-parser.add_argument('--CA_path', type=str)
-parser.add_argument('--CA_eval_epoch', type=str)
 args = parser.parse_args()
 
 
@@ -218,10 +198,10 @@ def get_pcd_center(pcd):
 planner_timestep = 1.0 / 50.0
 cmd_timestep = 1.0 / 100.0
 pregrasp_retreat_distance = 0.08
+
+
 # @hydra.main(version_base="1.2", config_path="", config_name="validate")
-
-
-def get_predictions(pcs, ctpt1_list, ctpt2_list):
+def creat_networks():
     # load models
     aff1_def = utils.get_model_module(args.aff1_version)
     affordance1 = aff1_def.Network(args.feat_dim, args.cp_feat_dim, args.dir_feat_dim, task_input_dim=task_input_dim)
@@ -266,6 +246,11 @@ def get_predictions(pcs, ctpt1_list, ctpt2_list):
     affordance2.to(device).eval()
     actor2.to(device).eval()
     critic2.to(device).eval()
+    network = [affordance1, actor1, critic1, affordance2, actor2, critic2]
+    return network
+
+
+def get_predictions(network, pcs, ctpt1_list, ctpt2_list):
 
     raw_pair = len(ctpt1_list)
     ctpt1 = torch.tensor(np.array(ctpt1_list)).float().reshape(batch_size * raw_pair, -1).to(args.device)
@@ -274,7 +259,6 @@ def get_predictions(pcs, ctpt1_list, ctpt2_list):
     num_ctpt1, num_ctpt2, rv1, rv2 = raw_pair, raw_pair, args.rv1, args.rv2
     num_pair1 = args.num_pair1
     batch_size = 1
-
     #inference
     with torch.no_grad():  #TODO
         #aff1
@@ -384,6 +368,8 @@ def get_predictions(pcs, ctpt1_list, ctpt2_list):
         position2 = position2.view(3).detach().cpu().numpy()
         up1, forward1 = dir1[0:3], dir1[3:6]
         up2, forward2 = dir2[0:3], dir2[3:6]
+
+    return position1, up1, forward1, position2, up2, forward2
 
 
 def get_ctpts(src_img_PIL, trg_img_PIL):
@@ -542,7 +528,9 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
     ctpt1_list, ctpt2_list = correspond_pipline(src_img_np)  #TODO
     '''retrieve and correspond'''
     '''inference'''
-    position1, up1, forward1, position2, up2, forward2 = get_predictions(object_pc, ctpt1_list, ctpt2_list)  #TODO
+    network = creat_networks()
+    position1, up1, forward1, position2, up2, forward2 = get_predictions(network, object_pc, ctpt1_list,
+                                                                         ctpt2_list)  #TODO
     '''inference'''
     action_dir1, action_dir2 = utils.get_action_dir(args.primact_type, up1, forward1, up2, forward2)
     '''cal pose'''
@@ -666,15 +654,7 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
                                       is_radian=True)
             time.sleep(2)
 
-            # xarm.arm.set_gripper_position(850, wait=True)
-
             input("Press Enter to continue...")
-
-            # obstacle_pcd, pose = get_object_pc_fp(object_name='chair2')
-            # print(f"current pose: {pose}")
-            # sv.scene.add_frame("obstacle_pose", wxyz=R.from_matrix(pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pose[:3, 3], axes_length=0.03, axes_radius=0.001)
-            # sv.scene.add_point_cloud("object_pc", points=np.asarray(obstacle_pcd.points), colors=(255, 0, 0), point_size=0.002, point_shape="circle")
-            # xarm6_planner.mplib_add_point_cloud(np.asarray(obstacle_pcd.points), name="obstacle_pc")
 
             go_home_duration = 2
             waypt_joint_values_np1 = []
@@ -691,6 +671,7 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
 
             xarm1.set_joint_values_sequence(waypt_joint_values_np1, go_home_duration)
             xarm2.set_joint_values_sequence(waypt_joint_values_np2, go_home_duration)
+
             xarm1.set_joint_values(waypt_joint_values_np1[-1], speed=0.2, wait=True)
             xarm2.set_joint_values(waypt_joint_values_np2[-1], speed=0.2, wait=True)
 
@@ -706,6 +687,13 @@ if __name__ == "__main__":
     sv = viser.ViserServer()
 
     batch_size = 1  #TODO
-    device = args.device
+
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed(args.seed)
+
+    cfgs = read_yaml_config(f"run_realworld/{args.config}")  #TODO
+    os.makedirs(cfgs['SAVE_ROOT'], exist_ok=True)
 
     unfolding()
