@@ -64,6 +64,14 @@ parser.add_argument('--retrieve', action='store_true')
 
 args = parser.parse_args()
 
+K = [[918.583046944134, 0, 648.5641804535674],
+ [0, 918.583046944134, 348.43171438920723],
+ [0, 0, 1]]
+
+CAM_In_mat = np.array(K)
+fx,fy,cx,cy = K[0,0],K[1,1],K[0,2],K[1,2]
+cam_w = 2*cx
+cam_h = 2*cy
 
 def get_object_pc(object_name='Box'):
     prompt_drawer = SAMPromptDrawer(window_name="Prompt Drawer",
@@ -205,6 +213,7 @@ pregrasp_retreat_distance = 0.08
 
 
 # @hydra.main(version_base="1.2", config_path="", config_name="validate")
+
 def creat_networks():
     # load models
     task_input_dim = 1
