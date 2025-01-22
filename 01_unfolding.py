@@ -1,9 +1,19 @@
-from argparse import ArgumentParser
+import sys
+import os
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR)
+sys.path.append(os.path.join(ROOT_DIR + "/third_party/segment-anything"))
+sys.path.append(os.path.join(ROOT_DIR + "/third_party/xarm6"))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+print(sys.path)
+PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
+sys.path.append(PARENT_DIR)
 import json
 import random
 import cv2
 import time
-
+from argparse import ArgumentParser
 import trimesh
 import viser
 from PIL import Image
@@ -17,16 +27,7 @@ from xarm.wrapper import XArmAPI
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
-import sys
-import os
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR)
-sys.path.append(os.path.join(ROOT_DIR + "/third_party/segment-anything"))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-print(sys.path)
-PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
-sys.path.append(PARENT_DIR)
 from ..BiMo.code import models, utils
 from ..BiMo.code.Run_Realworld.utils import read_yaml_config, crop_points
 from ..BiMo.code.run_featurizer import transfer_affordance, transfer_affordance_w_mask
