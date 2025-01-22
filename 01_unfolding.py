@@ -28,7 +28,7 @@ print(sys.path)
 PARENT_DIR = os.path.abspath(os.path.join(ROOT_DIR, '..'))
 sys.path.append(PARENT_DIR)
 from ..BiMo.code import models, utils
-from ..BiMo.code.Run_Realworld.utils import read_yaml_config
+from ..BiMo.code.Run_Realworld.utils import read_yaml_config, crop_points
 from ..BiMo.code.run_featurizer import transfer_affordance, transfer_affordance_w_mask
 
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
@@ -458,6 +458,7 @@ def cal_rotmat(CAM_In_mat,
 def retreive_pipeline(trg_rgb, src_img_dir):
     pass
 
+
 def correspond_pipeline(src_data_dir, src_img_dir, src_shape_list, src_trial_list, trg_img_PIL):
     dir_name = 'succ_files'
     ctpts_list = []
@@ -515,15 +516,48 @@ def correspond_pipeline(src_data_dir, src_img_dir, src_shape_list, src_trial_lis
     return ctpts_list
 
 
-def ctpts_2d_to_3d(ctpts_2d_list,trg_img_PIL):
+def lift_affordance(ctpts_2d_list, trg_img_PIL, pcd):
 
     num_pairs = len(ctpts_2d_list)
+    partial_points = np.array(pcd.points)
+    partial_colors = np.array(pcd.colors)
+    ctpt1_list = []
+    ctpt2_list = []
     for idx in range(num_pairs):
         ctpts_2d = ctpts_2d_list[idx]
         x1, y1, x2, y2 = ctpts_2d
-        position_world1, position_cam1, _ = cal_
+        pixel1 = [x1, y1]
+        pixel2 = [x2, y2]
+        position1 = partial_points[pixel1[1] * cfgs['cam_w'] + pixel1[0]]  #TODO
+        position2 = partial_points[pixel2[1] * cfgs['cam_w'] + pixel2[0]]  #TODO
+        # visualization
+        ds_points1, _, _ = crop_points(position1, partial_points, thres=0.5)
+        ds_points2, _, _ = crop_points(position2, partial_points, thres=0.5)
 
-    
+        # Combine unique points from both crops
+        combined_points = np.vstack((ds_points1, ds_points2))
+        combined_points = np.unique(combined_points, axis=0)  # Remove duplicates
+
+        # Create Open3D point cloud object
+        save_pcd = o3d.geometry.PointCloud()
+        save_pcd.points = o3d.utility.Vector3dVector(combined_points)
+
+        # Set the color for all cropped points to green
+        save_pcd.colors = o3d.utility.Vector3dVector(np.array([0, 1, 0]) * np.ones((combined_points.shape[0], 3)))
+
+        # Add position1 as a  red point
+        save_pcd.points.append(o3d.utility.Vector3dVector([position1]))
+        save_pcd.colors.append(o3d.utility.Vector3dVector([[1, 0, 0]]))  # Green for position1
+
+        # Add position2 as a blue point
+        save_pcd.points.append(o3d.utility.Vector3dVector([position2]))
+        save_pcd.colors.append(o3d.utility.Vector3dVector([[0, 0, 1]]))  # Blue for position2
+        # save to ply
+        o3d.io.write_point_cloud(f"{cfgs['SAVE_ROOT']}/ctpts_pair_{idx}.ply", save_pcd)
+        ctpt1_list.append(position1)
+        ctpt2_list.append(position2)
+    return ctpt1_list, ctpt2_list
+
 
 def init_dual_arm(ip_l="192.168.1.232", ip_r="192.168.1.208"):
     arm_l = XArmAPI(ip_l)
@@ -612,7 +646,7 @@ def unfolding(object_name='Box', arm1_ip=XARM6LEFT_IP, arm2_ip=XARM6_IP):
     src_data_dir = cfgs['src_data_dir']
     src_shape_list, src_trial_list = retreive_pipeline(trg_img_PIL, src_img_dir)  #TODO
     ctpts_2d_list = correspond_pipeline(src_data_dir, src_img_dir, src_shape_list, src_trial_list, trg_img_PIL)  #TODO
-    ctpt1_list, ctpt2_list = ctpts_2d_to_3d(ctpts_2d_list)  #TODO
+    ctpt1_list, ctpt2_list = lift_affordance(ctpts_2d_list) 
     '''retrieve and correspond'''
     '''inference'''
     network = creat_networks()
