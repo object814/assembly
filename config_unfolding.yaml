@@ -54,3 +54,5 @@ src_data_dir:
 src_img_dir:
 
 #CAM INFO
+cam_w: 
+cam_h:

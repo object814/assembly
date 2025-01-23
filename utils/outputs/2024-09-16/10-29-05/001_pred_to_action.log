@@ -1,9 +1,0 @@
-[2024-09-16 10:29:35,451][websockets.server][INFO] - server listening on 0.0.0.0:8080
-[2024-09-16 10:29:39,286][websockets.server][INFO] - connection open
-[2024-09-16 10:29:43,147][root][INFO] - Succeeded to open port: /dev/ttyUSB0
-[2024-09-16 10:29:43,147][root][INFO] - Succeeded to set baudrate to 3000000
-[2024-09-16 10:30:07,996][root][ERROR] - > write_byte: [Motor ID: 3] [TxRxResult] There is no status packet!
-[2024-09-16 10:30:08,030][root][ERROR] - > write_byte: [Motor ID: 4] [TxRxResult] There is no status packet!
-[2024-09-16 10:30:08,064][root][ERROR] - > write_byte: [Motor ID: 5] [TxRxResult] There is no status packet!
-[2024-09-16 10:30:08,098][root][ERROR] - > write_byte: [Motor ID: 6] [TxRxResult] There is no status packet!
-[2024-09-16 10:30:08,234][root][ERROR] - Could not set torque disabled for IDs: [3, 4, 5, 6]
