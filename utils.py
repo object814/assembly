@@ -311,6 +311,38 @@ class PointCloudUtils:
         xarm.arm.set_gripper_position(gripper_open, wait=True)
         print("螺旋运动完成，夹爪已松开。")
 
+    @staticmethod   
+    def canonicalize_point_cloud(point_pcd):
+        if isinstance(point_pcd, o3d.geometry.PointCloud):
+            points = np.asarray(point_pcd.points)
+        elif isinstance(point_pcd, np.ndarray):
+            points = point_pcd
+        else:
+            raise TypeError("Input must be a numpy.ndarray or an open3d.geometry.PointCloud.")
+
+        '''get center'''
+        # points = np.asarray(point_pcd.points)
+        centroid = np.mean(points, axis=0)
+        centered_pcd = points - centroid
+        # 3. 使用 PCA 计算主轴方向
+
+        
+        pca = PCA(n_components=3)
+        pca.fit(centered_pcd)
+        # 4. 获取旋转矩阵（主轴方向）
+        rotation_matrix = pca.components_
+        if np.linalg.det(rotation_matrix) < 0:
+            rotation_matrix = -rotation_matrix
+        # print(f"rotation_matrix: {rotatisample_surfaceon_matrix}")
+        transformed_pcd = np.dot(centered_pcd, rotation_matrix.T)
+        # restored_pcd = centered_pcd + centroid
+
+        # 将还原的点云转换回 Open3D 点云对象
+        canonicalized_pcd = o3d.geometry.PointCloud()
+        canonicalized_pcd.points = o3d.utility.Vector3dVector(transformed_pcd)
+
+        return canonicalized_pcd, rotation_matrix, centroid
+
 class Grasp_Policy():
 
     @staticmethod
@@ -373,8 +405,9 @@ class Grasp_Policy():
         rotation_y2 = R.from_euler('y', 180,  degrees=True).as_matrix()
         rotation_z_half = R.from_euler('z', 90,  degrees=True).as_matrix()
         print('z_axis',pose[2,2])
-        if  pose[2,2]>-0.1 :
-            pose[:3, :3] = pose[:3, :3] @ rotation_y
+        pose[:3, :3] = pose[:3, :3] @ rotation_y
+        if pose[2,2] > 0:
+            pose[:3, :3] = pose[:3, :3] @ rotation_y2
         z_axis = pose[:3,2].copy()
         y_axis = z_axis_offset / np.linalg.norm(z_axis_offset)
         x_axis = np.cross(y_axis, z_axis)
