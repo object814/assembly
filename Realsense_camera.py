@@ -353,9 +353,15 @@ if __name__ == "__main__":
     point1=[400, 570]
     point2=[600, 445]
     
-    u, v = point1
+    # u, v = point1
+    # try:
+    #     # 可视化 2D 和 3D 点
+    #     realtime_PC.visualize_2d_and_3d(u,v,save_path='/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02/point1')
+    # except ValueError as e:
+    #     print(e)
+    u, v = point2
     try:
         # 可视化 2D 和 3D 点
-        realtime_PC.visualize_2d_and_3d(u,v,save_path='/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02')
+        realtime_PC.visualize_2d_and_3d(u,v,save_path='/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02/point2')
     except ValueError as e:
         print(e)
