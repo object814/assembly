@@ -72,15 +72,15 @@ arm_left.set_gripper_position(850, wait=False)
 arm_right.set_gripper_position(850, wait=True)
 
 xarm_left_target_position = np.zeros(3)
-xarm_left_target_position[0] = 430
-xarm_left_target_position[1] = 80
-xarm_left_target_position[2] = 140 # then 80
+xarm_left_target_position[0] = 445
+xarm_left_target_position[1] = 35
+xarm_left_target_position[2] = 350 # then 160
 #-180,0,-90
 
 xarm_right_target_position = np.zeros(3)
-xarm_right_target_position[0] = 430
-xarm_right_target_position[1] = -80
-xarm_right_target_position[2] = 140
+xarm_right_target_position[0] = 445
+xarm_right_target_position[1] = -30
+xarm_right_target_position[2] = 350
 #
 
 #step0: pre pose
@@ -90,9 +90,10 @@ arm_right.set_position(x=xarm_right_target_position[0], y=xarm_right_target_posi
 print('here xarm_left_target_position:',xarm_left_target_position)
 print('here xarm_right_target_position:',xarm_right_target_position)
 time.sleep(1)
+input()
 #step1: trg pose
-xarm_left_target_position[2]=80
-xarm_right_target_position[2]=80
+xarm_left_target_position[2]=160
+xarm_right_target_position[2]=160
 
 arm_left.set_mode(0)
 arm_right.set_mode(0)
@@ -106,13 +107,13 @@ arm_right.set_position(x=xarm_right_target_position[0], y=xarm_right_target_posi
 time.sleep(1)
 #close gripper
 
-arm_left.set_gripper_position(210, wait=False)
-arm_right.set_gripper_position(210, wait=True)
+arm_left.set_gripper_position(12, wait=True)
+arm_right.set_gripper_position(12, wait=True)
 time.sleep(1)
 
 #step2: back to pre pose
-xarm_left_target_position[2]=180
-xarm_right_target_position[2]=180
+xarm_left_target_position[2]=260
+xarm_right_target_position[2]=260
 
 arm_left.set_position(x=xarm_left_target_position[0], y=xarm_left_target_position[1], z=xarm_left_target_position[2], roll=-180, pitch=0, yaw=-90, speed=100, is_radian=False, wait=False)
 arm_right.set_position(x=xarm_right_target_position[0], y=xarm_right_target_position[1], z=xarm_right_target_position[2], roll=-180, pitch=0, yaw=-90, speed=100, is_radian=False, wait=False)
