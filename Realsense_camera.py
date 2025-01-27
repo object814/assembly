@@ -45,8 +45,8 @@ class Realtime_PC:
                                     model_type=SAM_TYPE)
 
         front_cam_serial = "317222074181"  # 241122074374, 233622079809
-        exp_name = "0124_excalib_capture00"
-        left_exp_name = "0124_excalib_capture00_Left"
+        exp_name = "0125_excalib_capture00"
+        left_exp_name = "0125_excalib_capture00_Left"
         # camera_serial_nums = [arm_right_cam_serial]
         camera_serial_nums = [front_cam_serial]
         # camera_serial_nums = [top_cam_serial]
@@ -343,15 +343,15 @@ if __name__ == "__main__":
     realtime_PC = Realtime_PC()
     id = 0
     # realtime_PC.multi_rs.create_window_and_capture_data(save_dir=Path("/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02"))
-    for idx in range(5):
+    for idx in range(1):
         realtime_PC.get_now_pcd_from_camera()
     #     realtime_PC.vis_PC()
     #     realtime_PC.save_pc(save_dir="/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02", file_name=f"Box_02.ply")
 
     # pcs=realtime_PC.load_pc(load_dir="/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02", file_name=f"Box_02.ply")
     # realtime_PC.vis_PC()
-    point1=[400, 570]
-    point2=[600, 445]
+    point1=[490, 570]
+    point2=[750, 410]
     
     # u, v = point1
     # try:
@@ -362,6 +362,6 @@ if __name__ == "__main__":
     u, v = point2
     try:
         # 可视化 2D 和 3D 点
-        realtime_PC.visualize_2d_and_3d(u,v,save_path='/home/shaol/data/zhoujx/Obj_mesh_dir/Box_02/point2')
+        realtime_PC.visualize_2d_and_3d(u,v,save_path='/home/shaol/data/zhoujx/Obj_mesh_dir/Box_03/point2')
     except ValueError as e:
         print(e)
