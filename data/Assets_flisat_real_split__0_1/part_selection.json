@@ -1,0 +1,16 @@
+{
+    "id": "Assets_flisat_real_split__0_1",
+    "valid_parts": 2,
+    "used meshes": [
+        "original_part_00.obj",
+        "original_part_01.obj"
+    ],
+    "groups": [
+        [
+            0
+        ],
+        [
+            1
+        ]
+    ]
+}

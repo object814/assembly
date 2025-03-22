@@ -1,0 +1,30 @@
+pick_joints1 = np.array([ -29.2, 11, -41.2, -1, 30, -28.1])/180*np.pi
+xarm_right.move_by_joints_value(pick_joints1)
+xarm_right.move_gripper(close = True, wait = True)
+xarm_right.move_to_home()
+bp()
+first_grasp = np.array([-2.1, -25, -21, 7.4, 31.5, 82.2])/180*np.pi
+xarm_left.move_by_joints_value(first_grasp)
+xarm_left.move_gripper(close = True, wait = True)
+xarm_left.move_to_home()
+bp()
+target1_joints = np.array([ -44.7, 45.8, -108.3, 63.1, 120.4, 28.2])/180*np.pi
+xarm_right.move_by_joints_value(target1_joints)
+bp()
+xarm_right.move_gripper(open = True, wait = True)
+bp()
+xarm_right.move_to_home()
+bp()
+pick_joints2 = np.array([ 8.2, 5.4, -32.4, 9, 25.6, 2.4])/180*np.pi
+xarm_right.move_by_joints_value(pick_joints2)
+xarm_right.move_gripper(close = True, wait = True)
+xarm_right.move_to_home()
+bp()
+target2_joints2= np.array([ 34.4, 67.2, -151.2, -75.3, 116.4, -49.7])/180*np.pi
+xarm_right.move_by_joints_value(target2_joints2)
+bp()
+xarm_right.move_gripper(open = True, wait = True)
+
+bp()
+xarm_right.move_to_home()
+bp()

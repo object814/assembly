@@ -1,8 +1,0 @@
-viser
-hydra-core
-scikit-learn
-fpsample
-pytorch_kinematics
-pyrealsense2
-mplib
-sapien==3.0.0b1

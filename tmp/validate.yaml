@@ -1,0 +1,32 @@
+defaults:
+    - model: model.yaml
+    # - dataset: cmap_dataset.yaml
+    - _self_
+XARM6_IP: "192.168.1.208"
+XARM6LEFT_IP: "192.168.1.232"
+model:  # override model.yaml
+    encoder:
+        pretrain: null
+
+dataset:  # override multidex_dataset.yaml
+    batch_size: 32
+
+split_batch_size: 100  # decided by GPU memory limit
+gpu: 0
+name: '[3hands_latent128]'
+validate_epochs:
+#    - 10
+#    - 20
+    - 30
+    - 40
+    - 50
+    - 60
+    - 70
+    - 80
+    - 90
+    - 100
+#    - 110
+#    - 120
+#    - 130
+#    - 140
+#    - 150
