@@ -1,4 +1,4 @@
-# Real World Code for Our Set
+# Real World Code for Our Setting
 
 Xarm6 + Realsense D435 + LEAP Hand/ Ufactory Gripper
 
