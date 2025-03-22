@@ -15,4 +15,6 @@ git clone --recurse-submodules https://github.com/Robot-Experiment-Lab/realworld
 # TODO list
 
 * [ ] Calibration tutorial
-* [ ] clean waste file
+* [ ] Clean waste file
+* [ ] ONLY use relative path check
+* [ ] Reschedule script file
