@@ -1,9 +1,0 @@
-[2024-09-16 12:34:07,300][websockets.server][INFO] - server listening on 0.0.0.0:8080
-[2024-09-16 12:34:12,127][websockets.server][INFO] - connection open
-[2024-09-16 12:34:14,090][root][INFO] - Succeeded to open port: /dev/ttyUSB1
-[2024-09-16 12:34:14,091][root][INFO] - Succeeded to set baudrate to 3000000
-[2024-09-16 12:34:22,489][toppra.algorithm.algorithm][INFO] - No gridpoint specified. Automatically choose a gridpoint with 129 points
-[2024-09-16 12:34:22,489][toppra.algorithm.reachabilitybased.reachability_algorithm][INFO] - Solver wrapper not supplied. Choose solver wrapper automatically!
-[2024-09-16 12:34:22,489][toppra.algorithm.reachabilitybased.reachability_algorithm][INFO] - Select solver seidel
-[2024-09-16 12:34:22,491][toppra.algorithm.algorithm][INFO] - Successfully parametrize path. Duration: 2.917, previously 1.000)
-[2024-09-16 12:34:22,491][toppra.algorithm.algorithm][INFO] - Finish parametrization in 0.002 secs
