@@ -3,17 +3,21 @@ import time
 import viser 
 import numpy as np
 import open3d as o3d
-import hydra
+import sys
+import os
+# import hydra
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR)
+sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/segment-anything"))
+sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/xarm6"))
 import torch
 import warnings
+
 from xarm6_interface import XARM6_IP, XARM6LEFT_IP
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
-import sys
-import os
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR)
-sys.path.append(os.path.join(ROOT_DIR+"/third_party/segment-anything"))
+
+
 print(sys.path)
 from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
@@ -238,30 +242,6 @@ def filter_top_down_grasps(X_WorldEE, clip_min_z=0.05, approach_direction="z"):
     # return the valid grasps
     return X_WorldEE[valid_mask]
 
-# object_name = 'blue_cup' # 3/5 ; 7/10
-# object_name = 'ginger_cookies_box' # 5/5 ; 10/10
-# object_name = 'camera_bag' # 5/5 ; 10/10 
-# object_name = 'tea_box'#  4/5 ; 8/10
-# object_name = 'brush'  # 4/5 ; 9/10
-# object_name = 'milk_box'
-# object_name = 'ps_controller'
-# object_name = 'triangle_cad' 
-# object_name = 'qianzi'
-# object_name = 'zhijia'
-# object_name = 'apple' # 4/5 ; 9/10 # ok
-# object_name = 'gun' # ok
-# object_name = 'stage' # ok
-# object_name = 'hand_grips' # woliqi
-# object_name = 'light_blue_cup' # no
-# object_name = 'angle_iron' # no fail once
-# object_name = 'whiteboard_pen'
-# object_name = 'u_iron' # fail once
-# object_name = 'clipper'
-# object_name = 'blue_cup'
-# object_name = 'gripper'
-# object_name = 'spatula'
-# object_name = 'chu'
-# object_name = "wheel"
 
 
 
