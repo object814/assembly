@@ -1,0 +1,48 @@
+[submodule "3rdparty/xarm6"]
+	path = 3rdparty/xarm6
+	url = https://github.com/Robot-Experiment-Lab/xarm6.git
+[submodule "3rdparty/dex-urdf"]
+	path = 3rdparty/dex-urdf
+	url = https://github.com/Robot-Experiment-Lab/dex-urdf.git
+[submodule "3rdparty/differentiable_robot_hand"]
+	path = 3rdparty/differentiable_robot_hand
+	url = https://github.com/Robot-Experiment-Lab/differentiable_robot_hand.git
+[submodule "3rdparty/Grounding-DINO-1.5-API"]
+	path = 3rdparty/Grounding-DINO-1.5-API
+	url = https://github.com/Robot-Experiment-Lab/Grounding-DINO-1.5-API.git
+[submodule "3rdparty/isaacgym"]
+	path = 3rdparty/isaacgym
+	url = https://github.com/Robot-Experiment-Lab/isaacgym.git
+[submodule "3rdparty/segment-anything-2-real-time"]
+	path = 3rdparty/segment-anything-2-real-time
+	url = https://github.com/Robot-Experiment-Lab/segment-anything-2-real-time.git
+[submodule "3rdparty/nvdiffrast"]
+	path = 3rdparty/nvdiffrast
+	url = https://github.com/Robot-Experiment-Lab/nvdiffrast.git
+[submodule "3rdparty/LEAP_Hand_API"]
+	path = 3rdparty/LEAP_Hand_API
+	url = https://github.com/Robot-Experiment-Lab/LEAP_Hand_API.git
+[submodule "3rdparty/FoundationPose"]
+	path = 3rdparty/FoundationPose
+	url = https://github.com/Robot-Experiment-Lab/FoundationPose.git
+[submodule "3rdparty/xArm-Python-SDK"]
+	path = 3rdparty/xArm-Python-SDK
+	url = https://github.com/Robot-Experiment-Lab/xArm-Python-SDK.git
+[submodule "3rdparty/pytorch3d"]
+	path = 3rdparty/pytorch3d
+	url = https://github.com/Robot-Experiment-Lab/pytorch3d.git
+[submodule "3rdparty/segment-anything-2"]
+	path = 3rdparty/segment-anything-2
+	url = https://github.com/Robot-Experiment-Lab/segment-anything-2.git
+[submodule "3rdparty/ManiFM"]
+	path = 3rdparty/ManiFM
+	url = https://github.com/Robot-Experiment-Lab/ManiFM.git
+[submodule "3rdparty/IsaacLab"]
+	path = 3rdparty/IsaacLab
+	url = https://github.com/Robot-Experiment-Lab/IsaacLab.git
+[submodule "3rdparty/segment-anything"]
+	path = 3rdparty/segment-anything
+	url = https://github.com/Robot-Experiment-Lab/segment-anything.git
+[submodule "3rdparty/librealsense"]
+	path = 3rdparty/librealsense
+	url = https://github.com/Robot-Experiment-Lab/librealsense.git
