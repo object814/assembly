@@ -8,6 +8,8 @@ import os
 # import hydra
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_DIR)
+sys.path.append(os.path.join(ROOT_DIR+"/3rdparty"))
+
 sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/segment-anything"))
 sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/xarm6"))
 import torch
@@ -30,17 +32,17 @@ from xarm6_interface.arm_rw import XArm6RealWorld
 
 from scipy.spatial.transform import Slerp
 from xarm6_interface.arm_mplib import XARM6PlannerCfg, XARM6Planner, min_jerk_interpolator_with_alpha
-import pytorch3d
+# import pytorch3d
 from matplotlib import pyplot as plt
 from loguru import logger as lgr
 # from leaphand_rw.leaphand_rw import LeapNode, leap_from_sim_to_rw
 from xarm6_interface.envs.table_and_workspace_pc import WoodenTableMount, create_bounding_box_pc, create_plane_pc, env_pc_post_process
 from xarm6_interface.arm_pk import XArm6WOEE
 from xarm6_interface.utils.viser_utils import update_viser_mp_result
-from third_party.FoundationPose.estimater import *
+from FoundationPose.estimater import *
 import pickle
 from segment_anything import sam_model_registry, SamPredictor
-from graspnetAPI import GraspNet
+# from graspnetAPI import GraspNet
 from sklearn.decomposition import PCA
 
 X_BaserightBaseleft = np.array([
@@ -105,18 +107,18 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
         glctx=glctx
     )
     prompt_drawer = SAMPromptDrawer(window_name="Prompt Drawer", screen_scale=2.0, sam_checkpoint=SAM_PATH, device="cuda", model_type=SAM_TYPE)
-    cam_serial = "241122074374"
+    cam_serial = "249322065186"
     # top_cam_serial = '233622079809'
     camera_serial_nums = [cam_serial]
     multi_rs = MultiRealsense(camera_serial_nums)
 
     if arm_ip == XARM6LEFT_IP:
-        arm_left_cam_K_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/K.npy")
+        arm_left_cam_K_path = Path(f"3rdparty/xarm6/data/camera/{cam_serial}/K.npy")
         arm_left_cam_K = np.load(arm_left_cam_K_path)
         # arm_right_cam_X_BaseCamera_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/1230_excalib_capture00/optimized_X_BaseCamera.npy")
         # arm_right_cam_X_BaseCamera = np.load(arm_right_cam_X_BaseCamera_path)
         # arm_left_cam_X_BaseCamera = np.linalg.inv(X_BaserightBaseleft)@arm_right_cam_X_BaseCamera
-        arm_left_cam_X_BaseCamera_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/1219_excalib_capture00/optimized_X_BaseCamera.npy")
+        arm_left_cam_X_BaseCamera_path = Path(f"3rdparty/xarm6/data/camera/{cam_serial}/1206_excalib_capture00/optimized_X_BaseCamera.npy")
         arm_left_cam_X_BaseCamera = np.load(arm_left_cam_X_BaseCamera_path)
         multi_rs.set_intrinsics(0, arm_left_cam_K[0, 0], arm_left_cam_K[1, 1], arm_left_cam_K[0, 2], arm_left_cam_K[1, 2])
         camera_wxyzs = [
@@ -137,7 +139,8 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
             pc_o3d = rtr_dict["pointcloud_o3d"]
             
             prompt_drawer.reset()
-            mask_np = prompt_drawer.run(rgb)  # (720, 1280)
+            rgb_bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR) 
+            mask_np = prompt_drawer.run(rgb_bgr)  # (720, 1280)
             
             
             pose = est.register(K=arm_left_cam_K, rgb=rgb, depth=depth, ob_mask=mask_np, iteration=10)
@@ -697,12 +700,15 @@ if __name__ == "__main__":
     initial = True
     collision_pcd = None
     sv = viser.ViserServer()
-    
-    for i in range(2):
-        pick(arm_ip=XARM6LEFT_IP)
-        insert(arm_ip=XARM6LEFT_IP)
-        pick(arm_ip=XARM6_IP)
-        insert(arm_ip=XARM6_IP)
+    object_name = "sticker"
+    arm_ip ="192.168.1.243"
+    object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name, arm_ip = arm_ip)
+    sv.add_pcd(object_pc_o3d, name="sticker")
+    # for i in range(2):
+    #     pick(arm_ip=XARM6LEFT_IP)
+    #     insert(arm_ip=XARM6LEFT_IP)
+    #     pick(arm_ip=XARM6_IP)
+    #     insert(arm_ip=XARM6_IP)
 
 
     
