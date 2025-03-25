@@ -11,34 +11,34 @@ sys.path.append(ROOT_DIR)
 sys.path.append(os.path.join(ROOT_DIR+"/3rdparty"))
 
 sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/segment-anything"))
-sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/xarm6"))
+sys.path.append(os.path.join(ROOT_DIR+"/3rdparty/xarm7"))
 import torch
 import warnings
 
-from xarm6_interface import XARM6_IP, XARM6LEFT_IP
+from xarm7_interface import XARM7_IP, XARM7LEFT_IP
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 print(sys.path)
-from xarm6_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
+from xarm7_interface.utils.realsense import MultiRealsense, get_masked_pointcloud, remove_outliers
 from pathlib import Path
 from scipy.spatial.transform import Rotation as R
 
-from xarm6_interface import SAM_TYPE, SAM_PATH
-from xarm6_interface.utils.sam_prompt_drawer import SAMPromptDrawer
+from xarm7_interface import SAM_TYPE, SAM_PATH
+from xarm7_interface.utils.sam_prompt_drawer import SAMPromptDrawer
 
-from xarm6_interface.arm_rw import XArm6RealWorld
+from xarm7_interface.arm_rw import XArm7RealWorld
 
 from scipy.spatial.transform import Slerp
-from xarm6_interface.arm_mplib import XARM6PlannerCfg, XARM6Planner, min_jerk_interpolator_with_alpha
+from xarm7_interface.arm_mplib import XARM7PlannerCfg, XARM7Planner, min_jerk_interpolator_with_alpha
 # import pytorch3d
 from matplotlib import pyplot as plt
 from loguru import logger as lgr
 # from leaphand_rw.leaphand_rw import LeapNode, leap_from_sim_to_rw
-from xarm6_interface.envs.table_and_workspace_pc import WoodenTableMount, create_bounding_box_pc, create_plane_pc, env_pc_post_process
-from xarm6_interface.arm_pk import XArm6WOEE
-from xarm6_interface.utils.viser_utils import update_viser_mp_result
+from xarm7_interface.envs.table_and_workspace_pc import WoodenTableMount, create_bounding_box_pc, create_plane_pc, env_pc_post_process
+from xarm7_interface.arm_pk import XArm7WOEE
+from xarm7_interface.utils.viser_utils import update_viser_mp_result
 from FoundationPose.estimater import *
 import pickle
 from segment_anything import sam_model_registry, SamPredictor
@@ -88,7 +88,7 @@ def canonicalize_point_cloud(point_cloud):
     canonicalized_pcd.points = o3d.utility.Vector3dVector(transformed_pcd)
     return canonicalized_pcd, rotation_matrix, centroid
 
-def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
+def get_object_pc_fp(object_name, arm_ip=XARM7_IP):
     object_name_dino = object_name.replace("_", " ") + "."
     # Initialize the SAM predictor
     # sam = sam_model_registry[SAM_TYPE](checkpoint=SAM_PATH)
@@ -112,13 +112,13 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
     camera_serial_nums = [cam_serial]
     multi_rs = MultiRealsense(camera_serial_nums)
 
-    if arm_ip == XARM6LEFT_IP:
-        arm_left_cam_K_path = Path(f"3rdparty/xarm6/data/camera/{cam_serial}/K.npy")
+    if arm_ip == XARM7LEFT_IP:
+        arm_left_cam_K_path = Path(f"3rdparty/xarm7/data/camera/{cam_serial}/K.npy")
         arm_left_cam_K = np.load(arm_left_cam_K_path)
-        # arm_right_cam_X_BaseCamera_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/1230_excalib_capture00/optimized_X_BaseCamera.npy")
+        # arm_right_cam_X_BaseCamera_path = Path(f"third_party/xarm7/data/camera/{cam_serial}/1230_excalib_capture00/optimized_X_BaseCamera.npy")
         # arm_right_cam_X_BaseCamera = np.load(arm_right_cam_X_BaseCamera_path)
         # arm_left_cam_X_BaseCamera = np.linalg.inv(X_BaserightBaseleft)@arm_right_cam_X_BaseCamera
-        arm_left_cam_X_BaseCamera_path = Path(f"3rdparty/xarm6/data/camera/{cam_serial}/1206_excalib_capture00/optimized_X_BaseCamera.npy")
+        arm_left_cam_X_BaseCamera_path = Path(f"3rdparty/xarm7/data/camera/{cam_serial}/0324_excalib_capture00/optimized_X_BaseCamera.npy")
         arm_left_cam_X_BaseCamera = np.load(arm_left_cam_X_BaseCamera_path)
         multi_rs.set_intrinsics(0, arm_left_cam_K[0, 0], arm_left_cam_K[1, 1], arm_left_cam_K[0, 2], arm_left_cam_K[1, 2])
         camera_wxyzs = [
@@ -155,10 +155,10 @@ def get_object_pc_fp(object_name, arm_ip=XARM6_IP):
             object_pc_o3d.normals = o3d.utility.Vector3dVector(normals)
             object_pc_o3d.transform(pose)
         
-    elif arm_ip == XARM6_IP:
-        arm_right_cam_K_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/K.npy")
+    elif arm_ip == XARM7_IP:
+        arm_right_cam_K_path = Path(f"third_party/xarm7/data/camera/{cam_serial}/K.npy")
         arm_right_cam_K = np.load(arm_right_cam_K_path)
-        arm_right_cam_X_BaseCamera_path = Path(f"third_party/xarm6/data/camera/{cam_serial}/1230_excalib_capture00/optimized_X_BaseCamera.npy")
+        arm_right_cam_X_BaseCamera_path = Path(f"third_party/xarm7/data/camera/{cam_serial}/1230_excalib_capture00/optimized_X_BaseCamera.npy")
         arm_right_cam_X_BaseCamera = np.load(arm_right_cam_X_BaseCamera_path)
         multi_rs.set_intrinsics(0, arm_right_cam_K[0, 0], arm_right_cam_K[1, 1], arm_right_cam_K[0, 2], arm_right_cam_K[1, 2])
         
@@ -255,7 +255,7 @@ pregrasp_retreat_distance = 0.08
 
 
 
-def pick(object_name='sticker', arm_ip=XARM6_IP):  
+def pick(object_name='sticker', arm_ip=XARM7_IP):  
     # object_pc_o3d, masked_pc_o3d_fusion = get_object_pc()
     t1 = time.time()
 
@@ -301,7 +301,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
 
         pose[:3, 1] = y_axis
 
-        offset_in_world_frame = np.array([0, 0, 0.3])
+        offset_in_world_frame = np.array([0, 0, 0.05])
         pre_grasp = pose.copy()
         pre_grasp[:3, 3] = pcd_center + offset_in_world_frame  
         policy = "top_down"
@@ -313,21 +313,21 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
  
     ''' setup the planner and vis '''
     # sv = viser.ViserServer()
-    xarm6_pk = XArm6WOEE()
-    xarm6_planner_cfg = XARM6PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
-    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    xarm7_pk = XArm7WOEE()
+    xarm7_planner_cfg = XARM7PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
+    xarm7_planner = XARM7Planner(xarm7_planner_cfg)
     env_params = WoodenTableMount()
-    workspace_pc = create_bounding_box_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
-    table_plane_pc = create_plane_pc(env_params.table_plane_xmin, env_params.table_plane_ymin, env_params.table_plane_zmin, env_params.table_plane_xmax, env_params.table_plane_ymax, env_params.table_plane_zmax, xarm6_planner_cfg.n_env_pc)
-    workspace_xmin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmin, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
-    workspace_ymin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymin, env_params.zmax, xarm6_planner_cfg.n_env_pc)
-    workspace_ymax_pc = create_plane_pc(env_params.xmin, env_params.ymax, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm6_planner_cfg.n_env_pc)
+    workspace_pc = create_bounding_box_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm7_planner_cfg.n_env_pc)
+    table_plane_pc = create_plane_pc(env_params.table_plane_xmin, env_params.table_plane_ymin, env_params.table_plane_zmin, env_params.table_plane_xmax, env_params.table_plane_ymax, env_params.table_plane_zmax, xarm7_planner_cfg.n_env_pc)
+    workspace_xmin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmin, env_params.ymax, env_params.zmax, xarm7_planner_cfg.n_env_pc)
+    workspace_ymin_pc = create_plane_pc(env_params.xmin, env_params.ymin, env_params.zmin, env_params.xmax, env_params.ymin, env_params.zmax, xarm7_planner_cfg.n_env_pc)
+    workspace_ymax_pc = create_plane_pc(env_params.xmin, env_params.ymax, env_params.zmin, env_params.xmax, env_params.ymax, env_params.zmax, xarm7_planner_cfg.n_env_pc)
     env_pc = np.concatenate([workspace_pc, table_plane_pc, workspace_xmin_pc, workspace_ymin_pc, workspace_ymax_pc], axis=0)
     env_pc = env_pc_post_process(env_pc, filter_norm_thresh=0.1, n_save_pc=None)
-    xarm6_planner.mplib_add_point_cloud(env_pc, name="env_pc")
+    xarm7_planner.mplib_add_point_cloud(env_pc, name="env_pc")
     ''' setup the planner and vis '''
 
-    xarm = XArm6RealWorld(ip = arm_ip)
+    xarm = XArm7RealWorld(ip = arm_ip)
     xarm.arm.set_gripper_position(850, wait=True)
     home_joint_values = xarm.default_joint_values  # 默认的回到初始位置的关节角
     xarm.set_joint_values(home_joint_values, speed=0.35, wait=True)
@@ -346,7 +346,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
     current_joint_values = np.array(xarm.get_joint_values())
 
     # REAL PALNNING IS HERE! 
-    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, pre_grasp)
+    planning_result = xarm7_planner.mplib_plan_pose(current_joint_values, pre_grasp)
     if planning_result['status'] != 'Success':
         lgr.info(f"Collision-free planning: Fail")
         return
@@ -358,7 +358,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
 
     waypt_joint_values_np = planning_result['position']
     end_joint_values = waypt_joint_values_np[-1]
-    update_viser_mp_result(sv, xarm6_pk, current_joint_values, end_joint_values, waypt_joint_values_np)
+    update_viser_mp_result(sv, xarm7_pk, current_joint_values, end_joint_values, waypt_joint_values_np)
     # sv.add_mesh_simple("hand_open", vertices=gripper_trimesh.vertices, faces=gripper_trimesh.faces, wxyz=R.from_matrix(pre_grasp[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pre_grasp[:3, 3], opacity=0.5)
     
     validated = False
@@ -379,13 +379,13 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
     
     input("Press Enter to continue...")
     
-    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
+    xarm7_planner = XARM7Planner(xarm7_planner_cfg)
     current_joint_values = np.array(xarm.get_joint_values()) # yiwen
 
     ''' grasping motion is here'''
-    if arm_ip==XARM6_IP:
+    if arm_ip==XARM7_IP:
         offset_grasp_in_object_frame = np.array([0, 0, +0.14]) 
-    elif arm_ip==XARM6LEFT_IP:
+    elif arm_ip==XARM7LEFT_IP:
         offset_grasp_in_object_frame = np.array([0, 0, +0.13]) # 物体局部坐标系下向下偏移13cm  
     if policy == "top_down":
         center_grasp = pre_grasp.copy()
@@ -402,7 +402,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
 
     
     
-    status, grasp_arm_joint_values = xarm6_planner.mplib_ik(current_joint_values, center_grasp)
+    status, grasp_arm_joint_values = xarm7_planner.mplib_ik(current_joint_values, center_grasp)
     closest_grasp_arm_joint_values = get_closest_joint_value(current_joint_values, grasp_arm_joint_values)
     mp_is_success = status == 'Success'
     if not mp_is_success:
@@ -416,7 +416,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
         current_joint_values = np.array(xarm.get_joint_values())
         X_WorldEeflift =  center_grasp.copy()
         X_WorldEeflift[:3, 3] += np.array([0, 0, 0.2])
-        status, lifted_arm_joint_values = xarm6_planner.mplib_ik(current_joint_values, X_WorldEeflift)
+        status, lifted_arm_joint_values = xarm7_planner.mplib_ik(current_joint_values, X_WorldEeflift)
         mp_is_success = status == 'Success'
         closest_lifted_arm_joint_value = get_closest_joint_value(current_joint_values, lifted_arm_joint_values)
         if not mp_is_success:
@@ -433,7 +433,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
             # print(f"current pose: {pose}")
             # sv.scene.add_frame("obstacle_pose", wxyz=R.from_matrix(pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pose[:3, 3], axes_length=0.03, axes_radius=0.001)
             # sv.scene.add_point_cloud("object_pc", points=np.asarray(obstacle_pcd.points), colors=(255, 0, 0), point_size=0.002, point_shape="circle")
-            # xarm6_planner.mplib_add_point_cloud(np.asarray(obstacle_pcd.points), name="obstacle_pc")
+            # xarm7_planner.mplib_add_point_cloud(np.asarray(obstacle_pcd.points), name="obstacle_pc")
 
             go_home_duration = 2
             waypt_joint_values_np = []
@@ -466,7 +466,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
         grippermount_data_dir = Path("data/data_urdf/robot/xarm_gripper/hand_open_cvx_hull.obj")
         gripper_trimesh = trimesh.load_mesh(grippermount_data_dir).apply_scale(1.1)
         gripper_transform = np.eye(4)
-        xarm6_planner.mplib_update_attached_object(
+        xarm7_planner.mplib_update_attached_object(
             gripper_trimesh,
             gripper_transform,
         )
@@ -484,7 +484,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
         wxyz = R.from_matrix(rotation_matrix).as_quat()[[3, 0, 1, 2]]  # Convert to wxyz format
 
         # Update the planner with the attached object
-        xarm6_planner.mplib_update_attached_object(attached_trimesh, attach_transform)
+        xarm7_planner.mplib_update_attached_object(attached_trimesh, attach_transform)
 
         # Visualize the attached object in the scene
         sv.scene.add_mesh_simple(
@@ -500,7 +500,7 @@ def pick(object_name='sticker', arm_ip=XARM6_IP):
 
 
 
-def insert(arm_ip=XARM6_IP):
+def insert(arm_ip=XARM7_IP):
     global initial, collision_pcd  # 声明使用全局变量
     maximun_planning_time = 10
 
@@ -560,8 +560,8 @@ def insert(arm_ip=XARM6_IP):
         lgr.info("Updated collision point cloud with the current target.")
 
     
-    xarm6_pk = XArm6WOEE()
-    xarm = XArm6RealWorld(ip = arm_ip)
+    xarm7_pk = XArm7WOEE()
+    xarm = XArm7RealWorld(ip = arm_ip)
     # sv = viser.ViserServer()
     if  initial == True:
         collision_pcd, pose = get_object_pc_fp(object_name='banzi',arm_ip=arm_ip)
@@ -586,14 +586,14 @@ def insert(arm_ip=XARM6_IP):
     print(f"target pose: {target_pose}")
     sv.scene.add_point_cloud("target", points=np.asarray(target_pcd.points), colors=(0, 255, 0), point_size=0.002, point_shape="circle")
 
-    xarm6_planner_cfg = XARM6PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
-    xarm6_planner = XARM6Planner(xarm6_planner_cfg)
-    xarm6_planner.mplib_add_point_cloud(np.asarray(collision_pcd.points), name="collision_pc")
+    xarm7_planner_cfg = XARM7PlannerCfg(vis=False, n_env_pc=10000, timestep=planner_timestep)
+    xarm7_planner = XARM7Planner(xarm7_planner_cfg)
+    xarm7_planner.mplib_add_point_cloud(np.asarray(collision_pcd.points), name="collision_pc")
 
     current_joint_values = np.array(xarm.get_joint_values())
     pre_align_pose, ee_target_pose = get_pre_pose_from_target_pose(target_pose)
     print(f"pre_align_pose: {pre_align_pose}")
-    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, pre_align_pose)
+    planning_result = xarm7_planner.mplib_plan_pose(current_joint_values, pre_align_pose)
     '''try to change the rotation and plan again if is not success'''
     trial = 0
 
@@ -606,7 +606,7 @@ def insert(arm_ip=XARM6_IP):
         pre_align_pose, ee_target_pose = get_pre_pose_from_target_pose(target_pose)
 
         # 尝试规划
-        planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, pre_align_pose)
+        planning_result = xarm7_planner.mplib_plan_pose(current_joint_values, pre_align_pose)
         trial += 1
 
     if trial == maximun_planning_time:
@@ -622,7 +622,7 @@ def insert(arm_ip=XARM6_IP):
     sv.scene.add_mesh_simple("hand_open", vertices=gripper_trimesh.vertices, faces=gripper_trimesh.faces, wxyz=R.from_matrix(pre_align_pose[:3, :3]).as_quat()[[3, 0, 1, 2]], position=pre_align_pose[:3, 3], opacity=0.5)
     waypt_joint_values_np = planning_result['position']
     end_joint_values = waypt_joint_values_np[-1]
-    update_viser_mp_result(sv, xarm6_pk, current_joint_values, end_joint_values, waypt_joint_values_np)
+    update_viser_mp_result(sv, xarm7_pk, current_joint_values, end_joint_values, waypt_joint_values_np)
     validated = False
     validate_button = sv.gui.add_button("Execute",)
     # turn validated to True]
@@ -645,7 +645,7 @@ def insert(arm_ip=XARM6_IP):
     # 规划运动到最终插入位置
     current_joint_values = np.array(xarm.get_joint_values())
 
-    planning_result = xarm6_planner.mplib_plan_pose(current_joint_values, ee_target_pose)
+    planning_result = xarm7_planner.mplib_plan_pose(current_joint_values, ee_target_pose)
     if planning_result['status'] != 'Success':
         lgr.info(f"Collision-free planning to target pose: Fail")
         return
@@ -671,7 +671,7 @@ def insert(arm_ip=XARM6_IP):
     lifted_pose = current_pose @ translation_matrix  # 计算平移后的新位姿
 
     # 规划并执行移动
-    status, lifted_joint_values = xarm6_planner.mplib_ik(np.array(xarm.get_joint_values()), lifted_pose)
+    status, lifted_joint_values = xarm7_planner.mplib_ik(np.array(xarm.get_joint_values()), lifted_pose)
     mp_is_success = status == 'Success'
     
     if not mp_is_success:
@@ -702,8 +702,11 @@ if __name__ == "__main__":
     sv = viser.ViserServer()
     object_name = "sticker"
     arm_ip ="192.168.1.243"
-    object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name, arm_ip = arm_ip)
-    sv.add_pcd(object_pc_o3d, name="sticker")
+    # object_pc_o3d, X_WorldObject = get_object_pc_fp(object_name, arm_ip = arm_ip)
+    # sv.scene.add_point_cloud(f"1", points = np.asarray(object_pc_o3d.points), colors = (0,0,255),point_size = 0.001, point_shape = 'circle')
+    # input()
+    pick(arm_ip=arm_ip)
+
     # for i in range(2):
     #     pick(arm_ip=XARM6LEFT_IP)
     #     insert(arm_ip=XARM6LEFT_IP)
